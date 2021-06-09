@@ -1,135 +1,256 @@
-twilio: # Twilio gateway configuration
-  accountId: 
-  accountToken: 
+twilio:
+  accountId: ACc2c1b8655a7e3eb1c93c6371eaa7585d
+  accountToken: 379bec37d8248824a60f74aad56e40ae
+  localDomain:  https://google.com
+  iosVerificationText: verification code is - %s  # Text to use for the verification message on iOS. Will be passed to String.format with the verification code as argument 1.
+  androidNgVerificationText:  verification code is - %s # Text to use for the verification message on android-ng client types. Will be passed to String.format with the verification code as argument 1.
+  android202001VerificationText: verification code is - %s # Text to use for the verification message on android-2020-01 client types. Will be passed to String.format with the verification code as argument 1.
+  genericVerificationText: verification code is - %s # Text to use when the client type is unrecognized. Will be passed to String.format with the verification code as argument 1.
   numbers: # Numbers allocated in Twilio
-    - # First number
-    - # Second number
-    - # Third number
-    - # ...
-    - # Nth number
-  nanpaMessagingServiceSid: # Twilio SID for the messaging service to use for NANPA.
-  messagingServiceSid: # Twilio SID for the message service to use for non-NANPA.
-  localDomain: # Domain Twilio can connect back to for calls. Should be domain of your service.
-  iosVerificationText: # Text to use for the verification message on iOS. Will be passed to String.format with the verification code as argument 1.
-  androidNgVerificationText: # Text to use for the verification message on android-ng client types. Will be passed to String.format with the verification code as argument 1.
-  android202001VerificationText: # Text to use for the verification message on android-2020-01 client types. Will be passed to String.format with the verification code as argument 1.
-  genericVerificationText: # Text to use when the client type is unrecognized. Will be passed to String.format with the verification code as argument 1.
+    - +14158771979
+   
   senderId:
-    defaultSenderId: # Sender ID to use for country codes not found in either the overrides or omitted lists.
+    defaultSenderId: +14158771979 # Sender ID to use for country codes not found in either the overrides or omitted lists.
     countryCodesWithoutSenderId:
-      - # First country code
-      - # Second country code
-      - # ...
-      - # Nth country code
+      - +91
     countrySpecificSenderIds:
-      - countryCode: # First country code
-        senderId: # Sender ID to use for this country
-      - countryCode: # Second country code
-        senderId: # Sender ID to use for this country
-      - countryCode: # ...
-        senderId: # ...
-      - countryCode: # Nth country code
-        senderId: # Sender ID to use for this country
+      - countryCode: +91 # First country code
+        senderId: a # Sender ID to use for this country
 
+
+backupService:
+  userAuthenticationTokenSharedSecret: bd5ee839bfa83dc1f60af05d7db00000 # Generate it with `head -c 16 /dev/urandom | hexdump -ve '1/1 "%.2x"'`
+
+storageService:
+  userAuthenticationTokenSharedSecret: cffe9b783677f8ee3dfb485eef000000 # Generate it with `head -c 16 /dev/urandom | hexdump -ve '1/1 "%.2x"'`
+  uri: http://localhost:8082
 push:
-  queueSize: # Size of push pending queue
+  queueSize: 200
 
-redphone:
-  authKey: # Deprecated
-
-turn: # TURN server configuration
-  secret: # TURN server secret
+turn: # Coturn server configuration
+  secret: s6vko8sBxE6Yl24JqgB5JEUZ63TtxhSGKAe/dzcbD/U= # You will need the same config with the secret in turnserver.conf
   uris:
-    - stun:yourdomain:80
-    - stun:yourdomain.com:443
-    - turn:yourdomain:443?transport=udp
-    - turn:etc.com:80?transport=udp
+    - stun:global.stun.twilio.com:3478?transport=udp # If you change the port in turnserver.conf, change this too
+    - turn:global.turn.twilio.com:443?transport=tcp # If you change the port in turnserver.conf, change this too
 
-cacheCluster: # Redis server configuration for cache cluster
-  urls:
-    - redis://redis.example.com:6379/
+cacheCluster: # redis server for cache cluster
+  urls: 
+    - redis://127.0.0.1:7001/2 # change to your redis server
+clientPresenceCluster: # redis server for cache cluster
+  urls: 
+    - redis://127.0.0.1:7001/2 # change to your redis server
+metricsCluster: # redis server for cache cluster
+  urls: 
+    - redis://127.0.0.1:7001/2 # change to your redis server
+pushSchedulerCluster: # redis server for push scheduler
+  urls: 
+    - redis://127.0.0.1:7001/2 # change to your redis server
+pubsub: # redis server for pubsub cache
+  url: redis://127.0.0.1:7001/pubsub # change to your redis server
+  replicaUrls:
+    -  redis://127.0.0.1:7001/pubsubReplica # change to your redis server
+messageCache: # Redis server configuration for message store cache
+  cluster:
+    urls:
+      - redis://127.0.0.1:7001/2
 
 directory:
   client: # Configuration for interfacing with Contact Discovery Service cluster
-    userAuthenticationTokenSharedSecret: # hex-encoded secret shared with CDS used to generate auth tokens for Signal users
-    userAuthenticationTokenUserIdSecret: # hex-encoded secret shared among Signal-Servers to obscure user phone numbers from CDS
+    userAuthenticationTokenSharedSecret: 8707de6f3cfc99fe016ef73412d506f9 # Generate it with `head -c 16 /dev/urandom | hexdump -ve '1/1 "%.2x"'`
+    userAuthenticationTokenUserIdSecret: 0b5e71c9d6156dcb37f81b89c75ced90 # Generate it with `head -c 16 /dev/urandom | hexdump -ve '1/1 "%.2x"'`
   sqs:
-    accessKey:      # AWS SQS accessKey
-    accessSecret:   # AWS SQS accessSecret
-    queueUrl:       # AWS SQS queue url
-  server:
-    replicationUrl:                # CDS replication endpoint base url
-    replicationPassword:           # CDS replication endpoint password
-    replicationCaCertificate:      # CDS replication endpoint TLS certificate trust root
-    reconciliationChunkSize:       # CDS reconciliation chunk size
-    reconciliationChunkIntervalMs: # CDS reconciliation chunk interval, in milliseconds
+    accessKey:    AKIAVO2I5V37SG2OROGX # Change this to your AWS IAM Access Key
+    accessSecret:  /8ZAm7DpqTcxGITvOKdISK2lBgGL1G9hPv2DOeYS # Change this to your AWS IAM Secret
+    queueUrls:     
+      - https://sqs.ap-south-1.amazonaws.com/375425707775/cachyserver.fifo # Change this to your AWS SQS (FIFO) URL
+  server: # You can change the certificate with your own certificate
+    - replicationName: a
+      replicationUrl: http://127.0.0.1:9090 # CDS replication endpoint base url
+      replicationPassword: mypassword # CDS replication endpoint password
+      replicationCaCertificate: |
+        -----BEGIN CERTIFICATE-----
+        MIIFLzCCBBegAwIBAgISBCsOXpFLIy62tVeYNDBteOoNMA0GCSqGSIb3DQEBCwUA
+        MDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQD
+        EwJSMzAeFw0yMTAyMDgwMzUzNTVaFw0yMTA1MDkwMzUzNTVaMCAxHjAcBgNVBAMT
+        FW1lZGlhc2VydmVyLmNhY2h5LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+        AQoCggEBAL7MXFbaBUJLc2NyZdDSPil6JOqRmRh8d1vSB76N2iOasgaGBXhSitUr
+        Ij2gqK07Fs/p+97Mur+gKV8uZFBD7IpQiHeuBt1yfJCvD37ZXUFok/MWMRegxhDX
+        Q9ENwIKflhALbm7htH7QrVqFLDkmSylxYKwggeDxPSTpbivqLaTpE3WE01zygYrU
+        GsGq39iLfJkJNfTNeYh6CQ8KgrKR62DpjemqJz9awsj2C/xFpgb+VTt9fz06+sjP
+        XqOhKKsIqWlR1HJ13o80J79GQD4DtI7GTgbtytG8Kvy7C6VT8GK6ggx3XBBcVC1P
+        288CCejFssBx1R7jCEBmuenzuIfn58ECAwEAAaOCAk8wggJLMA4GA1UdDwEB/wQE
+        AwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIw
+        ADAdBgNVHQ4EFgQUoDp0LDNE5wSXQnjwCqWl27ynIuEwHwYDVR0jBBgwFoAUFC6z
+        F7dYVsuuUAlA5h+vnYsUwsYwVQYIKwYBBQUHAQEESTBHMCEGCCsGAQUFBzABhhVo
+        dHRwOi8vcjMuby5sZW5jci5vcmcwIgYIKwYBBQUHMAKGFmh0dHA6Ly9yMy5pLmxl
+        bmNyLm9yZy8wIAYDVR0RBBkwF4IVbWVkaWFzZXJ2ZXIuY2FjaHkuY29tMEwGA1Ud
+        IARFMEMwCAYGZ4EMAQIBMDcGCysGAQQBgt8TAQEBMCgwJgYIKwYBBQUHAgEWGmh0
+        dHA6Ly9jcHMubGV0c2VuY3J5cHQub3JnMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDv
+        AHUA9lyUL9F3MCIUVBgIMJRWjuNNExkzv98MLyALzE7xZOMAAAF3f/0wkwAABAMA
+        RjBEAiB3AGfRILO5XX+N/CNMpLkyphFHlaiCmjuSFYNzMHZY7QIgPlG+JRqRhxiK
+        Z9YDlPYYHkP9iLCZQvldENW/vG1Ebo4AdgBvU3asMfAxGdiZAKRRFf93FRwR2QLB
+        ACkGjbIImjfZEwAAAXd//TDHAAAEAwBHMEUCIBgfGErBr7PEy0n6c9//17bm99aW
+        v7ERZx3DHY5QDHSoAiEAu7lSUNBr6cTHOlUDowRwPaOCSmjBBtwfiPToaExN3Egw
+        DQYJKoZIhvcNAQELBQADggEBADiRLAnjDGA4px95sVjrJutZq6rr26j6mCPMZQDL
+        d2S3VbHzfYSWYvkQvsMVRvVmV8K6psQI6QDBeTL2rZ+9BA8StnwXqmDhBLnGhFlg
+        8BAxAW8uycVOleakeIoeaTEyd0Wi0x/Fv2oHoz409tC4s9W8393trWXOyfiCY/oI
+        Do0xTsQtjvMj+8F2IWNZLOLtXUPjHHl1F0HBJGXlBQDBpqfLG41oZl/tRX0fL4iZ
+        0SLaaxCK926j8ZpNfK/uTGzg3VO7ZeQowUGvc3LdBsYbfiWAkNogWK6PxnAzQjsw
+        ViZJzUqn5pOf1qkh5MN3NAkc7ZeV45jokgLyK4x64EweJmQ=
+        -----END CERTIFICATE-----
 
-messageCache: # Redis server configuration for message store cache
-  persistDelayMinutes:
+awsAttachments: # aws s3 configuration
+  accessKey: AKIAVO2I5V37735YMNOG # Change this to your AWS IAM Access Key
+  accessSecret: Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8 # Change this to your AWS IAM Secret
+  bucket: cachy-cdn-us # Change this to your bucket's name
+  region: us-east-1 # Change this to your bucket's region
 
-  cluster:
-    urls:
-      - redis://redis.example.com:6379/
+# cdn: # aws cdn configuration
+#   accessKey: AKIAVO2I5V37735YMNOG # Change this to your AWS IAM Access Key
+#   accessSecret: Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8 # Change this to your AWS IAM Secret
+#   bucket: signal-01-attachment # Change this to your bucket's name
+#   region: ap-south-1 # Change this to your bucket's region
 
-messageStore: # Postgresql database configuration for message store
+cdn: # aws cdn configuration
+  accessKey: AKIAVO2I5V37735YMNOG # Change this to your AWS IAM Access Key
+  accessSecret: Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8 # Change this to your AWS IAM Secret
+  bucket: cachy-cdn-us # Change this to your bucket's name
+  region: us-east-1 # Change this to your bucket's region
+
+# openssl genrsa -out private_key_rsa_4096_pkcs1.pem 4096
+# openssl pkcs8 -topk8 -in private_key_rsa_4096_pkcs1.pem -inform pem -out private_key_rsa_4096_pkcs8-exported.pem -outform pem -nocrypt
+#add \n to the certificate: awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'  private_key_rsa_4096_pkcs8-exported.pem
+gcpAttachments: # gcp storage configuration
+  domain: 34.117.101.254
+  email: cachy-609@elite-vista-311508.iam.gserviceaccount.com
+  maxSizeInBytes: 80000000
+  pathPrefix: 
+  rsaSigningKey: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDReQpsKHAa9C15\nWCgl9mDGwNMGb0eyNnvaj6gancdMmw9SyKOhofn8V5j91x7aiLVkXWl4B8vyakL6\nA/Bx7AG/lZqLabWXvVp+XnZyoOKvFl7QYjttHUQsz5KrD2tSUmVyDFT4C8SggjJm\nDlfcoeOBgjd6QXHmrEmM6h0iq/ldPMQ2b6NlOzSzOoqk64JMRNQwj1djGYJu3RzH\neE3yKmL8gmQDubuiXZ8TEepbasUHVrR9bNDI2K43ZVik/OETk7AesWM0uV5Co3AO\nprPxezCzqanmghti9iMOEYu1Nvh16jPa0OHrgY8ybt2VFtgsVmq08gLysRA9rDbx\n+zkfR+GBAgMBAAECggEAW1vGHuv4ENlkJ+M6B2yQQr8AinLoOyKmG+nBsHIV5SRP\np5RYQXtqkxMFZ9h13Wv4aOCQykfkPEL6GR60tIrxLESsVZdyGs7789dxI4dltmU0\nTwA42NsFy+FwH2knLo0/L2GPgWtog3SlVHt2+IQmvGo1lf2LFscXgPzuXhvRM0cu\nBZ/5Oo5MYhm5oeN16mGfQirIMApsZCNgbGLu+e54Xjb5dA3gHW0iDgPE0L6eyjG1\n9J593SHdCT0O8meSQGJR3xIrQHrEXy87vdKWEKtxBNdVPo/vRdehAwV4KFNA9m7f\nkNfrGEGLjnLQH1NYH5NIgywfynU8Dp0Lu7p+9V/bXQKBgQD3BmT2Md6deTgqU7SE\nvgrEVLR9PR+uNavytN2Th1JdMXRKpbcj8xdcmOlB2uaCWKsfNXF+4WpSBIQFdKq0\n3QHb7FyTVqZ2wwLyGUZflMtdjnttROC2rxr7RFCq4UtUP1vHqPO1fPsPrqGNKo0g\n5l1slE7QqELEea8Em1VhReuE9wKBgQDZFV6iia2w9GY9//iA64wh5hnCLsP9BgtW\nKHa2HE0pDFyj94KtFCgk4AMkOIMwnClyGPvO5wxk0qSiib7n+ZbsO2UQncIJ3VT/\n2i6KxQ0HEBOE61AbV8kS5WEo7a8spfmfGKyfImrXrnLuJUYuS5f1ZBUM2Q+T5II7\nQtNIGbbHRwKBgCQhyU7BiKBcBL0cNUFdUtHY2fWfpSykKRx9HBPiLUf4Xdw1VQ5r\nFjWzIBtD24ehVJZiCNHYQubwRidOI1IFKapzbi8W845Xg+zJiaOdbgmnN6KJ+px+\nDGJIYcw82/ncsp4Htm4Lc+WdU4AEg1QWnf+tycF3exyl99WiquBpi8ONAoGAB58t\ndG17ELR0Boc/NV+PyvzmOKAlt3OH4F2JVXmG6AMMGaGuD9+eTTUkRxhI2uMQvXXN\nGYWZNM0EhMRrVH+54c9wC/ZOAsSnoFgLvEmQ3Iee99K/PEaHw8cT8zjtJpcpPYHD\nRc8Si0IPvPbIEQYMbsw1xP62Ak5KmEQPYP+uIC8CgYEA1aoizfGCFOcp/YxbgTrF\nHFSJlnhK+TPNgQJ2dBB/l3k0g+ls3RT6OMDDnWAwaRoNhkDOLq5zX+2avekD6dJS\nmRzPmE6IafwCzoaiJzu/6KcsazthdKMv8X5zA1X3OndRg73tiaYjMHnV/ckFXaZl\nbwSgoOmYZiBZCcto0pcaAbE=\n-----END PRIVATE KEY-----\n"
+
+remoteConfig: # remote configuration token
+  authorizedTokens:
+    - dummy
+  globalConfig:
+    a : a
+
+keysDynamoDb:
+  region: ap-south-1
+  tableName: keysDynamoDb
+
+messageDynamoDb:
+  region: ap-south-1
+  tableName: messageDynamoDb
+
+zkConfig: # zkgroup config, run using your build jar
+  serverSecret: AH3kImi4S1uZuOYGc46NHsxB1JP7U0ymfHVZFRRfGnwFrcO80rcetpXwRpmSe7z3+y8hhMUAEB5diYj5VDtFpAvCuw0wQ7ysVdyRXDa1BpNF+cKNfo1wyNfaTfjci+5XNBo+J+RSjf99H08maH4suTtxfY0TdH3gjxmkSLuNZcAIPpTay+1iOp8RAOdlxNd2dwfiVKxcPORcR8KbmwMQ/gU7ZTfNkt/ilpUQr4FvWVOaMvEZ2WL5a+ES6i0JW8NsBYfZcyGKz+ybVvW/EOM2Ej9IzHeKbPiPnk9EsoLdPRsM5bpQ4cNGyNMctMg3z42tzogyiJ5anqjnTakd0NxV7wpKCR/Tw52IPMYI0shv6bpN00UJrcyVEUdXPFK1fpzhDKjmB1q7ve21ou8MAZyMMQ5IXiO8LNgDPY/+YOv4cecHKKvZjqYP1CHAJY2rWKc+WQqgShvzM2kfX3r8zoVpVmJLF4qd2nu+s/bpKK9bbdOFiR+jKpgrgL6L/h/VtrrmAoQHVJFzqueQwKD2FEc/OeHoSP75INfAoNfLUzPnPgoHbhVVntkWi+BZvl//ayjbbP8ijrDs4WwpeOHiEqaBr0fB9v079wFpRmdu0PC2H49PfgWPeJHZhRJ0imvvNBhzCcfNhw7g6oCEDSEwd4s7/5oqvaup2dByFN3c4sP6MIIJK8KQOiGF6iufXZqU7YzmGZaaHgAcZLf5S/E9e+CG2wudfN2DJfQDcUleaw+YwKNgWoHUw+wTn6sTpkk08i8tBzJCE0M6AyNRi6GkAehArBrJnfvRZGkrdKXdZvAMnacAfQk1k9xz9CJVmoiw/oBIO87uUkQUY9zTBU1a8+CESQkGCaxeEc0HSoImBQzAOU8j7dKo9zeCSZoF9gwGofnjM+ace6q+ipYVCg2G1Zt9iXG82chKZ6ZZ50myzKvsJYgj5TDtmz1F5vwobzn05/VGte69pbrREVAXxPdSuua2aQt4e+EMe7YCDcfxTt3rfQ0HDqsIsB5+3gokEMmNK4C4Gw
+  serverPublic: AKjmB1q7ve21ou8MAZyMMQ5IXiO8LNgDPY/+YOv4cecHKKvZjqYP1CHAJY2rWKc+WQqgShvzM2kfX3r8zoVpVmIGCaxeEc0HSoImBQzAOU8j7dKo9zeCSZoF9gwGofnjM+ace6q+ipYVCg2G1Zt9iXG82chKZ6ZZ50myzKvsJYgjeHvhDHu2Ag3H8U7d630NBw6rCLAeft4KJBDJjSuAuBs
+  enabled: true
+
+accountsDatabase: # database for account
   driverClass: org.postgresql.Driver
-  user:
-  password:
-  url:
+  user:        postgres
+  password:    9807
+  url:         jdbc:postgresql://localhost:5432/accountdb
 
-metricsCluster:
-  urls:
-    - redis://redis.example.com:6379/
+# messageStore: # database for message
+#   driverClass: org.postgresql.Driver
+#   user:        postgres
+#   password:    postgres
+#   url:         jdbc:postgresql://3.108.48.212:5432/messagedb
 
-awsAttachments: # AWS S3 configuration
-  accessKey:
-  accessSecret:
-  bucket:
-  region:
-
-gcpAttachments: # GCP Storage configuration
-  domain:
-  email:
-  maxSizeInBytes:
-  pathPrefix:
-  rsaSigningKey:
-
-profiles: # AWS S3 configuration
-  accessKey:
-  accessSecret:
-  bucket:
-  region:
-
-database: # Postgresql database configuration
+abuseDatabase: # database for abuse
   driverClass: org.postgresql.Driver
-  user:
-  password:
-  url:
+  user:        postgres
+  password:    9807
+  url:         jdbc:postgresql://localhost:5432/abusedb
+
+gcm: # firebase messaging
+  senderId: 493051797127 # your sender id
+  apiKey: AAAAcswtXoc:APA91bG0E8KmWVHPKpk9L3fHhODMkXOWW9KF2kead5L6LI_dsRK_67CjfqKLgqQKbUsfU_gXq7tZ26ktA508UvxW8rKGlLuWGQVKI5LngMmVqTRyawGeDmEl_G8LQYbhoGhlsfiliphc # your api key
+
+recaptcha: # google recaptcha v3
+  secret: xxxxxxxxxxx # your recaptcha secret
+
+accountDatabaseCrawler: # crawler for account database
+  chunkSize:       1000
+  chunkIntervalMs: 1000000
 
 apn: # Apple Push Notifications configuration
   sandbox: true
-  bundleId:
-  keyId:
-  teamId:
-  signingKey:
-
-gcm: # GCM Configuration
-  senderId:
-  apiKey:
+  bundleId: com.mono.developer
+  keyId: 5J888RDNSB
+  teamId: JE4W6E3NRW
+  signingKey: |
+    -----BEGIN PRIVATE KEY-----
+    MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgC4i+fgGD77sjjBDZ
+    RoUXxXOSBdJ5xG8Xapom/lUe22ugCgYIKoZIzj0DAQehRANCAATZ33DeCXx/5xry
+    cnrad6mUSlr1k8TjxcVPn8RLANsOy3xBYafvNhmrZPPV2vPI89Q3t1y+R82Pf+ak
+    /rxVYqma
+    -----END PRIVATE KEY-----
 
 micrometer: # Micrometer metrics config
-  - name: "example"
-  - uri: "https://metrics.example.com/"
-  - apiKey:
-  - accountId:
+  uri: "https://mediaserver.cachy.com/"
 
-remoteConfig:
-  authorizedTokens:
-    - # 1st authorized token
-    - # 2nd authorized token
-    - # ...
-    - # Nth authorized token
-  globalConfig: # keys and values that are given to clients on GET /v1/config
+paymentsService:
+  userAuthenticationTokenSharedSecret: 09ce32f32a896e208a25a413399a5504 # hex-encoded 32-byte secret shared with MobileCoin services used to generate auth tokens for Signal users
+  fixerApiKey: 8c1c5c016807d1013f6a19389c359e44
+  paymentCurrencies: 
+    - USD
 
-paymentService:
-  userAuthenticationTokenSharedSecret: # hex-encoded 32-byte secret shared with MobileCoin services used to generate auth tokens for Signal users
+appConfig:
+  application: cachy_signal_server 
+  environment: cachy_env 
+  configuration: cachy_config_new
+
+unidentifiedDelivery:
+  certificate: CiYI0gkSIQU0M/Ux/RMqkfn/8rb8QyUGAm+k6Zuh3N0sS1GTq8ldIRJAXPV+UHA/tVKPpWIPUf11NaIYnGtNUoywpJbM1QUe/SsON7powB8v4ro+TaOYSYjNq7c/tqvdakfNi72OScaDDg==
+  privateKey: ePM3ayOP+g+4sd8VGK6aIXIpQwt3iOGr1LCYk0WfenA=
+  # Change this to you generated private key
+  expiresDays: 365
+
+voiceVerification: # voice otp verification, afaik it use vox service
+  url: https://server.chatapp.net
+  locales:
+    - en
+
+server: # server configuration
+  applicationConnectors:
+    - type: http
+      port: 8080 # your signal server will run on this port
+  adminConnectors:
+    - type: http
+      port: 8081 # your signal server admin will run on this port
+  requestLog:
+     appenders:
+       - type: file
+         logFormat: "%clientHost, %l, %user, [%date], \"%requestURL\", %statusCode, %bytesSent, %elapsedTime, \"%header{User-Agent}\", \"%header{Authorization}\", \"%header{Unidentified-Access-Key}\""
+         currentLogFilename: ./log/request.csv
+         archivedLogFilenamePattern: ./log/request-%d.csv.gz
+         archivedFileCount: 50
+      
+testDevices:
+  - number: "+1234567890"
+    code: 123456
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      currentLogFilename: ./log/signalserver.log
+      threshold: ALL
+      queueSize: 512
+      discardingThreshold: 0
+      archive: true
+      archivedLogFilenamePattern: ./log/signalserver-%d.log
+      archivedFileCount: 5
+      timeZone: UTC
+      logFormat: "%-5p [%d{ISO8601,UTC}] %c: %m%n%rEx"
+      bufferSize: 1KiB
+      immediateFlush: true
+    - type: console
+      threshold: ALL
+      queueSize: 512
+      discardingThreshold: 0
+      timeZone: UTC
+      target: stdout
+      logFormat: "%-5p [%d{ISO8601,UTC}] %c: %m%n%rEx"

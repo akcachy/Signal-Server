@@ -50,6 +50,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
       Optional<WebSocketAuthenticator<T>> authenticator = Optional.ofNullable(environment.getAuthenticator());
       T                                   authenticated = null;
 
+      logger.info("################ WEBSOCKET CREATE ################");
       if (authenticator.isPresent()) {
         AuthenticationResult<T> authenticationResult = authenticator.get().authenticate(request);
 

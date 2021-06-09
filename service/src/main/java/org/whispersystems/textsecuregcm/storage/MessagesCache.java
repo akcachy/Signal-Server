@@ -143,7 +143,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public long insert(final UUID guid, final UUID destinationUuid, final long destinationDevice, final MessageProtos.Envelope message) {
         final MessageProtos.Envelope messageWithGuid = message.toBuilder().setServerGuid(guid.toString()).build();
         final String                 sender          = message.hasSource() ? (message.getSource() + "::" + message.getTimestamp()) : "nil";
-
+        logger.warn("**************** MESSAGE CACHE INSERT() MSG_UUID "+ guid.toString()+ " DESTINATION UUID "+ destinationUuid.toString());
         return (long)insertTimer.record(() ->
                 insertScript.executeBinary(List.of(getMessageQueueKey(destinationUuid, destinationDevice),
                                                    getMessageQueueMetadataKey(destinationUuid, destinationDevice),
@@ -155,6 +155,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
 
     public void insertEphemeral(final UUID destinationUuid, final long destinationDevice, final MessageProtos.Envelope message) {
+        logger.warn("**************** MESSAGE CACHE INSERTEMPHEMERAL() DESTINATION UUID "+ destinationUuid.toString());
         insertEphemeralTimer.record(() -> {
                 final byte[] ephemeralQueueKey = getEphemeralMessageQueueKey(destinationUuid, destinationDevice);
 
@@ -348,7 +349,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     public void addMessageAvailabilityListener(final UUID destinationUuid, final long deviceId, final MessageAvailabilityListener listener) {
         final String queueName = getQueueName(destinationUuid, deviceId);
-
+        logger.info("MESSAGE AVAILABLITY LISTNER QUEUE NAME "+ queueName);
         synchronized (messageListenersByQueueName) {
             messageListenersByQueueName.put(queueName, listener);
             queueNamesByMessageListener.put(listener, queueName);
@@ -370,6 +371,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
 
     private void subscribeForKeyspaceNotifications(final String queueName) {
+        logger.info("####################### QUEUE NAME " + queueName);
         final int slot = SlotHash.getSlot(queueName);
 
         pubSubConnection.usePubSubConnection(connection -> connection.sync().nodes(node -> node.is(RedisClusterNode.NodeFlag.MASTER) && node.hasSlot(slot))
@@ -395,13 +397,17 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public void message(final RedisClusterNode node, final String channel, final String message) {
         pubSubMessageCounter.increment();
 
+        logger.info("####################### MESSAGE  CHANNEL " + channel + " MSG "+message);
         if (channel.startsWith(QUEUE_KEYSPACE_PREFIX) && "zadd".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## ZADD");
             newMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMessagesAvailable));
         } else if (channel.startsWith(EPHEMERAL_QUEUE_KEYSPACE_PREFIX) && "rpush".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## RPUSH");
             ephemeralMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewEphemeralMessageAvailable));
         } else if (channel.startsWith(PERSISTING_KEYSPACE_PREFIX) && "del".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## DEL");
             queuePersistedNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleMessagesPersisted));
         }

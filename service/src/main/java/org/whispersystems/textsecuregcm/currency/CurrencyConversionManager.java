@@ -57,7 +57,7 @@ public class CurrencyConversionManager implements Managed {
           logger.warn("Error updating currency conversions", t);
         }
 
-        Util.sleep(15000);
+        Util.sleep(1500000000);
       }
     }).start();
   }

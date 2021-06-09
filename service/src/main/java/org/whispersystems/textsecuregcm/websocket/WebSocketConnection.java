@@ -144,6 +144,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     // X-Signal-Key: false must be sent until Android stops assuming it missing means true
     return client.sendRequest("PUT", "/api/v1/message", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
+        logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
         if (isSuccessResponse(response)) {
           if (storedMessageInfo.isPresent()) {
             messagesManager.delete(account.getUuid(), device.getId(), storedMessageInfo.get().getGuid());
@@ -181,6 +182,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   private void sendDeliveryReceiptFor(Envelope message) {
     if (!message.hasSource()) return;
 
+    logger.warn("############## SEND DELEVERY RECEIPT #########");
     try {
       receiptSender.sendReceipt(account, message.getSource(), message.getTimestamp());
     } catch (NoSuchUserException e) {
@@ -213,7 +215,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
           if (drainDuration > SLOW_DRAIN_THRESHOLD) {
             Metrics.counter(SLOW_QUEUE_DRAIN_COUNTER_NAME, tags).increment();
           }
-
+          logger.warn("################ PROCESS STORED MESSAGE TAGS"+ tags.toString());
           client.sendRequest("PUT", "/api/v1/queue/empty", Collections.singletonList(TimestampHeaderUtil.getTimestampHeader()), Optional.empty());
         }
 
@@ -285,7 +287,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   @Override
   public void handleNewMessagesAvailable() {
     messageAvailableMeter.mark();
-
+    logger.warn("############## HANDLE NEW MESSAGE AVAILABLE #########");
     storedMessageState.compareAndSet(StoredMessageState.EMPTY, StoredMessageState.CACHED_NEW_MESSAGES_AVAILABLE);
     processStoredMessages();
   }

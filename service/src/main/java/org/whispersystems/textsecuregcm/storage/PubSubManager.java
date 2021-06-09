@@ -51,18 +51,23 @@ public class PubSubManager implements Managed {
   }
 
   public void subscribe(PubSubAddress address, DispatchChannel channel) {
+    logger.warn("@@@@@@@@@@@@@@@@  SUBSCRIBE ADDRESS "+ address.serialize());
     dispatchManager.subscribe(address.serialize(), channel);
   }
 
   public void unsubscribe(PubSubAddress address, DispatchChannel dispatchChannel) {
+    logger.warn("@@@@@@@@@@@@@@@@  UNSUBSCRIBE ADDRESS "+ address.serialize());
     dispatchManager.unsubscribe(address.serialize(), dispatchChannel);
   }
 
   public boolean hasLocalSubscription(PubSubAddress address) {
+    logger.warn("@@@@@@@@@@@@@@@@  HAS LOCAL SUB "+ address.serialize());
     return dispatchManager.hasSubscription(address.serialize());
   }
 
   public boolean publish(PubSubAddress address, PubSubMessage message) {
+    logger.info("@@@@@@@@@@@@@@@@ PUBSUB  @@@@@@ ADDRESS "+ address.serialize());
+    logger.info("@@@@@@@@@@@@@@@@ PUBSUB  @@@@@@ MESSAGE TYPE "+ message.getType());
     return publish(address.serialize().getBytes(), message);
   }
 

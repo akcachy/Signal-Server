@@ -1,6 +1,8 @@
 package org.whispersystems.textsecuregcm.storage;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.appconfig.AmazonAppConfig;
 import com.amazonaws.services.appconfig.AmazonAppConfigClient;
@@ -39,10 +41,10 @@ public class DynamicConfigurationManager {
 
   public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-  public DynamicConfigurationManager(String application, String environment, String configurationName) {
+  public DynamicConfigurationManager(String application, String environment, String configurationName) {  
     this(AmazonAppConfigClient.builder()
                               .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(10000).withRequestTimeout(10000))
-                              .withCredentials(InstanceProfileCredentialsProvider.getInstance())
+                              .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")))
                               .build(),
          application, environment, configurationName, UUID.randomUUID().toString());
   }

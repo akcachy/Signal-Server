@@ -168,6 +168,7 @@ public class ProfileController {
                                       @PathParam("credentialRequest")           String credentialRequest)
       throws RateLimitExceededException
   {
+    logger.info("************ /v1/profile/{uuid}/{version}/{credentialRequest} UUID "+ uuid.toString());
     if (!isZkEnabled) throw new WebApplicationException(Response.Status.NOT_FOUND);
     return getVersionedProfile(requestAccount, accessKey, uuid, version, Optional.of(credentialRequest));
   }
@@ -206,6 +207,7 @@ public class ProfileController {
 
       Optional<ProfileKeyCredentialResponse> credential = getProfileCredential(credentialRequest, profile, uuid);
 
+      logger.info("************ /v1/profile/{uuid}/{version}/{credentialRequest} RETURN PROFILE");
       return Optional.of(new Profile(name,
                                      about,
                                      aboutEmoji,
@@ -308,7 +310,7 @@ public class ProfileController {
     if (requestAccount.isEmpty() && accessKey.isEmpty()) {
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
-
+    logger.info("************ /v1/profile/{identifier} NUMBER "+ identifier.getNumber() + " UUID "+ identifier.getUuid().toString());
     if (requestAccount.isPresent()) {
       rateLimiters.getProfileLimiter().validate(requestAccount.get().getNumber());
     }
@@ -323,19 +325,22 @@ public class ProfileController {
       username = usernamesManager.get(accountProfile.get().getUuid());
     }
 
-    return new Profile(accountProfile.get().getProfileName(),
-                       null,
-                       null,
-                       accountProfile.get().getAvatar(),
-                       null,
-                       accountProfile.get().getIdentityKey(),
-                       UnidentifiedAccessChecksum.generateFor(accountProfile.get().getUnidentifiedAccessKey()),
-                       accountProfile.get().isUnrestrictedUnidentifiedAccess(),
-                       new UserCapabilities(accountProfile.get().isGroupsV2Supported(), accountProfile.get().isGv1MigrationSupported()),
-                       username.orElse(null),
-                       null,
-                       null,
-                       accountProfile.get().getPayments());
+    Profile profile = new Profile(accountProfile.get().getProfileName(),
+                            null,
+                            null,
+                            accountProfile.get().getAvatar(),
+                            null,
+                            accountProfile.get().getIdentityKey(),
+                            UnidentifiedAccessChecksum.generateFor(accountProfile.get().getUnidentifiedAccessKey()),
+                            accountProfile.get().isUnrestrictedUnidentifiedAccess(),
+                            new UserCapabilities(accountProfile.get().isGroupsV2Supported(), accountProfile.get().isGv1MigrationSupported()),
+                            username.orElse(null),
+                            null,
+                            null,
+                            accountProfile.get().getPayments());
+    logger.info("************ /v1/profile/{identifier} UAK "+ profile.getUnidentifiedAccess());  
+    logger.info("************ /v1/profile/{identifier} UAK "+ profile.getUnidentifiedAccess());                      
+    return profile;
   }
 
 

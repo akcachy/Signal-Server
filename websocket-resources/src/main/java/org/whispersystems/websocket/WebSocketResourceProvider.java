@@ -87,6 +87,8 @@ public class WebSocketResourceProvider<T extends Principal> implements WebSocket
     this.context.setAuthenticated(authenticated);
     this.session.setIdleTimeout(idleTimeoutMillis);
 
+
+    logger.info("################ WEBSOCKET RESOURCE PROVIDER : CONNECTION LISTENER PERSENT "+ connectListener.isPresent());
     if (connectListener.isPresent()) {
       connectListener.get().onWebSocketConnect(this.context);
     }

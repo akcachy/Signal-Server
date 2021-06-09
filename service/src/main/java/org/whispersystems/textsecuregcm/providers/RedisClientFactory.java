@@ -43,6 +43,8 @@ public class RedisClientFactory implements RedisPubSubConnectionFactory {
     this.host      = redisURI.getHost();
     this.port      = redisURI.getPort();
 
+    logger.info("*************** REDIS HOST "+this.host+" PORT "+this.port);
+
     JedisPool       masterPool   = new JedisPool(poolConfig, host, port, Protocol.DEFAULT_TIMEOUT, null);
     List<JedisPool> replicaPools = new LinkedList<>();
 

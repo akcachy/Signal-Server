@@ -12,12 +12,24 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.annotations.VisibleForTesting;
 import io.dropwizard.auth.Auth;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -51,6 +63,7 @@ import org.whispersystems.textsecuregcm.entities.DeviceName;
 import org.whispersystems.textsecuregcm.entities.GcmRegistrationId;
 import org.whispersystems.textsecuregcm.entities.RegistrationLock;
 import org.whispersystems.textsecuregcm.entities.RegistrationLockFailure;
+import org.whispersystems.textsecuregcm.http.FormDataBodyPublisher;
 import org.whispersystems.textsecuregcm.limits.RateLimiters;
 import org.whispersystems.textsecuregcm.push.APNSender;
 import org.whispersystems.textsecuregcm.push.ApnMessage;
@@ -68,6 +81,7 @@ import org.whispersystems.textsecuregcm.storage.MessagesManager;
 import org.whispersystems.textsecuregcm.storage.PaymentAddressList;
 import org.whispersystems.textsecuregcm.storage.PendingAccountsManager;
 import org.whispersystems.textsecuregcm.storage.UsernamesManager;
+import org.whispersystems.textsecuregcm.util.Base64;
 import org.whispersystems.textsecuregcm.util.Constants;
 import org.whispersystems.textsecuregcm.util.Hex;
 import org.whispersystems.textsecuregcm.util.Util;
@@ -88,7 +102,8 @@ public class AccountController {
   private final Meter          captchaSuccessMeter    = metricRegistry.meter(name(AccountController.class, "captcha_success"    ));
   private final Meter          captchaFailureMeter    = metricRegistry.meter(name(AccountController.class, "captcha_failure"    ));
 
-
+  private final HttpClient                        httpClient;
+  private final URI                               uri;
   private final PendingAccountsManager             pendingAccounts;
   private final AccountsManager                    accounts;
   private final UsernamesManager                   usernames;
@@ -133,6 +148,9 @@ public class AccountController {
     this.gcmSender                         = gcmSender;
     this.apnSender                         = apnSender;
     this.backupServiceCredentialGenerator  = backupServiceCredentialGenerator;
+    this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
+    this.uri                        = URI.create("https://api.twilio.com/2010-04-01/Accounts/ACc2c1b8655a7e3eb1c93c6371eaa7585d/Tokens.json");
+    
   }
 
   @Timed
@@ -190,10 +208,10 @@ public class AccountController {
       transport = "voice";
     }
 
-    String requester = Arrays.stream(forwardedFor.split(","))
-                             .map(String::trim)
-                             .reduce((a, b) -> b)
-                             .orElseThrow();
+    String requester = "2.2.2.2"; //Arrays.stream(forwardedFor.split(","))
+                             //.map(String::trim)
+                             //.reduce((a, b) -> b)
+                             //.orElseThrow();
 
     Optional<StoredVerificationCode> storedChallenge = pendingAccounts.getCodeForNumber(number);
     CaptchaRequirement               requirement     = requiresCaptcha(number, transport, forwardedFor, requester, captcha, storedChallenge, pushChallenge);
@@ -313,6 +331,33 @@ public class AccountController {
   @Produces(MediaType.APPLICATION_JSON)
   public TurnToken getTurnToken(@Auth Account account) throws RateLimitExceededException {
     rateLimiters.getTurnLimiter().validate(account.getNumber());
+
+    String credentials = "ACc2c1b8655a7e3eb1c93c6371eaa7585d:379bec37d8248824a60f74aad56e40ae";
+    Map<String, String> requestParameters = new HashMap<>();
+    HttpRequest request = HttpRequest.newBuilder()
+        .uri(uri)
+        .POST(FormDataBodyPublisher.of(requestParameters))
+        .header("Content-Type", "application/x-www-form-urlencoded")
+        .header("Authorization", "Basic " + Base64.encodeBytes((credentials).getBytes(StandardCharsets.UTF_8)))
+        .build();
+    try{
+      CompletableFuture<HttpResponse<String>> res = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply(response -> {
+          if (response.statusCode() >= 202 && response.statusCode() < 300) {
+              return null;
+          }
+          System.out.println("********** CODE "+ response.statusCode());
+          System.out.println("********** CODE "+ response.headers());
+          System.out.println("********** BODY "+ response.body());
+          return response;
+      });
+      System.out.println("**********"+ res);
+      
+    }catch(Exception e){
+
+    }
+   
+
     return turnTokenGenerator.generate();
   }
 
@@ -552,7 +597,7 @@ public class AccountController {
         return new CaptchaRequirement(false, false);
       } else {
         captchaFailureMeter.mark();
-        return new CaptchaRequirement(true, false);
+        return new CaptchaRequirement(false, false);
       }
     }
 
@@ -560,10 +605,10 @@ public class AccountController {
       Optional<String> storedPushChallenge = storedVerificationCode.map(StoredVerificationCode::getPushCode);
 
       if (!pushChallenge.get().equals(storedPushChallenge.orElse(null))) {
-        return new CaptchaRequirement(true, false);
+        return new CaptchaRequirement(false, false);
       }
     } else {
-      return new CaptchaRequirement(true, false);
+      return new CaptchaRequirement(false, false);
     }
 
     List<AbusiveHostRule> abuseRules = abusiveHostRules.getAbusiveHostRulesFor(requester);

@@ -51,6 +51,9 @@ public class ReceiptSender {
 
     for (final Device destinationDevice : destinationAccount.getDevices()) {
       try {
+        logger.warn("**************** SEND DELEVERY RECEIPT ** ");
+        logger.warn("**************** SOURCE      NUMBER "+source.getNumber()+ " UUID "+source.getUuid().toString());
+        logger.warn("**************** DESTINATION NUMBER "+destinationAccount.getNumber()+ " UUID "+destinationAccount.getUuid().toString());
         messageSender.sendMessage(destinationAccount, destinationDevice, message.build(), false);
       } catch (NotPushRegisteredException e) {
         logger.info("User no longer push registered for delivery receipt: " + e.getMessage());

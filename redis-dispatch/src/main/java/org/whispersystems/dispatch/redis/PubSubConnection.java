@@ -38,6 +38,7 @@ public class PubSubConnection {
   private final AtomicBoolean    closed;
 
   public PubSubConnection(Socket socket) throws IOException {
+    logger.info("@@@@@@@@@@@@@ PUBSUB CONNECTION LOCAL_PORT "+ socket.getLocalPort());
     this.socket       = socket;
     this.outputStream = socket.getOutputStream();
     this.inputStream  = new RedisInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -45,6 +46,7 @@ public class PubSubConnection {
   }
 
   public void subscribe(String channelName) throws IOException {
+    logger.info("@@@@@@@@@@@@@ SUBSCRIBE   CHANNEL NAME "+channelName);
     if (closed.get()) throw new IOException("Connection closed!");
 
     byte[] command = Util.combine(SUBSCRIBE_COMMAND, channelName.getBytes(), CRLF);
@@ -52,6 +54,7 @@ public class PubSubConnection {
   }
 
   public void unsubscribe(String channelName) throws IOException {
+    logger.info("@@@@@@@@@@@@@ UNSUBSCRIBE   CHANNEL NAME "+channelName);
     if (closed.get()) throw new IOException("Connection closed!");
 
     byte[] command = Util.combine(UNSUBSCRIBE_COMMAND, channelName.getBytes(), CRLF);
@@ -107,6 +110,7 @@ public class PubSubConnection {
 
   private PubSubReply readSubscribeReply() throws IOException {
     String channelName = readSubscriptionReply();
+    logger.info("@@@@@@@@@@@@@@@@ PUBSUB READ_SUBSCRIBE_REPLAY CHANNEL NAME "+ channelName);
     return new PubSubReply(PubSubReply.Type.SUBSCRIBE, channelName, Optional.empty());
   }
 

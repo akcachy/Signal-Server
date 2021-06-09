@@ -55,6 +55,8 @@ public class WebSocketClient {
 
     WebSocketMessage requestMessage = messageFactory.createRequest(Optional.of(requestId), verb, path, headers, body);
 
+    logger.info("############## WEBSOCKET MSG TYPE "+ requestMessage.getType() + " REQUEST PATH"+ requestMessage.getRequestMessage().getPath() +" VERB "+verb);
+    logger.info("############## WEBSOCKET REQUEST ID  "+ requestId + " HEADERS "+ headers.toString() );
     try {
       remoteEndpoint.sendBytes(ByteBuffer.wrap(requestMessage.toByteArray()), new WriteCallback() {
         @Override

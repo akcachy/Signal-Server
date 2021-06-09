@@ -11,6 +11,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.metrics.MetricsFactory;
 import io.dropwizard.metrics.ReporterFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.entities.ActiveUserTally;
 import org.whispersystems.textsecuregcm.redis.FaultTolerantRedisCluster;
 import org.whispersystems.textsecuregcm.util.SystemMapper;
@@ -36,6 +39,7 @@ public class ActiveUserCounter extends AccountDatabaseCrawlerListener {
   private final MetricsFactory            metricsFactory;
   private final FaultTolerantRedisCluster cacheCluster;
   private final ObjectMapper              mapper;
+  private static final Logger logger = LoggerFactory.getLogger(ActiveUserCounter.class);
 
   public ActiveUserCounter(MetricsFactory metricsFactory, FaultTolerantRedisCluster cacheCluster) {
     this.metricsFactory         = metricsFactory;
@@ -163,7 +167,7 @@ public class ActiveUserCounter extends AccountDatabaseCrawlerListener {
       }
 
       final String tallyJson = mapper.writeValueAsString(activeUserTally);
-
+      logger.info("************** TALLY_KEY "+ TALLY_KEY + " JSON "+ tallyJson);
       cacheCluster.useCluster(connection -> connection.sync().set(TALLY_KEY, tallyJson));
     } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);

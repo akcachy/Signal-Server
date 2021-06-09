@@ -43,6 +43,7 @@ public class KeepAliveController {
   public Response getKeepAlive(@Auth             Account account,
                                @WebSocketSession WebSocketSessionContext context)
   {
+    logger.info("**************** /v1/keepalive NUMBER "+ account.getNumber() + " UUID "+ account.getUuid() + " IK "+ account.getIdentityKey()) ;
     if (account != null) {
       if (!clientPresenceManager.isLocallyPresent(account.getUuid(), account.getAuthenticatedDevice().get().getId())) {
         logger.warn("***** No local subscription found for {}::{}; age = {}ms, User-Agent = {}",

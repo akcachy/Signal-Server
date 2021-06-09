@@ -10,6 +10,9 @@ import com.google.common.annotations.VisibleForTesting;
 import io.github.resilience4j.retry.IntervalFunction;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.gcm.server.internal.GcmResponseEntity;
 import org.whispersystems.gcm.server.internal.GcmResponseListEntity;
 
@@ -35,6 +38,7 @@ import java.util.concurrent.TimeoutException;
 public class Sender {
 
   private static final String PRODUCTION_URL = "https://fcm.googleapis.com/fcm/send";
+  private final Logger logger = LoggerFactory.getLogger(Sender.class);
 
   private final String                   authorizationHeader;
   private final URI                      uri;
@@ -113,6 +117,7 @@ public class Sender {
       return retry.executeCompletionStage(executorService,
                                           () -> getClient().sendAsync(request, BodyHandlers.ofByteArray())
                                                       .thenApply(response -> {
+                                                        logger.info("************ /v1/messages/{destination} SENDER RESP CODE "+ response.statusCode());
                                                         switch (response.statusCode()) {
                                                           case 400: throw new CompletionException(new InvalidRequestException());
                                                           case 401: throw new CompletionException(new AuthenticationFailedException());

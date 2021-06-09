@@ -147,6 +147,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     }
 
     public void setPresent(final UUID accountUuid, final long deviceId, final DisplacedPresenceListener displacementListener) {
+        log.debug("*************** SET PRESENT ********** UUID "+ accountUuid.toString()+ " DEVICE ID "+ deviceId);
         try (final Timer.Context ignored = setPresenceTimer.time()) {
             final String presenceKey = getPresenceKey(accountUuid, deviceId);
 
@@ -176,6 +177,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     }
 
     public boolean isPresent(final UUID accountUuid, final long deviceId) {
+        log.debug("*************** PRESENT ********** UUID "+ accountUuid.toString()+ " DEVICE ID "+ deviceId);
         try (final Timer.Context ignored = checkPresenceTimer.time()) {
             return presenceCluster.withCluster(connection -> connection.sync().exists(getPresenceKey(accountUuid, deviceId))) == 1;
         }
@@ -190,6 +192,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     }
 
     private boolean clearPresence(final String presenceKey) {
+        log.debug("*************** CLEAR  PRESENTKEY  "+presenceKey);
         try (final Timer.Context ignored = clearPresenceTimer.time()) {
             displacementListenersByPresenceKey.remove(presenceKey);
             unsubscribeFromRemotePresenceChanges(presenceKey);

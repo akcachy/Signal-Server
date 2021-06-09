@@ -61,12 +61,15 @@ public class BaseAccountAuthenticator {
         return Optional.empty();
       }
 
+      logger.info("*************** AUTHENTICATE  NUMBER "+ account.get().getNumber()+ " UUID "+ account.get().getUuid());
       Optional<Device> device = account.get().getDevice(authorizationHeader.getDeviceId());
 
       if (!device.isPresent()) {
         noSuchDeviceMeter.mark();
         return Optional.empty();
       }
+
+      logger.info("*************** DEVICE PRESENT TRUE ");
 
       if (enabledRequired) {
         if (!device.get().isEnabled()) {
@@ -80,6 +83,8 @@ public class BaseAccountAuthenticator {
         }
       }
 
+      logger.info("**************** AFTER ENEBLE REQUIRED ");
+
       if (device.get().getAuthenticationCredentials().verify(basicCredentials.getPassword())) {
         authenticationSucceededMeter.mark();
         account.get().setAuthenticatedDevice(device.get());
@@ -87,6 +92,7 @@ public class BaseAccountAuthenticator {
         return account;
       }
 
+      logger.info("**************** DEVICE VATIFICATION FAILED!!!!!!!!!! ");
       authenticationFailedMeter.mark();
       return Optional.empty();
     } catch (IllegalArgumentException | InvalidAuthorizationHeaderException iae) {

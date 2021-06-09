@@ -77,6 +77,7 @@ public class GCMSender {
       default:           throw new AssertionError();
     }
 
+    logger.info("************ /v1/messages/{destination} MESSAGE TYPE "+ key );
     Message request = builder.withDataPart(key, message.getData().orElse("")).build();
 
     CompletableFuture<Result> future = signalSender.send(request);

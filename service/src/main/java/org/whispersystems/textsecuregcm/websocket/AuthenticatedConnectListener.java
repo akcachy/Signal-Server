@@ -9,6 +9,9 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
 import com.codahale.metrics.Timer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.push.ApnFallbackManager;
 import org.whispersystems.textsecuregcm.push.ClientPresenceManager;
 import org.whispersystems.textsecuregcm.push.MessageSender;
@@ -35,6 +38,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
   private final MessageSender         messageSender;
   private final ApnFallbackManager    apnFallbackManager;
   private final ClientPresenceManager clientPresenceManager;
+  private final Logger         logger                           = LoggerFactory.getLogger(AuthenticatedConnectListener.class);
 
   public AuthenticatedConnectListener(ReceiptSender receiptSender,
                                       MessagesManager messagesManager,
@@ -62,12 +66,14 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
       RedisOperation.unchecked(() -> apnFallbackManager.cancel(account, device));
 
       clientPresenceManager.setPresent(account.getUuid(), device.getId(), connection);
+      logger.info("############## WEBSOCKET CONNECT : UUID "+ account.getUuid()+ " DEVICE ID"+ device.getId());
       messagesManager.addMessageAvailabilityListener(account.getUuid(), device.getId(), connection);
       connection.start();
 
       context.addListener(new WebSocketSessionContext.WebSocketEventListener() {
         @Override
         public void onWebSocketClose(WebSocketSessionContext context, int statusCode, String reason) {
+          logger.info("############## WEBSOCKET CLOSED : STATUS CODE "+ statusCode + " REASON "+ reason+" !!!!!!!!!!!!!!!!!!!!!");
           clientPresenceManager.clearPresence(account.getUuid(), device.getId());
           messagesManager.removeMessageAvailabilityListener(connection);
           connection.stop();
@@ -76,11 +82,13 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
           timer.stop();
 
           if (messagesManager.hasCachedMessages(account.getUuid(), device.getId())) {
+            logger.info("############## WEBSOCKET CLOSED : HAS CACHE MSG "+ account.getUuid());
             messageSender.sendNewMessageNotification(account, device);
           }
         }
       });
     } else {
+      logger.info("############## WEBSOCKET CONTEXT AUTHENTICATED  ");
       final Timer.Context timer = unauthenticatedDurationTimer.time();
       context.addListener((context1, statusCode, reason) -> timer.stop());
     }

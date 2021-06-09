@@ -80,6 +80,7 @@ import org.whispersystems.textsecuregcm.controllers.DirectoryController;
 import org.whispersystems.textsecuregcm.controllers.KeepAliveController;
 import org.whispersystems.textsecuregcm.controllers.KeysController;
 import org.whispersystems.textsecuregcm.controllers.MessageController;
+import org.whispersystems.textsecuregcm.controllers.NewDirectoryController;
 import org.whispersystems.textsecuregcm.controllers.PaymentsController;
 import org.whispersystems.textsecuregcm.controllers.ProfileController;
 import org.whispersystems.textsecuregcm.controllers.ProvisioningController;
@@ -232,6 +233,11 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
       }
 
       @Override
+      public String apiToken() {
+          return "cd16fee7-5a38-4401-b81c-e914d368368f";
+      }
+
+      @Override
       public int batchSize() {
         return config.getMicrometerConfiguration().getBatchSize();
       }
@@ -261,14 +267,15 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
             .withRegion(config.getMessageDynamoDbConfiguration().getRegion())
             .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getMessageDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
                                                               .withRequestTimeout((int) config.getMessageDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-            .withCredentials(InstanceProfileCredentialsProvider.getInstance());
+            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
+
 
     AmazonDynamoDBClientBuilder keysDynamoDbClientBuilder = AmazonDynamoDBClientBuilder
             .standard()
             .withRegion(config.getKeysDynamoDbConfiguration().getRegion())
             .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getKeysDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
                                                               .withRequestTimeout((int) config.getKeysDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-            .withCredentials(InstanceProfileCredentialsProvider.getInstance());
+            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
 
     DynamoDB messageDynamoDb = new DynamoDB(messageDynamoDbClientBuilder.build());
     DynamoDB preKeyDynamoDb = new DynamoDB(keysDynamoDbClientBuilder.build());
@@ -343,6 +350,9 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
                                                                                                               config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
                                                                                                               true);
 
+    ExternalServiceCredentialGenerator newDirectoryCredentialsGenerator = new ExternalServiceCredentialGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(),
+                                                                                                              config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
+                                                                                                              false);                                                                                                          
     ExternalServiceCredentialGenerator storageCredentialsGenerator   = new ExternalServiceCredentialGenerator(config.getSecureStorageServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
     ExternalServiceCredentialGenerator backupCredentialsGenerator    = new ExternalServiceCredentialGenerator(config.getSecureBackupServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
     ExternalServiceCredentialGenerator paymentsCredentialsGenerator  = new ExternalServiceCredentialGenerator(config.getPaymentsServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
@@ -424,6 +434,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     environment.jersey().register(new AccountController(pendingAccountsManager, accountsManager, usernamesManager, abusiveHostRules, rateLimiters, smsSender, directoryQueue, messagesManager, turnTokenGenerator, config.getTestDevices(), recaptchaClient, gcmSender, apnSender, backupCredentialsGenerator));
     environment.jersey().register(new DeviceController(pendingDevicesManager, accountsManager, messagesManager, directoryQueue, rateLimiters, config.getMaxDevices()));
     environment.jersey().register(new DirectoryController(directoryCredentialsGenerator));
+    environment.jersey().register(new NewDirectoryController(newDirectoryCredentialsGenerator, accountsManager));
     environment.jersey().register(new ProvisioningController(rateLimiters, provisioningManager));
     environment.jersey().register(new CertificateController(new CertificateGenerator(config.getDeliveryCertificate().getCertificate(), config.getDeliveryCertificate().getPrivateKey(), config.getDeliveryCertificate().getExpiresDays()), zkAuthOperations, isZkEnabled));
     environment.jersey().register(new VoiceVerificationController(config.getVoiceVerificationConfiguration().getUrl(), config.getVoiceVerificationConfiguration().getLocales()));
@@ -453,7 +464,9 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     webSocketEnvironment.jersey().register(remoteConfigController);
 
     WebSocketEnvironment<Account> provisioningEnvironment = new WebSocketEnvironment<>(environment, webSocketEnvironment.getRequestLog(), 60000);
-    provisioningEnvironment.setConnectListener(new ProvisioningConnectListener(pubSubManager));
+    ProvisioningConnectListener provisioningConn = new ProvisioningConnectListener(pubSubManager);
+    System.out.println("____________________"+ provisioningConn.toString());
+    provisioningEnvironment.setConnectListener(provisioningConn);
     provisioningEnvironment.jersey().register(new MetricsApplicationEventListener(TrafficSource.WEBSOCKET));
     provisioningEnvironment.jersey().register(new KeepAliveController(clientPresenceManager));
 

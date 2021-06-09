@@ -6,6 +6,9 @@
 package org.whispersystems.textsecuregcm.controllers;
 
 import com.codahale.metrics.annotation.Timed;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.entities.ProvisioningMessage;
 import org.whispersystems.textsecuregcm.limits.RateLimiters;
 import org.whispersystems.textsecuregcm.push.ProvisioningManager;
@@ -32,6 +35,7 @@ public class ProvisioningController {
 
   private final RateLimiters        rateLimiters;
   private final ProvisioningManager provisioningManager;
+  private final Logger logger = LoggerFactory.getLogger(ProvisioningController.class);
 
   public ProvisioningController(RateLimiters rateLimiters, ProvisioningManager provisioningManager) {
     this.rateLimiters        = rateLimiters;
@@ -50,6 +54,7 @@ public class ProvisioningController {
   {
     rateLimiters.getMessagesLimiter().validate(source.getNumber());
 
+    logger.info("************ /v1/provisioning/{destination} SOURCE UUID"+ source.getUuid().toString() +" DESTINATION "+ destinationName);
     if (!provisioningManager.sendProvisioningMessage(new ProvisioningAddress(destinationName, 0),
                                                      Base64.decode(message.getBody())))
     {

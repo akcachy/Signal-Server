@@ -7,6 +7,9 @@ package org.whispersystems.textsecuregcm.push;
 import io.dropwizard.lifecycle.Managed;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Tag;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.metrics.PushLatencyManager;
 import org.whispersystems.textsecuregcm.redis.RedisOperation;
 import org.whispersystems.textsecuregcm.storage.Account;
@@ -46,6 +49,7 @@ public class MessageSender implements Managed {
   private static final String CHANNEL_TAG_NAME       = "channel";
   private static final String EPHEMERAL_TAG_NAME     = "ephemeral";
   private static final String CLIENT_ONLINE_TAG_NAME = "clientOnline";
+  private final Logger         logger                           = LoggerFactory.getLogger(MessageSender.class);
 
   public MessageSender(ApnFallbackManager    apnFallbackManager,
                        ClientPresenceManager clientPresenceManager,
@@ -81,11 +85,14 @@ public class MessageSender implements Managed {
       throw new AssertionError();
     }
 
+    logger.info("************ /v1/messages/{destination} CHANNEL "+ channel + " ONLINE "+online );
+    logger.info("************ /v1/messages/{destination} DESTINATION NO "+ account.getNumber() +  " UUID "+ account.getUuid() );
     final boolean clientPresent;
 
     if (online) {
       clientPresent = clientPresenceManager.isPresent(account.getUuid(), device.getId());
 
+      logger.info("************ /v1/messages/{destination} CLIENT PRESENT IF ONLINE"+ clientPresent );
       if (clientPresent) {
         messagesManager.insertEphemeral(account.getUuid(), device.getId(), message);
       }
@@ -97,6 +104,7 @@ public class MessageSender implements Managed {
       // but disconnected before the message was delivered, we should send a notification.
       clientPresent = clientPresenceManager.isPresent(account.getUuid(), device.getId());
 
+      logger.info("************ /v1/messages/{destination} CLIENT PRESENT "+ clientPresent );
       if (!clientPresent) {
         sendNewMessageNotification(account, device);
       }

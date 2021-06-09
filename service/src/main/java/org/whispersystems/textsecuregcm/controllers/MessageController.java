@@ -131,6 +131,7 @@ public class MessageController {
     if (source.isEmpty() && accessKey.isEmpty()) {
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
+    logger.info("************ /v1/messages/{destination} MOBILE "+ destinationName.getNumber()+" UUID "+destinationName.getUuid().toString());
 
     if (source.isPresent() && !source.get().isFor(destinationName)) {
       try {
@@ -157,6 +158,7 @@ public class MessageController {
       senderType = "self";
     }
 
+    logger.info("************ /v1/messages/{destination} SENDER TYPE "+ senderType);
     for (final IncomingMessage message : messages.getMessages()) {
       int contentLength = 0;
 
@@ -178,6 +180,8 @@ public class MessageController {
 
     try {
       boolean isSyncMessage = source.isPresent() && source.get().isFor(destinationName);
+
+      logger.info("************ /v1/messages/{destination} IS SYNC MSG "+ isSyncMessage);
 
       Optional<Account> destination;
 
@@ -324,6 +328,7 @@ public class MessageController {
                            IncomingMessage incomingMessage)
       throws NoSuchUserException
   {
+    logger.info("************ /v1/messages/{destination} SEND MSG");
     try (final Timer.Context ignored = sendMessageInternalTimer.time()) {
       Optional<byte[]> messageBody    = getMessageBody(incomingMessage);
       Optional<byte[]> messageContent = getMessageContent(incomingMessage);

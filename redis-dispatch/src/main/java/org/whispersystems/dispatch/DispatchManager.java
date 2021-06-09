@@ -50,6 +50,7 @@ public class DispatchManager extends Thread {
   }
 
   public synchronized void subscribe(String name, DispatchChannel dispatchChannel) {
+    logger.info("@@@@@@@@@@@ SUBSCRIBE NAME ***"+ name);
     Optional<DispatchChannel> previous = Optional.ofNullable(subscriptions.get(name));
     subscriptions.put(name, dispatchChannel);
 
@@ -65,6 +66,7 @@ public class DispatchManager extends Thread {
   }
 
   public synchronized void unsubscribe(String name, DispatchChannel channel) {
+    logger.info("@@@@@@@@@@@ UNSUBSCRIBE NAME ***"+ name);
     Optional<DispatchChannel> subscription = Optional.ofNullable(subscriptions.get(name));
 
     if (subscription.isPresent() && subscription.get() == channel) {
@@ -89,7 +91,8 @@ public class DispatchManager extends Thread {
     while (running) {
       try {
         PubSubReply reply = pubSubConnection.read();
-
+        if(!reply.getChannel().equals("KEEPALIVE"))
+          logger.info("@@@@@@@@@@@@@@ PUBSUB REPLY  ***** CHANNEL "+ reply.getChannel() + " TYPE "+reply.getType());
         switch (reply.getType()) {
           case UNSUBSCRIBE:                             break;
           case SUBSCRIBE:   dispatchSubscribe(reply);   break;
@@ -97,7 +100,7 @@ public class DispatchManager extends Thread {
           default:          throw new AssertionError("Unknown pubsub reply type! " + reply.getType());
         }
       } catch (IOException e) {
-        logger.warn("***** PubSub Connection Error *****", e);
+        logger.warn("@@@@@@@@@@@@@@ PubSub Connection Error *****", e);
         if (running) {
           this.pubSubConnection.close();
           this.pubSubConnection = redisPubSubConnectionFactory.connect();
@@ -110,6 +113,7 @@ public class DispatchManager extends Thread {
   }
 
   private void dispatchSubscribe(final PubSubReply reply) {
+    logger.info("@@@@@@@@@@@@@@ DISPATCH SUBSCRIBE   ***** CHANNEL"+ reply.getChannel() + " TYPE "+reply.getType());
     Optional<DispatchChannel> subscription = Optional.ofNullable(subscriptions.get(reply.getChannel()));
 
     if (subscription.isPresent()) {
@@ -120,9 +124,13 @@ public class DispatchManager extends Thread {
   }
 
   private void dispatchMessage(PubSubReply reply) {
+    if(!reply.getChannel().equals("KEEPALIVE"))
+      logger.info("@@@@@@@@@@@@@@ DISPATCH MSG : CHANNEL NAME " + reply.getChannel()+ " TYPE "+reply.getType());
     Optional<DispatchChannel> subscription = Optional.ofNullable(subscriptions.get(reply.getChannel()));
 
     if (subscription.isPresent()) {
+      if(!reply.getChannel().equals("KEEPALIVE"))
+        logger.info("@@@@@@@@@@@@@@ DISPATCH MSG : CHANNEL PRESENT " );
       dispatchMessage(reply.getChannel(), subscription.get(), reply.getContent().get());
     } else if (deadLetterChannel.isPresent()) {
       dispatchMessage(reply.getChannel(), deadLetterChannel.get(), reply.getContent().get());
@@ -138,6 +146,7 @@ public class DispatchManager extends Thread {
         synchronized (DispatchManager.this) {
           try {
             for (String name : subscriptions.keySet()) {
+              logger.info("@@@@@@@@@@@@@@ RESUBSCRIBE : NAME " + name);
               pubSubConnection.subscribe(name);
             }
           } catch (IOException e) {
