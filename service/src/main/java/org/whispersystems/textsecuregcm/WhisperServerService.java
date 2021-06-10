@@ -179,13 +179,13 @@ import org.whispersystems.textsecuregcm.workers.ZkParamsCommand;
 import org.whispersystems.websocket.WebSocketResourceProviderFactory;
 import org.whispersystems.websocket.setup.WebSocketEnvironment;
 
-public class WhisperServerService extends Application<WhisperServerConfiguration> {
+public class WhisperServerService {
 
   static {
     Security.addProvider(new BouncyCastleProvider());
   }
 
-  @Override
+
   public void initialize(Bootstrap<WhisperServerConfiguration> bootstrap) {
     bootstrap.addCommand(new VacuumCommand());
     bootstrap.addCommand(new DeleteUserCommand());
@@ -210,12 +210,12 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     });
   }
 
-  @Override
+
   public String getName() {
-    return "whisper-server";
+    return "cachy-server";
   }
 
-  @Override
+
   public void run(WhisperServerConfiguration config, Environment environment)
       throws Exception
   {
@@ -234,7 +234,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
 
       @Override
       public String apiToken() {
-          return "cd16fee7-5a38-4401-b81c-e914d368368f";
+        return "cd16fee7-5a38-4401-b81c-e914d368368f";
       }
 
       @Override
@@ -245,9 +245,9 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
       @Override
       protected DistributionStatisticConfig defaultHistogramConfig() {
         return DistributionStatisticConfig.builder()
-                .percentiles(.75, .95, .99, .999)
-                .build()
-                .merge(super.defaultHistogramConfig());
+            .percentiles(.75, .95, .99, .999)
+            .build()
+            .merge(super.defaultHistogramConfig());
       }
     });
 
@@ -263,19 +263,19 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     FaultTolerantDatabase abuseDatabase   = new FaultTolerantDatabase("abuse_database", abuseJdbi, config.getAbuseDatabaseConfiguration().getCircuitBreakerConfiguration());
 
     AmazonDynamoDBClientBuilder messageDynamoDbClientBuilder = AmazonDynamoDBClientBuilder
-            .standard()
-            .withRegion(config.getMessageDynamoDbConfiguration().getRegion())
-            .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getMessageDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
-                                                              .withRequestTimeout((int) config.getMessageDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
+        .standard()
+        .withRegion(config.getMessageDynamoDbConfiguration().getRegion())
+        .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getMessageDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
+            .withRequestTimeout((int) config.getMessageDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
 
 
     AmazonDynamoDBClientBuilder keysDynamoDbClientBuilder = AmazonDynamoDBClientBuilder
-            .standard()
-            .withRegion(config.getKeysDynamoDbConfiguration().getRegion())
-            .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getKeysDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
-                                                              .withRequestTimeout((int) config.getKeysDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
+        .standard()
+        .withRegion(config.getKeysDynamoDbConfiguration().getRegion())
+        .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getKeysDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
+            .withRequestTimeout((int) config.getKeysDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
 
     DynamoDB messageDynamoDb = new DynamoDB(messageDynamoDbClientBuilder.build());
     DynamoDB preKeyDynamoDb = new DynamoDB(keysDynamoDbClientBuilder.build());
@@ -347,12 +347,12 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     DisabledPermittedAccountAuthenticator disabledPermittedAccountAuthenticator = new DisabledPermittedAccountAuthenticator(accountsManager);
 
     ExternalServiceCredentialGenerator directoryCredentialsGenerator = new ExternalServiceCredentialGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(),
-                                                                                                              config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
-                                                                                                              true);
+        config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
+        true);
 
     ExternalServiceCredentialGenerator newDirectoryCredentialsGenerator = new ExternalServiceCredentialGenerator(config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenSharedSecret(),
-                                                                                                              config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
-                                                                                                              false);                                                                                                          
+        config.getDirectoryConfiguration().getDirectoryClientConfiguration().getUserAuthenticationTokenUserIdSecret(),
+        false);
     ExternalServiceCredentialGenerator storageCredentialsGenerator   = new ExternalServiceCredentialGenerator(config.getSecureStorageServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
     ExternalServiceCredentialGenerator backupCredentialsGenerator    = new ExternalServiceCredentialGenerator(config.getSecureBackupServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
     ExternalServiceCredentialGenerator paymentsCredentialsGenerator  = new ExternalServiceCredentialGenerator(config.getPaymentsServiceConfiguration().getUserAuthenticationTokenSharedSecret(), new byte[0], false);
@@ -426,7 +426,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     environment.jersey().register(new MetricsApplicationEventListener(TrafficSource.HTTP));
 
     environment.jersey().register(new PolymorphicAuthDynamicFeature<>(ImmutableMap.of(Account.class, accountAuthFilter,
-                                                                                      DisabledPermittedAccount.class, disabledPermittedAccountAuthFilter)));
+        DisabledPermittedAccount.class, disabledPermittedAccountAuthFilter)));
     environment.jersey().register(new PolymorphicAuthValueFactoryProvider.Binder<>(ImmutableSet.of(Account.class, DisabledPermittedAccount.class)));
 
     environment.jersey().register(new TimestampResponseFilter());
@@ -532,7 +532,7 @@ public class WhisperServerService extends Application<WhisperServerConfiguration
     filter.setInitParameter("allowCredentials", "true");
   }
 
-  public static void main(String[] args) throws Exception {
-    new WhisperServerService().run(args);
-  }
+//  public static void main(String[] args) throws Exception {
+//    new WhisperServerService().run(args);
+//  }
 }
