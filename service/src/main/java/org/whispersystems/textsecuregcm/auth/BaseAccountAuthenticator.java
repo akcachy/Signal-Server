@@ -112,4 +112,54 @@ public class BaseAccountAuthenticator {
     }
   }
 
+  //#region Accessor and getter methods for Cachy
+
+  public MetricRegistry getMetricRegistry() {
+    return metricRegistry;
+  }
+
+  public Meter getAuthenticationFailedMeter() {
+    return authenticationFailedMeter;
+  }
+
+  public Meter getAuthenticationSucceededMeter() {
+    return authenticationSucceededMeter;
+  }
+
+  public Meter getNoSuchAccountMeter() {
+    return noSuchAccountMeter;
+  }
+
+  public Meter getNoSuchDeviceMeter() {
+    return noSuchDeviceMeter;
+  }
+
+  public Meter getAccountDisabledMeter() {
+    return accountDisabledMeter;
+  }
+
+  public Meter getDeviceDisabledMeter() {
+    return deviceDisabledMeter;
+  }
+
+  public Meter getInvalidAuthHeaderMeter() {
+    return invalidAuthHeaderMeter;
+  }
+
+  public Logger getLogger() {
+    return logger;
+  }
+
+  public AccountsManager getAccountsManager() {
+    return accountsManager;
+  }
+
+  public Clock getClock() {
+    return clock;
+  }
+
+
+  //#endregion
+
+
 }

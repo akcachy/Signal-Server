@@ -5,12 +5,9 @@
 package org.whispersystems.textsecuregcm.auth;
 
 import io.micrometer.core.instrument.Metrics;
-import io.micrometer.core.instrument.Tag;
-import org.apache.http.auth.AUTH;
 import org.whispersystems.textsecuregcm.storage.Account;
 import org.whispersystems.textsecuregcm.storage.AccountsManager;
 
-import java.util.List;
 import java.util.Optional;
 
 import io.dropwizard.auth.Authenticator;
@@ -39,4 +36,13 @@ public class AccountAuthenticator extends BaseAccountAuthenticator implements Au
     return maybeAccount;
   }
 
+  //#region Getter and Setter for the Cachy App
+  public static String getAuthenticationCounterName() {
+    return AUTHENTICATION_COUNTER_NAME;
+  }
+
+  public static String getGv2CapableTagName() {
+    return GV2_CAPABLE_TAG_NAME;
+  }
+  //#endregion
 }

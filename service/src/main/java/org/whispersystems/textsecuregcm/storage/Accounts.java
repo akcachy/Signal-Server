@@ -141,4 +141,52 @@ public class Accounts {
     }));
   }
 
+
+//#region Getter/Setter For Private Member in order to providing access to cachy
+
+public MetricRegistry getMetricRegistry() {
+  return metricRegistry;
+}
+public Timer getCreateTimer() {
+  return createTimer;
+}
+public Timer getUpdateTimer() {
+  return updateTimer;
+}
+
+public Timer getGetByNumberTimer() {
+  return getByNumberTimer;
+}
+
+public Timer getGetByUuidTimer() {
+  return getByUuidTimer;
+}
+
+public Timer getGetAllFromTimer() {
+  return getAllFromTimer;
+}
+
+public Timer getGetAllFromOffsetTimer() {
+  return getAllFromOffsetTimer;
+}
+
+public Timer getDeleteTimer() {
+  return deleteTimer;
+}
+
+public Timer getVacuumTimer() {
+  return vacuumTimer;
+}
+
+public FaultTolerantDatabase getDatabase() {
+  return database;
+}
+
+public static ObjectMapper getMapper() {
+  return mapper;
+}
+
+//#endregion
+  
+
 }

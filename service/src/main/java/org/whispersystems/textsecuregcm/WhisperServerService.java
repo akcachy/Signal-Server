@@ -267,7 +267,7 @@ public class WhisperServerService {
         .withRegion(config.getMessageDynamoDbConfiguration().getRegion())
         .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getMessageDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
             .withRequestTimeout((int) config.getMessageDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")));
 
 
     AmazonDynamoDBClientBuilder keysDynamoDbClientBuilder = AmazonDynamoDBClientBuilder
@@ -275,7 +275,7 @@ public class WhisperServerService {
         .withRegion(config.getKeysDynamoDbConfiguration().getRegion())
         .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getKeysDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
             .withRequestTimeout((int) config.getKeysDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")));
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")));
 
     DynamoDB messageDynamoDb = new DynamoDB(messageDynamoDbClientBuilder.build());
     DynamoDB preKeyDynamoDb = new DynamoDB(keysDynamoDbClientBuilder.build());

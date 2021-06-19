@@ -281,4 +281,146 @@ public class Account implements Principal  {
     return false;
   }
 
+//#region Cachy Properties
+
+    @JsonProperty
+    private String userName;
+
+    @JsonProperty
+    private String password;
+
+    @JsonProperty
+    private String email;
+
+    @JsonProperty
+    private String isEmailVerified;
+
+    @JsonProperty
+    private String deviceId;
+
+    @JsonProperty
+    private String deviceName;
+
+    @JsonProperty
+    private String activationCode;
+
+    @JsonProperty
+    private String referedBy;
+
+    @JsonProperty
+    private String ipAddrress;
+
+    @JsonProperty
+    private String status;
+
+    @JsonProperty
+    private String countryCode;
+
+    @JsonProperty
+    private long createdAt;
+
+
+
+
+      public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIsEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setIsEmailVerified(String isEmailVerified) {
+        this.isEmailVerified = isEmailVerified;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public String getReferedBy() {
+        return referedBy;
+    }
+
+    public void setReferedBy(String referedBy) {
+        this.referedBy = referedBy;
+    }
+
+    public String getIpAddrress() {
+        return ipAddrress;
+    }
+
+    public void setIpAddrress(String ipAddrress) {
+        this.ipAddrress = ipAddrress;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+
+//#endregion
+
+
+
 }

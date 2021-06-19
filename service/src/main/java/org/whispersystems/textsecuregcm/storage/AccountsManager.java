@@ -239,4 +239,98 @@ public class AccountsManager {
   private void databaseDelete(final Account account) {
     accounts.delete(account.getUuid());
   }
+
+
+//#region Public accessor and getter Method for cachy
+
+public static MetricRegistry getMetricregistry() {
+  return metricRegistry;
+}
+
+public static Timer getCreatetimer() {
+  return createTimer;
+}
+
+public static Timer getUpdatetimer() {
+  return updateTimer;
+}
+
+public static Timer getGetbynumbertimer() {
+  return getByNumberTimer;
+}
+
+public static Timer getGetbyuuidtimer() {
+  return getByUuidTimer;
+}
+
+public static Timer getDeletetimer() {
+  return deleteTimer;
+}
+
+public static Timer getRedissettimer() {
+  return redisSetTimer;
+}
+
+public static Timer getRedisnumbergettimer() {
+  return redisNumberGetTimer;
+}
+
+public static Timer getRedisuuidgettimer() {
+  return redisUuidGetTimer;
+}
+
+public static Timer getRedisdeletetimer() {
+  return redisDeleteTimer;
+}
+
+public static String getDeleteCounterName() {
+  return DELETE_COUNTER_NAME;
+}
+
+public static String getCountryCodeTagName() {
+  return COUNTRY_CODE_TAG_NAME;
+}
+
+public static String getDeletionReasonTagName() {
+  return DELETION_REASON_TAG_NAME;
+}
+
+public Logger getLogger() {
+  return logger;
+}
+
+public Accounts getAccounts() {
+  return accounts;
+}
+
+public FaultTolerantRedisCluster getCacheCluster() {
+  return cacheCluster;
+}
+
+public DirectoryQueue getDirectoryQueue() {
+  return directoryQueue;
+}
+
+public KeysDynamoDb getKeysDynamoDb() {
+  return keysDynamoDb;
+}
+
+public MessagesManager getMessagesManager() {
+  return messagesManager;
+}
+
+public UsernamesManager getUsernamesManager() {
+  return usernamesManager;
+}
+
+public ProfilesManager getProfilesManager() {
+  return profilesManager;
+}
+
+public ObjectMapper getMapper() {
+  return mapper;
+}
+
+//#endregion
+
 }

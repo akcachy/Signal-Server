@@ -44,7 +44,7 @@ public class DynamicConfigurationManager {
   public DynamicConfigurationManager(String application, String environment, String configurationName) {  
     this(AmazonAppConfigClient.builder()
                               .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(10000).withRequestTimeout(10000))
-                              .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37735YMNOG", "Ig/wGik3JURmEQFZ8szYuDqrBf/l742HjCBKdNZ8")))
+                              .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")))
                               .build(),
          application, environment, configurationName, UUID.randomUUID().toString());
   }
