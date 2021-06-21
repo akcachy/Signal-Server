@@ -178,4 +178,54 @@ public class UsernamesManager {
     return "UsernameByUsername::" + username;
   }
 
+
+  //#region Getter Method For Cachy
+
+  public static MetricRegistry getMetricregistry() {
+    return metricRegistry;
+  }
+
+  public static Timer getCreatetimer() {
+    return createTimer;
+  }
+
+  public static Timer getDeletetimer() {
+    return deleteTimer;
+  }
+
+  public static Timer getGetbyuuidtimer() {
+    return getByUuidTimer;
+  }
+
+  public static Timer getGetbyusernametimer() {
+    return getByUsernameTimer;
+  }
+
+  public static Timer getRedissettimer() {
+    return redisSetTimer;
+  }
+
+  public static Timer getRedisuuidgettimer() {
+    return redisUuidGetTimer;
+  }
+
+  public static Timer getRedisusernamegettimer() {
+    return redisUsernameGetTimer;
+  }
+
+  public Usernames getUsernames() {
+    return usernames;
+  }
+
+  public ReservedUsernames getReservedUsernames() {
+    return reservedUsernames;
+  }
+
+  public FaultTolerantRedisCluster getCacheCluster() {
+    return cacheCluster;
+  }
+
+//#endregion
+  
+
 }

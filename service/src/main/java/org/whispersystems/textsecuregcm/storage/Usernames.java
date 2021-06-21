@@ -90,4 +90,30 @@ public class Usernames {
     }));
   }
 
+  //#region Getter Methods For Cachy
+  public MetricRegistry getMetricRegistry() {
+    return metricRegistry;
+  }
+
+  public Timer getCreateTimer() {
+    return createTimer;
+  }
+
+  public Timer getDeleteTimer() {
+    return deleteTimer;
+  }
+
+  public Timer getGetByUsernameTimer() {
+    return getByUsernameTimer;
+  }
+
+  public Timer getGetByUuidTimer() {
+    return getByUuidTimer;
+  }
+
+  public FaultTolerantDatabase getDatabase() {
+    return database;
+  }
+
+  //#endregion
 }
