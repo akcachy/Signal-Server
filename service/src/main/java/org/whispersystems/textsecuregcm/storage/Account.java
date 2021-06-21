@@ -293,16 +293,13 @@ public class Account implements Principal  {
     private String email;
 
     @JsonProperty
-    private String isEmailVerified;
+    private boolean isEmailVerified;
 
     @JsonProperty
     private String deviceId;
 
     @JsonProperty
     private String deviceName;
-
-    @JsonProperty
-    private String activationCode;
 
     @JsonProperty
     private String referedBy;
@@ -346,11 +343,11 @@ public class Account implements Principal  {
         this.email = email;
     }
 
-    public String getIsEmailVerified() {
+    public boolean getIsEmailVerified() {
         return isEmailVerified;
     }
 
-    public void setIsEmailVerified(String isEmailVerified) {
+    public void setIsEmailVerified(boolean isEmailVerified) {
         this.isEmailVerified = isEmailVerified;
     }
 
@@ -368,14 +365,6 @@ public class Account implements Principal  {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
-    }
-
-    public String getActivationCode() {
-        return activationCode;
-    }
-
-    public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
     }
 
     public String getReferedBy() {

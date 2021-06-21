@@ -27,6 +27,16 @@ public class AccountRowMapper implements RowMapper<Account> {
       Account account = mapper.readValue(resultSet.getString(Accounts.DATA), Account.class);
       account.setNumber(resultSet.getString(Accounts.NUMBER));
       account.setUuid(UUID.fromString(resultSet.getString(Accounts.UID)));
+      account.setEmail(resultSet.getString(Accounts.EMAIL));
+      account.setPassword(resultSet.getString(Accounts.PASSWORD));
+      account.setUserName(resultSet.getString(Accounts.USERNAME));
+      account.setIsEmailVerified(resultSet.getBoolean(Accounts.ISEMAILVERIFIED));
+      account.setDeviceId(resultSet.getString(Accounts.DEVICEID));
+      account.setDeviceName(resultSet.getString(Accounts.DEVICENAME));
+      account.setReferedBy(resultSet.getString(Accounts.REFEREDBY));
+      account.setIpAddrress(resultSet.getString(Accounts.IPADDRESS));
+      account.setStatus(resultSet.getString(Accounts.STATUS));
+      account.setCountryCode(resultSet.getString(Accounts.COUNTRYCODE));
       return account;
     } catch (IOException e) {
       throw new SQLException(e);

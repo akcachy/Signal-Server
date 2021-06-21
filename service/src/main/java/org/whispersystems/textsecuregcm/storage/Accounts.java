@@ -141,7 +141,17 @@ public class Accounts {
     }));
   }
 
-
+  // Cachy ACcount Details
+  public static final String USERNAME         = "user_name";
+  public static final String PASSWORD         = "password";
+  public static final String EMAIL            = "email";
+  public static final String ISEMAILVERIFIED  = "is_email_verified";
+  public static final String DEVICEID         = "device_id";
+  public static final String DEVICENAME       = "device_name";
+  public static final String REFEREDBY        = "refered_by";
+  public static final String IPADDRESS       = "ip_address";
+  public static final String STATUS           = "status";
+  public static final String COUNTRYCODE      = "country_code";
 //#region Getter/Setter For Private Member in order to providing access to cachy
 
 public MetricRegistry getMetricRegistry() {
