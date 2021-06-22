@@ -179,42 +179,42 @@ public class UsernamesManager {
   }
 
 
-  //#region Getter Method For Cachy
-
-  public static MetricRegistry getMetricregistry() {
-    return metricRegistry;
-  }
-
-  public static Timer getCreatetimer() {
-    return createTimer;
-  }
-
-  public static Timer getDeletetimer() {
-    return deleteTimer;
-  }
-
-  public static Timer getGetbyuuidtimer() {
-    return getByUuidTimer;
-  }
-
-  public static Timer getGetbyusernametimer() {
-    return getByUsernameTimer;
-  }
-
-  public static Timer getRedissettimer() {
-    return redisSetTimer;
-  }
-
-  public static Timer getRedisuuidgettimer() {
-    return redisUuidGetTimer;
-  }
-
-  public static Timer getRedisusernamegettimer() {
-    return redisUsernameGetTimer;
-  }
+  //#region Getter Functions for cachy
 
   public Usernames getUsernames() {
     return usernames;
+  }
+  
+  public static MetricRegistry getMetricRegistry() {
+    return metricRegistry;
+  }
+
+  public static Timer getCreateTimer() {
+    return createTimer;
+  }
+
+  public static Timer getDeleteTimer() {
+    return deleteTimer;
+  }
+
+  public static Timer getGetbyUuidTimer() {
+    return getByUuidTimer;
+  }
+
+  public static Timer getGetbyUsernameTimer() {
+    return getByUsernameTimer;
+  }
+
+  public static Timer getRedisSetTimer() {
+    return redisSetTimer;
+  }
+
+  public static Timer getRedisUuidGetTimer() {
+    return redisUuidGetTimer;
+  }
+
+  public static Timer getRedisUsernameGetTimer() {
+    return redisUsernameGetTimer;
   }
 
   public ReservedUsernames getReservedUsernames() {
@@ -225,7 +225,5 @@ public class UsernamesManager {
     return cacheCluster;
   }
 
-//#endregion
-  
-
+  //#endregion
 }

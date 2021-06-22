@@ -142,7 +142,7 @@ public class Accounts {
   }
 
   // Cachy ACcount Details
-  public static final String USERNAME         = "user_name";
+  public static final String USERNAME         = "username";
   public static final String PASSWORD         = "password";
   public static final String EMAIL            = "email";
   public static final String ISEMAILVERIFIED  = "is_email_verified";

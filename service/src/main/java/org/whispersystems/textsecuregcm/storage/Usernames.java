@@ -90,7 +90,7 @@ public class Usernames {
     }));
   }
 
-  //#region Getter Methods For Cachy
+  //#region getter for Cachy
   public MetricRegistry getMetricRegistry() {
     return metricRegistry;
   }
@@ -114,6 +114,5 @@ public class Usernames {
   public FaultTolerantDatabase getDatabase() {
     return database;
   }
-
   //#endregion
 }
