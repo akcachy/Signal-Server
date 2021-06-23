@@ -13,6 +13,7 @@ service/config/production.yml
 service/config/federated.yml
 service/config/staging.yml
 service/config/testing.yml
+service/config/
 .opsmanage
 put.sh
 deployer-staging.properties

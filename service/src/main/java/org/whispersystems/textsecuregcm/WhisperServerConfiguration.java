@@ -383,4 +383,5 @@ public class WhisperServerConfiguration extends Configuration {
   public AppConfigConfiguration getAppConfig() {
     return appConfig;
   }
+
 }
