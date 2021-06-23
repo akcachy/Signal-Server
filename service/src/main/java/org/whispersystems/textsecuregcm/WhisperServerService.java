@@ -267,7 +267,7 @@ public class WhisperServerService {
         .withRegion(config.getMessageDynamoDbConfiguration().getRegion())
         .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getMessageDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
             .withRequestTimeout((int) config.getMessageDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")));
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.getAwsAttachmentsConfiguration().getAccessKey(),config.getAwsAttachmentsConfiguration().getAccessSecret())));
 
 
     AmazonDynamoDBClientBuilder keysDynamoDbClientBuilder = AmazonDynamoDBClientBuilder
@@ -275,7 +275,7 @@ public class WhisperServerService {
         .withRegion(config.getKeysDynamoDbConfiguration().getRegion())
         .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(((int) config.getKeysDynamoDbConfiguration().getClientExecutionTimeout().toMillis()))
             .withRequestTimeout((int) config.getKeysDynamoDbConfiguration().getClientRequestTimeout().toMillis()))
-        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")));
+        .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.getAwsAttachmentsConfiguration().getAccessKey(),config.getAwsAttachmentsConfiguration().getAccessSecret())));
 
     DynamoDB messageDynamoDb = new DynamoDB(messageDynamoDbClientBuilder.build());
     DynamoDB preKeyDynamoDb = new DynamoDB(keysDynamoDbClientBuilder.build());
@@ -319,7 +319,7 @@ public class WhisperServerService {
     ExecutorService          apnSenderExecutor                    = environment.lifecycle().executorService(name(getClass(), "apnSender-%d")).maxThreads(1).minThreads(1).build();
     ExecutorService          gcmSenderExecutor                    = environment.lifecycle().executorService(name(getClass(), "gcmSender-%d")).maxThreads(1).minThreads(1).build();
 
-    DynamicConfigurationManager dynamicConfigurationManager = new DynamicConfigurationManager(config.getAppConfig().getApplication(), config.getAppConfig().getEnvironment(), config.getAppConfig().getConfigurationName());
+    DynamicConfigurationManager dynamicConfigurationManager = new DynamicConfigurationManager(config.getAppConfig().getApplication(), config.getAppConfig().getEnvironment(), config.getAppConfig().getConfigurationName(),config.getAwsAttachmentsConfiguration().getAccessKey(),config.getAwsAttachmentsConfiguration().getAccessSecret());
     dynamicConfigurationManager.start();
 
     ExperimentEnrollmentManager experimentEnrollmentManager = new ExperimentEnrollmentManager(dynamicConfigurationManager);

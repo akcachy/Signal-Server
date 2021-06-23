@@ -41,14 +41,20 @@ public class DynamicConfigurationManager {
 
   public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(new YAMLFactory()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-  public DynamicConfigurationManager(String application, String environment, String configurationName) {  
+//  public DynamicConfigurationManager(String application, String environment, String configurationName) {
+//    this(AmazonAppConfigClient.builder()
+//                              .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(10000).withRequestTimeout(10000))
+//                              .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")))
+//                              .build(),
+//         application, environment, configurationName, UUID.randomUUID().toString());
+//  }
+  public DynamicConfigurationManager(String application, String environment, String configurationName,String aws_access_key,String aws_accessecretkey) {
     this(AmazonAppConfigClient.builder()
-                              .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(10000).withRequestTimeout(10000))
-                              .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAVO2I5V37Y4ONBJ63", "P3p3yQe2IOGUerGoNneJclIJkEXuwQcuWcW++JFs")))
-                              .build(),
-         application, environment, configurationName, UUID.randomUUID().toString());
+            .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(10000).withRequestTimeout(10000))
+            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(aws_access_key,aws_accessecretkey)))
+            .build(),
+        application, environment, configurationName, UUID.randomUUID().toString());
   }
-
   @VisibleForTesting
   public DynamicConfigurationManager(AmazonAppConfig appConfigClient, String application, String environment, String configurationName, String clientId) {
     this.appConfigClient   = appConfigClient;

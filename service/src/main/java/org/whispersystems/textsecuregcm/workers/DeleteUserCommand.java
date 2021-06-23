@@ -104,7 +104,7 @@ public class DeleteUserCommand extends EnvironmentCommand<WhisperServerConfigura
 
       ExecutorService keyspaceNotificationDispatchExecutor = environment.lifecycle().executorService(name(getClass(), "keyspaceNotification-%d")).maxThreads(4).build();
 
-      DynamicConfigurationManager dynamicConfigurationManager = new DynamicConfigurationManager(configuration.getAppConfig().getApplication(), configuration.getAppConfig().getEnvironment(), configuration.getAppConfig().getConfigurationName());
+      DynamicConfigurationManager dynamicConfigurationManager = new DynamicConfigurationManager(configuration.getAppConfig().getApplication(), configuration.getAppConfig().getEnvironment(), configuration.getAppConfig().getConfigurationName(),configuration.getAwsAttachmentsConfiguration().getAccessKey(),configuration   .getAwsAttachmentsConfiguration().getAccessSecret());
 
       Accounts                  accounts             = new Accounts(accountDatabase);
       Usernames                 usernames            = new Usernames(accountDatabase);
