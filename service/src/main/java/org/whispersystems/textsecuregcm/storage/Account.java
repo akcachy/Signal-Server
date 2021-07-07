@@ -316,7 +316,8 @@ public class Account implements Principal  {
     @JsonProperty
     private long createdAt;
 
-
+    @JsonProperty
+    private String profileKey;
 
 
       public String getUserName() {
@@ -405,6 +406,14 @@ public class Account implements Principal  {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getProfileKey() {
+      return profileKey;
+    }
+
+    public void setProfileKey(String profileKey) {
+      this.profileKey = profileKey;
     }
 
 
