@@ -152,6 +152,7 @@ public class Accounts {
   public static final String IPADDRESS       = "ip_address";
   public static final String STATUS           = "status";
   public static final String COUNTRYCODE      = "country_code";
+  public static final String ACCOUNT_TYPE     = "account_type";
 //#region Getter/Setter For Private Member in order to providing access to cachy
 
 public MetricRegistry getMetricRegistry() {

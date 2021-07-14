@@ -319,6 +319,9 @@ public class Account implements Principal  {
     @JsonProperty
     private String profileKey;
 
+    @JsonProperty
+    private String accountType;
+
 
       public String getUserName() {
         return userName;
@@ -416,6 +419,15 @@ public class Account implements Principal  {
       this.profileKey = profileKey;
     }
 
+    public String getAccountType() {
+      return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+      this.accountType = accountType;
+    }
+
+    
 
 //#endregion
 
