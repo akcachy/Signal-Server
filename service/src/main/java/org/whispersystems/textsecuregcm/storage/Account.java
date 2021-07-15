@@ -284,7 +284,7 @@ public class Account implements Principal  {
 //#region Cachy Properties
 
     @JsonProperty
-    private String userName;
+    private String username;
 
     @JsonProperty
     private String password;
@@ -322,13 +322,16 @@ public class Account implements Principal  {
     @JsonProperty
     private String accountType;
 
+    @JsonProperty
+    private String monitization;
+
 
       public String getUserName() {
-        return userName;
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -425,6 +428,14 @@ public class Account implements Principal  {
 
     public void setAccountType(String accountType) {
       this.accountType = accountType;
+    }
+
+    public String getMonitization() {
+      return monitization;
+    }
+
+    public void setMonitization(String monitization) {
+      this.monitization = monitization;
     }
 
     

@@ -38,6 +38,7 @@ public class AccountRowMapper implements RowMapper<Account> {
       account.setStatus(resultSet.getString(Accounts.STATUS));
       account.setCountryCode(resultSet.getString(Accounts.COUNTRYCODE));
       account.setAccountType(resultSet.getString(Accounts.ACCOUNT_TYPE));
+      account.setMonitization(resultSet.getString(Accounts.MONITIZATION));
       return account;
     } catch (IOException e) {
       throw new SQLException(e);
