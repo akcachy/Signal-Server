@@ -325,6 +325,9 @@ public class Account implements Principal  {
     @JsonProperty
     private String monitization;
 
+    @JsonProperty
+    private String profileVersion;
+
 
       public String getUserName() {
         return username;
@@ -436,6 +439,14 @@ public class Account implements Principal  {
 
     public void setMonitization(String monitization) {
       this.monitization = monitization;
+    }
+
+    public String getProfileVersion() {
+      return profileVersion;
+    }
+
+    public void setProfileVersion(String profileVersion) {
+      this.profileVersion = profileVersion;
     }
 
     
