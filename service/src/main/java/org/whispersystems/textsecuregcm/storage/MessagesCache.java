@@ -82,6 +82,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_queue::";
     private static final String EPHEMERAL_QUEUE_KEYSPACE_PREFIX = "__keyspace@0__:user_queue_ephemeral::";
     private static final String PERSISTING_KEYSPACE_PREFIX      = "__keyspace@0__:user_queue_persisting::";
+    private static final String MATCHER_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_matcher_queue::";
+    private static final String EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX = "__keyspace@0__:user_matcher_queue_ephemeral::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -389,7 +391,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return new String[] {
                 QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 EPHEMERAL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
-                PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}"
+                PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
+                MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
+                EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
         };
     }
 
