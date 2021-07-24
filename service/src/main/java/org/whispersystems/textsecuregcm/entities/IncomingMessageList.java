@@ -23,6 +23,9 @@ public class IncomingMessageList {
   @JsonProperty
   private boolean online;
 
+  @JsonProperty
+  private boolean agreeToPay;
+
   public IncomingMessageList() {}
 
   public List<IncomingMessage> getMessages() {
@@ -35,5 +38,9 @@ public class IncomingMessageList {
 
   public boolean isOnline() {
     return online;
+  }
+
+  public boolean isAgreeToPay() {
+    return agreeToPay;
   }
 }
