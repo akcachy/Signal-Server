@@ -327,6 +327,9 @@ public class Account implements Principal  {
 
     @JsonProperty
     private String profileVersion;
+    
+    @JsonProperty
+    private String masterKey;
 
 
       public String getUserName() {
@@ -447,6 +450,14 @@ public class Account implements Principal  {
 
     public void setProfileVersion(String profileVersion) {
       this.profileVersion = profileVersion;
+    }
+
+    public String getMasterKey() {
+      return masterKey;
+    }
+
+    public void setMasterKey(String masterKey) {
+      this.masterKey = masterKey;
     }
 
     
