@@ -316,6 +316,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             @Override
             public void handleMessagesPersisted() {
             }
+            @Override
+            public void handleNewMatchingMessageAvailable() {
+            }
         };
 
         messagesCache.addMessageAvailabilityListener(DESTINATION_UUID, DESTINATION_DEVICE_ID, listener);
@@ -349,6 +352,10 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
                     notified.set(true);
                     notified.notifyAll();
                 }
+            }
+
+            @Override
+            public void handleNewMatchingMessageAvailable() {
             }
         };
 
@@ -386,6 +393,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
 
             @Override
             public void handleMessagesPersisted() {
+            }
+            @Override
+            public void handleNewMatchingMessageAvailable() {
             }
         };
 

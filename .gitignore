@@ -19,3 +19,9 @@ put.sh
 deployer-staging.properties
 deployer-production.properties
 deployer.log
+service/.*
+redis-dispatch/.*
+websocket-resources/.*
+.project
+.settings/*
+gcm-sender-async/.*

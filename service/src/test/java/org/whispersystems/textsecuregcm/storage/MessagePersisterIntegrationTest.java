@@ -128,6 +128,9 @@ public class MessagePersisterIntegrationTest extends AbstractRedisClusterTest {
                     messagesPersisted.notifyAll();
                 }
             }
+            @Override
+            public void handleNewMatchingMessageAvailable() {
+            }
         });
 
         messagePersister.start();

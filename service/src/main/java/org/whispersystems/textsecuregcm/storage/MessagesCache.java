@@ -74,6 +74,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final Counter pubSubMessageCounter                = Metrics.counter(name(MessagesCache.class, "pubSubMessage"));
     private final Counter newMessageNotificationCounter       = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "false");
     private final Counter ephemeralMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "true");
+    private final Counter ephemeralMatchingMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMatchingMessageNotification"));
     private final Counter queuePersistedNotificationCounter   = Metrics.counter(name(MessagesCache.class, "queuePersisted"));
 
     static final         String NEXT_SLOT_TO_PERSIST_KEY  = "user_queue_persist_slot";
@@ -309,6 +310,29 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }));
     }
 
+    public Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice) {
+        return takeMatchingMessage(destinationUuid, destinationDevice, System.currentTimeMillis());
+    }
+
+    @VisibleForTesting
+    Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice, final long currentTimeMillis) {
+        final long earliestAllowableTimestamp = currentTimeMillis - MAX_EPHEMERAL_MESSAGE_DELAY.toMillis();
+
+        return takeEphemeralMessageTimer.record(() -> readDeleteCluster.withBinaryCluster(connection -> {
+            byte[] messageBytes;
+
+            while ((messageBytes = connection.sync().lpop(getEphemeralMatchingMessageQueueKey(destinationUuid, destinationDevice))) != null) {
+                //try {
+                    String msg = new String(messageBytes);
+                    logger.info("########## MATCHING "+ msg);
+                    return Optional.of(msg);
+                //}
+            }
+
+            return Optional.empty();
+        }));
+    }
+
     public void clear(final UUID destinationUuid) {
         // TODO Remove null check in a fully UUID-based world
         if (destinationUuid != null) {
@@ -415,6 +439,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             queuePersistedNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleMessagesPersisted));
         }
+        else if (channel.startsWith(EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX) && "rpush".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## RPUSH MATCHING");
+            ephemeralMatchingMessageNotificationCounter.increment();
+            notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMatchingMessageAvailable));
+        }
     }
 
     private Optional<MessageAvailabilityListener> findListener(final String keyspaceChannel) {
@@ -462,6 +491,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return ("user_queue_ephemeral::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
 
+    static byte[] getMatecingMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_matcher_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    static byte[] getEphemeralMatchingMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_matcher_queue_ephemeral::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
     private static byte[] getMessageQueueMetadataKey(final UUID accountUuid, final long deviceId) {
         return ("user_queue_metadata::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }

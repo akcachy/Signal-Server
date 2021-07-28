@@ -61,6 +61,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   private static final Meter          sendMessageMeter               = metricRegistry.meter(name(WebSocketConnection.class, "send_message"));
   private static final Meter          messageAvailableMeter          = metricRegistry.meter(name(WebSocketConnection.class, "messagesAvailable"));
   private static final Meter          ephemeralMessageAvailableMeter = metricRegistry.meter(name(WebSocketConnection.class, "ephemeralMessagesAvailable"));
+  private static final Meter          ephemeralMatchingMessageAvailableMeter = metricRegistry.meter(name(WebSocketConnection.class, "ephemeralMatchingMessagesAvailable"));
   private static final Meter          messagesPersistedMeter         = metricRegistry.meter(name(WebSocketConnection.class, "messagesPersisted"));
   private static final Meter          bytesSentMeter                 = metricRegistry.meter(name(WebSocketConnection.class, "bytes_sent"));
   private static final Meter          sendFailuresMeter              = metricRegistry.meter(name(WebSocketConnection.class, "send_failures"));
@@ -298,6 +299,33 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
 
     messagesManager.takeEphemeralMessage(account.getUuid(), device.getId())
                    .ifPresent(message -> sendMessage(message, Optional.empty()));
+  }
+  
+  @Override
+  public void handleNewMatchingMessageAvailable() {
+    ephemeralMatchingMessageAvailableMeter.mark();
+
+    messagesManager.takeMatchingMessage(account.getUuid(), device.getId())
+                   .ifPresent(message -> sendMatchingMessage(message));
+  }
+
+  private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final String message) {
+    final Optional<byte[]> body = Optional.ofNullable(message.getBytes());
+
+    sendMessageMeter.mark();
+    sentMessageCounter.increment();
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/matching", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
   }
 
   @Override

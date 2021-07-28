@@ -17,4 +17,6 @@ public interface MessageAvailabilityListener {
     void handleNewEphemeralMessageAvailable();
 
     void handleMessagesPersisted();
+
+    void handleNewMatchingMessageAvailable();
 }
