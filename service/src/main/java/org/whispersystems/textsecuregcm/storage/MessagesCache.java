@@ -84,7 +84,6 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String EPHEMERAL_QUEUE_KEYSPACE_PREFIX = "__keyspace@0__:user_queue_ephemeral::";
     private static final String PERSISTING_KEYSPACE_PREFIX      = "__keyspace@0__:user_queue_persisting::";
     private static final String MATCHER_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_matcher_queue::";
-    private static final String EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX = "__keyspace@0__:user_matcher_queue_ephemeral::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -416,8 +415,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 EPHEMERAL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
-                MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
-                EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
+                MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}"
         };
     }
 
@@ -439,7 +437,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             queuePersistedNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleMessagesPersisted));
         }
-        else if (channel.startsWith(EPHEMERAL_MATCHER_QUEUE_KEYSPACE_PREFIX) && "rpush".equals(message)) {
+        else if (channel.startsWith(MATCHER_QUEUE_KEYSPACE_PREFIX) && "rpush".equals(message)) {
             logger.info("####################### CHANNEL START WITH ######## RPUSH MATCHING");
             ephemeralMatchingMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMatchingMessageAvailable));
