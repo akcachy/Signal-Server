@@ -40,7 +40,7 @@ public class ExternalServiceCredentialGenerator {
     String output             = Hex.encodeHexString(Util.truncate(getHmac(key, prefix.getBytes(), mac), 10));
     String token              = prefix + ":" + output;
 
-    logger.info("*********** /v1/directory/get/{contact} NUMBER "+ number);
+    logger.info("*********** Generate For NUMBER "+ number);
     return new ExternalServiceCredentials(username, token);
   }
 

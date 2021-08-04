@@ -29,6 +29,9 @@ public class ProfileAvatarUploadAttributes {
 
   @JsonProperty
   private String signature;
+  
+  @JsonProperty
+  private String matchingGroup;
 
   public ProfileAvatarUploadAttributes() {}
 
@@ -48,6 +51,14 @@ public class ProfileAvatarUploadAttributes {
 
   public String getKey() {
     return key;
+  }
+
+  public String getMatchingGroup() {
+    return matchingGroup;
+  }
+
+  public void setMatchingGroup(String matchingGroup) {
+    this.matchingGroup = matchingGroup;
   }
 
 }
