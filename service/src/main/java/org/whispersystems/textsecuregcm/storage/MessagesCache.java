@@ -320,7 +320,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return takeEphemeralMessageTimer.record(() -> readDeleteCluster.withBinaryCluster(connection -> {
             byte[] messageBytes;
 
-            while ((messageBytes = connection.sync().lpop(getEphemeralMatchingMessageQueueKey(destinationUuid, destinationDevice))) != null) {
+            while ((messageBytes = connection.sync().lpop(getMatecingMessageQueueKey(destinationUuid, destinationDevice))) != null) {
                 //try {
                     String msg = new String(messageBytes);
                     logger.info("########## MATCHING "+ msg);

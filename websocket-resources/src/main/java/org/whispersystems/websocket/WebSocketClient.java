@@ -22,10 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class WebSocketClient {
 
   private static final Logger logger = LoggerFactory.getLogger(WebSocketClient.class);
+  private final ObjectMapper             mapper = new ObjectMapper();
 
   private final Session                                                session;
   private final RemoteEndpoint                                         remoteEndpoint;
@@ -57,6 +60,10 @@ public class WebSocketClient {
 
     logger.info("############## WEBSOCKET MSG TYPE "+ requestMessage.getType() + " REQUEST PATH"+ requestMessage.getRequestMessage().getPath() +" VERB "+verb);
     logger.info("############## WEBSOCKET REQUEST ID  "+ requestId + " HEADERS "+ headers.toString() );
+    try{
+      logger.info(mapper.writeValueAsString(requestMessage));
+    }catch(Exception e){}
+    
     try {
       remoteEndpoint.sendBytes(ByteBuffer.wrap(requestMessage.toByteArray()), new WriteCallback() {
         @Override
