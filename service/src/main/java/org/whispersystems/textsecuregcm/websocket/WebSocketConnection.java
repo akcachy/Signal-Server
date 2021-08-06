@@ -12,6 +12,7 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import io.micrometer.core.instrument.Metrics;
@@ -34,8 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.controllers.MessageController;
 import org.whispersystems.textsecuregcm.controllers.NoSuchUserException;
+import org.whispersystems.textsecuregcm.entities.CachyMatchingUser;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
 import org.whispersystems.textsecuregcm.metrics.UserAgentTagUtil;
 import org.whispersystems.textsecuregcm.push.DisplacedPresenceListener;
 import org.whispersystems.textsecuregcm.push.ReceiptSender;
@@ -44,6 +47,7 @@ import org.whispersystems.textsecuregcm.storage.Device;
 import org.whispersystems.textsecuregcm.storage.MessageAvailabilityListener;
 import org.whispersystems.textsecuregcm.storage.MessagesManager;
 import org.whispersystems.textsecuregcm.util.Constants;
+import org.whispersystems.textsecuregcm.util.SystemMapper;
 import org.whispersystems.textsecuregcm.util.TimestampHeaderUtil;
 import org.whispersystems.textsecuregcm.util.Util;
 import org.whispersystems.textsecuregcm.util.ua.ClientPlatform;
@@ -76,7 +80,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   private static final String STATUS_MESSAGE_TAG                     = "message";
 
   private static final long SLOW_DRAIN_THRESHOLD = 10_000;
-
+  private static ObjectMapper mapper = SystemMapper.getMapper();
   @VisibleForTesting
   static final int MAX_DESKTOP_MESSAGE_SIZE = 1024 * 1024;
 
@@ -310,12 +314,30 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   }
 
   private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final String message) {
-    final Optional<byte[]> body = Optional.ofNullable(message.getBytes());
+    CachyMatchingUser matchingUser = null;
+    try{
+        matchingUser = mapper.readValue(message, CachyMatchingUser.class);
+    }catch(Exception e){}
 
     sendMessageMeter.mark();
     sentMessageCounter.increment();
-    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    
+    final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder()
+                                                  .setCallId(matchingUser.getCallId())
+                                                  .setNumber(matchingUser.getNumber())
+                                                  .setUuid(matchingUser.getUuid())
+                                                  .setIsCaller(matchingUser.isCaller())
+                                                  .setFollowEnable(matchingUser.isFollowEnable());
+                                                             
+    for (Integer iterable_element : matchingUser.getMatchingKeyword()) {
+            builder1.addMatchingKeyword(iterable_element );
+    }                                       
 
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.MATCHING_MESSAGE)
+                                                    .setMatchingMessage(builder1);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
     // X-Signal-Key: false must be sent until Android stops assuming it missing means true
     return client.sendRequest("PUT", "/api/v1/matching", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {

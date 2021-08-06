@@ -84,6 +84,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String EPHEMERAL_QUEUE_KEYSPACE_PREFIX = "__keyspace@0__:user_queue_ephemeral::";
     private static final String PERSISTING_KEYSPACE_PREFIX      = "__keyspace@0__:user_queue_persisting::";
     private static final String MATCHER_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_matcher_queue::";
+    private static final String POSTS_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_posts_queue::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -493,8 +494,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return ("user_matcher_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
 
-    static byte[] getEphemeralMatchingMessageQueueKey(final UUID accountUuid, final long deviceId) {
-        return ("user_matcher_queue_ephemeral::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    static byte[] getPostsMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
     private static byte[] getMessageQueueMetadataKey(final UUID accountUuid, final long deviceId) {
         return ("user_queue_metadata::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);

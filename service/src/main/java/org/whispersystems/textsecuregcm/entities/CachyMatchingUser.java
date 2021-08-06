@@ -8,35 +8,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CachyMatchingUser {
     @JsonProperty
-    private UUID uuid;
+    private String uuid;
 
     @JsonProperty
-    private Set<Long> matchingKeyword;
+    private Set<Integer> matchingKeyword;
 
     @JsonProperty
     private boolean isCaller;
+    
+    @JsonProperty
+    private boolean followEnable;
 
     @JsonProperty
     private String number;
+    
+    @JsonProperty
+    private String callId;
 
 
 
     public CachyMatchingUser() {
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public Set<Long> getMatchingKeyword() {
+    public Set<Integer> getMatchingKeyword() {
         return matchingKeyword;
     }
 
-    public void setMatchingKeyword(Set<Long> matchingKeyword) {
+    public void setMatchingKeyword(Set<Integer> matchingKeyword) {
         this.matchingKeyword = matchingKeyword;
     }
 
@@ -54,6 +60,22 @@ public class CachyMatchingUser {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getCallId() {
+        return callId;
+    }
+
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
+
+    public boolean isFollowEnable() {
+        return followEnable;
+    }
+
+    public void setFollowEnable(boolean followEnable) {
+        this.followEnable = followEnable;
     }
     
 }
