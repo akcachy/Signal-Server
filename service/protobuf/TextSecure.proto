@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+syntax = "proto2";
 package textsecure;
 
 option java_package = "org.whispersystems.textsecuregcm.entities";
@@ -27,6 +28,7 @@ message Envelope {
     PREKEY_BUNDLE       = 3;
     RECEIPT             = 5;
     UNIDENTIFIED_SENDER = 6;
+    MATCHING_MESSAGE    = 7;
   }
 
   optional Type   type             = 1;
@@ -39,6 +41,15 @@ message Envelope {
   optional bytes  content          = 8; // Contains an encrypted Content
   optional string serverGuid       = 9;
   optional uint64 server_timestamp = 10;
+  optional MatchingMessage  matchingMessage = 12;
+}
+message MatchingMessage {
+  optional string uuid = 1;
+  repeated uint32 matchingKeyword = 2;
+  optional string number = 3;
+  optional bool isCaller = 4;
+  optional string callId = 5;
+  optional bool followEnable = 6;
 }
 
 message ProvisioningUuid {
