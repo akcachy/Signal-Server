@@ -19,4 +19,6 @@ public interface MessageAvailabilityListener {
     void handleMessagesPersisted();
 
     void handleNewMatchingMessageAvailable();
+    
+    void handlePostWallMessageAvailable();
 }

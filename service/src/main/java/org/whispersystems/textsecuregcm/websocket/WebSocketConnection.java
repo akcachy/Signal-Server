@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.controllers.MessageController;
 import org.whispersystems.textsecuregcm.controllers.NoSuchUserException;
 import org.whispersystems.textsecuregcm.entities.CachyMatchingUser;
+import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
@@ -66,6 +67,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
   private static final Meter          messageAvailableMeter          = metricRegistry.meter(name(WebSocketConnection.class, "messagesAvailable"));
   private static final Meter          ephemeralMessageAvailableMeter = metricRegistry.meter(name(WebSocketConnection.class, "ephemeralMessagesAvailable"));
   private static final Meter          ephemeralMatchingMessageAvailableMeter = metricRegistry.meter(name(WebSocketConnection.class, "ephemeralMatchingMessagesAvailable"));
+  private static final Meter          postWallMessageAvailableMeter = metricRegistry.meter(name(WebSocketConnection.class, "postWallMessagesAvailable"));
   private static final Meter          messagesPersistedMeter         = metricRegistry.meter(name(WebSocketConnection.class, "messagesPersisted"));
   private static final Meter          bytesSentMeter                 = metricRegistry.meter(name(WebSocketConnection.class, "bytes_sent"));
   private static final Meter          sendFailuresMeter              = metricRegistry.meter(name(WebSocketConnection.class, "send_failures"));
@@ -311,6 +313,42 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
 
     messagesManager.takeMatchingMessage(account.getUuid(), device.getId())
                    .ifPresent(message -> sendMatchingMessage(message));
+  }
+  @Override
+  public void handlePostWallMessageAvailable() {
+    postWallMessageAvailableMeter.mark();
+
+    messagesManager.takePostWallMessage(account.getUuid(), device.getId())
+                   .ifPresent(message -> sendPostWallMessage(message));
+  }
+  
+  private CompletableFuture<WebSocketResponseMessage> sendPostWallMessage(final CachyUserPostResponse message) {
+
+    sendMessageMeter.mark();
+    sentMessageCounter.increment();
+    
+    final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder();
+                                                  // .setCallId(matchingUser.getCallId())
+                                                  // .setNumber(matchingUser.getNumber())
+                                                  // .setUuid(matchingUser.getUuid())
+                                                  // .setIsCaller(matchingUser.isCaller())
+                                                  // .setFollowEnable(matchingUser.isFollowEnable());                                      
+
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.MATCHING_MESSAGE)
+                                                    .setMatchingMessage(builder1);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/wall", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
   }
 
   private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final String message) {

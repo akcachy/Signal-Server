@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope;
+import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
 import org.whispersystems.textsecuregcm.metrics.PushLatencyManager;
@@ -59,11 +60,22 @@ public class MessagesManager {
   public Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.takeMatchingMessage(destinationUuid, destinationDevice);
   }
+  
+  public Optional<CachyUserPostResponse> takePostWallMessage(final UUID destinationUuid, final long destinationDevice) {
+    return messagesCache.takePostWallMessage(destinationUuid, destinationDevice);
+  }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.hasMessages(destinationUuid, destinationDevice);
   }
 
+  public List<CachyUserPostResponse> getPosts(final UUID uuid, final long device, final int limit) {
+    return messagesCache.getPosts(uuid, device, limit, true);
+  }
+  public List<CachyUserPostResponse> getWall(final UUID uuid, final long device, final int limit) {
+    return messagesCache.getPosts(uuid, device, limit, false);
+  }
+  
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {
     RedisOperation.unchecked(() -> pushLatencyManager.recordQueueRead(destinationUuid, destinationDevice, userAgent));
 

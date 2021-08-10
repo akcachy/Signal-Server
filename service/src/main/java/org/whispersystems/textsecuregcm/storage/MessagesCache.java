@@ -5,6 +5,7 @@
 
 package org.whispersystems.textsecuregcm.storage;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.dropwizard.lifecycle.Managed;
@@ -20,12 +21,14 @@ import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.MessageProtos;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.redis.ClusterLuaScript;
 import org.whispersystems.textsecuregcm.redis.FaultTolerantPubSubConnection;
 import org.whispersystems.textsecuregcm.redis.FaultTolerantRedisCluster;
 import org.whispersystems.textsecuregcm.util.RedisClusterUtil;
+import org.whispersystems.textsecuregcm.util.SystemMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -59,6 +62,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final ClusterLuaScript removeBySenderScript;
     private final ClusterLuaScript removeByGuidScript;
     private final ClusterLuaScript getItemsScript;
+    private final ClusterLuaScript getPostsScript;
     private final ClusterLuaScript removeQueueScript;
     private final ClusterLuaScript getQueuesToPersistScript;
 
@@ -71,10 +75,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final Timer   getQueuesToPersistTimer             = Metrics.timer(name(MessagesCache.class, "getQueuesToPersist"));
     private final Timer   clearQueueTimer                     = Metrics.timer(name(MessagesCache.class, "clear"));
     private final Timer   takeEphemeralMessageTimer           = Metrics.timer(name(MessagesCache.class, "takeEphemeral"));
+    private final Timer   takePostWallMessageTimer           = Metrics.timer(name(MessagesCache.class, "takePostWall"));
     private final Counter pubSubMessageCounter                = Metrics.counter(name(MessagesCache.class, "pubSubMessage"));
     private final Counter newMessageNotificationCounter       = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "false");
     private final Counter ephemeralMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "true");
     private final Counter ephemeralMatchingMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMatchingMessageNotification"));
+    private final Counter postWallMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "postWallMessageNotification"));
     private final Counter queuePersistedNotificationCounter   = Metrics.counter(name(MessagesCache.class, "queuePersisted"));
 
     static final         String NEXT_SLOT_TO_PERSIST_KEY  = "user_queue_persist_slot";
@@ -85,6 +91,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String PERSISTING_KEYSPACE_PREFIX      = "__keyspace@0__:user_queue_persisting::";
     private static final String MATCHER_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_matcher_queue::";
     private static final String POSTS_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_posts_queue::";
+    private static final String POSTS_WALL_QUEUE_KEYSPACE_PREFIX      = "__keyspace@0__:user_posts_wall_queue::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -96,7 +103,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String REMOVE_METHOD_UUID   = "uuid";
 
     private static final Logger logger = LoggerFactory.getLogger(MessagesCache.class);
-
+    private final ObjectMapper                         mapper = SystemMapper.getMapper();
     public MessagesCache(final FaultTolerantRedisCluster insertCluster, final FaultTolerantRedisCluster readDeleteCluster, final ExecutorService notificationExecutorService) throws IOException {
 
         this.insertCluster = insertCluster;
@@ -112,6 +119,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         this.getItemsScript           = ClusterLuaScript.fromResource(readDeleteCluster, "lua/get_items.lua",             ScriptOutputType.MULTI);
         this.removeQueueScript        = ClusterLuaScript.fromResource(readDeleteCluster, "lua/remove_queue.lua",          ScriptOutputType.STATUS);
         this.getQueuesToPersistScript = ClusterLuaScript.fromResource(readDeleteCluster, "lua/get_queues_to_persist.lua", ScriptOutputType.MULTI);
+        this.getPostsScript               = ClusterLuaScript.fromResource(readDeleteCluster, "lua/get_posts.lua",             ScriptOutputType.MULTI);
     }
 
     @Override
@@ -313,6 +321,20 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice) {
         return takeMatchingMessage(destinationUuid, destinationDevice, System.currentTimeMillis());
     }
+    
+    public Optional<CachyUserPostResponse> takePostWallMessage(final UUID destinationUuid, final long destinationDevice) {
+        return takePostWallMessage(destinationUuid, destinationDevice, System.currentTimeMillis());
+    }
+
+    @VisibleForTesting
+    Optional<CachyUserPostResponse> takePostWallMessage(final UUID uuid, final long destinationDevice, final long currentTimeMillis) {
+
+        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, 1, false);
+        if(list.size()!=1){
+            return Optional.of(list.get(0));
+        }
+        return Optional.empty();
+    }
 
     @VisibleForTesting
     Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice, final long currentTimeMillis) {
@@ -416,7 +438,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 EPHEMERAL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
-                MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}"
+                MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
+                POSTS_WALL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
         };
     }
 
@@ -442,6 +465,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             logger.info("####################### CHANNEL START WITH ######## RPUSH MATCHING");
             ephemeralMatchingMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMatchingMessageAvailable));
+        }
+        else if (channel.startsWith(POSTS_WALL_QUEUE_KEYSPACE_PREFIX) && "zadd".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## HSET MATCHING");
+            postWallMessageNotificationCounter.increment();
+            notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handlePostWallMessageAvailable));
         }
     }
 
@@ -494,6 +522,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return ("user_matcher_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
 
+    static byte[] getPostWallMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_posts_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    
     static byte[] getPostsMessageQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
@@ -522,4 +554,52 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     static long getDeviceIdFromQueueName(final String queueName) {
         return Long.parseLong(queueName.substring(queueName.lastIndexOf("::") + 2, queueName.lastIndexOf('}')));
     }
+
+    //#region
+    @SuppressWarnings("unchecked")
+    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final int limit, boolean isPosts) {
+         return getMessagesTimer.record(() -> {
+            final byte[] queueName;
+            if(isPosts){
+                queueName = getPostMessageQueueKey(destinationUuid, destinationDevice);
+            }else{
+                queueName = getPostWallQueueKey(destinationUuid, destinationDevice);
+            }
+
+            final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
+                                                                                       List.of(String.valueOf(limit).getBytes(StandardCharsets.UTF_8)));
+            
+            
+            final List<CachyUserPostResponse> messageEntities;
+            if (queueItems.size() % 2 == 0) {
+                messageEntities = new ArrayList<>(queueItems.size() / 2);
+
+                for (int i = 0; i < queueItems.size() - 1; i += 2) {
+                    try {
+                        //System.out.println(new String(queueItems.get(i)));
+                        CachyUserPostResponse post = mapper.readValue(new String(queueItems.get(i)), CachyUserPostResponse.class);
+                        post.setSeq(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
+                        messageEntities.add(post );
+                    } catch (Exception e) {
+                        logger.warn("Failed to parse envelope", e);
+                    }
+                }
+            } else {
+                logger.error("\"Get messages\" operation returned a list with a non-even number of elements.");
+                messageEntities = Collections.emptyList();
+            }
+            
+            return messageEntities;
+        });
+    }
+    @VisibleForTesting
+    static byte[] getPostMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    
+    @VisibleForTesting
+    static byte[] getPostWallQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_posts_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    //#endregion
 }
