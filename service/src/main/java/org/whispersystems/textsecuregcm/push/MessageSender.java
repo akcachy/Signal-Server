@@ -150,6 +150,39 @@ public class MessageSender implements Managed {
     RedisOperation.unchecked(() -> pushLatencyManager.recordPushSent(account.getUuid(), device.getId()));
   }
 
+  public void sendNewMessageNotificationWithData(final Account account, final Device device, final Optional<String> body) {
+    if (!Util.isEmpty(device.getGcmId())) {
+      sendGcmNotificationWithData(account, device, body);
+    } else if (!Util.isEmpty(device.getApnId()) || !Util.isEmpty(device.getVoipApnId())) {
+      sendApnNotificationWithData(account, device, body);
+    }
+  }
+
+  private void sendGcmNotificationWithData(Account account, Device device, final Optional<String> body) {
+    GcmMessage gcmMessage = new GcmMessage(device.getGcmId(), account.getNumber(),
+                                           (int)device.getId(), GcmMessage.Type.NOTIFICATION, body);
+
+    gcmSender.sendMessage(gcmMessage);
+
+    RedisOperation.unchecked(() -> pushLatencyManager.recordPushSent(account.getUuid(), device.getId()));
+  }
+
+  private void sendApnNotificationWithData(Account account, Device device, final Optional<String> body) {
+    ApnMessage apnMessage;
+
+    if (!Util.isEmpty(device.getVoipApnId())) {
+      apnMessage = new ApnMessage(device.getVoipApnId(), account.getNumber(), device.getId(), true, body);
+      RedisOperation.unchecked(() -> apnFallbackManager.schedule(account, device));
+    } else {
+      apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), device.getId(), false, body);
+    }
+
+    apnSender.sendMessage(apnMessage);
+
+    RedisOperation.unchecked(() -> pushLatencyManager.recordPushSent(account.getUuid(), device.getId()));
+  }
+
+
   @Override
   public void start() {
     apnSender.start();
