@@ -24,6 +24,11 @@ public class CachyTaggedUserProfile {
     @JsonProperty
     private String pk;
     
+    @JsonProperty
+    private boolean pro;
+    
+    @JsonProperty
+    private boolean pre;
 
     public CachyTaggedUserProfile(){
 
@@ -97,6 +102,26 @@ public class CachyTaggedUserProfile {
 
     public void setPk(String pk) {
         this.pk = pk;
+    }
+
+
+    public boolean isPro() {
+        return pro;
+    }
+
+
+    public void setPro(boolean pro) {
+        this.pro = pro;
+    }
+
+
+    public boolean isPre() {
+        return pre;
+    }
+
+
+    public void setPre(boolean pre) {
+        this.pre = pre;
     }
 
 

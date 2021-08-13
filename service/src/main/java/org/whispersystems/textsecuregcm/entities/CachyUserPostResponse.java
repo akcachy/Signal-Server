@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CachyUserPostResponse {
     @JsonProperty
-    private String id;
+    private String postId;
 
     @JsonIgnore
     private String uuid;
@@ -29,30 +29,35 @@ public class CachyUserPostResponse {
     public long seq;
     
     @JsonProperty
-    public List<CachyTaggedUserProfile> taggedUserDetails;
+    public long likes;
+    
+    @JsonProperty
+    public long comments;
+
+    @JsonProperty
+    public long duration;
+
+    @JsonProperty
+    public String description;
+    
+    @JsonProperty
+    public boolean isLiked;
+    
+    @JsonProperty
+    public List<CachyTaggedUserProfile> contributorsDetails;
     
 
     public CachyUserPostResponse() {
     }
 
 
-    public CachyUserPostResponse(String id, String uuid, String coverImg, String metadata, String url, long createdAt) {
-        this.id = id;
-        this.uuid = uuid;
-        this.coverImg = coverImg;
-        this.metadata = metadata;
-        this.createdAt = createdAt;
-        this.url = url;
+    public String getPostId() {
+        return postId;
     }
 
 
-    public String getId() {
-        return id;
-    }
-
-
-    public void setId(String id) {
-        this.id = id;
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
 
@@ -105,13 +110,6 @@ public class CachyUserPostResponse {
         this.url = url;
     }
 
-    public List<CachyTaggedUserProfile> getTaggedUserDetails() {
-        return taggedUserDetails;
-    }
-
-    public void setTaggedUserDetails(List<CachyTaggedUserProfile> taggedUserDetails) {
-        this.taggedUserDetails = taggedUserDetails;
-    }
 
     public long getSeq() {
         return seq;
@@ -119,5 +117,35 @@ public class CachyUserPostResponse {
 
     public void setSeq(long seq) {
         this.seq = seq;
+    }
+
+
+    public long getLikes() {
+        return likes;
+    }
+
+
+    public void setLikes(long likes) {
+        this.likes = likes;
+    }
+
+
+    public long getComments() {
+        return comments;
+    }
+
+
+    public void setComments(long comments) {
+        this.comments = comments;
+    }
+
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+
+    public void setLiked(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 }

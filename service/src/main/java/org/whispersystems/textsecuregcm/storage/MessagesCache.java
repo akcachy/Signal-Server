@@ -21,6 +21,7 @@ import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.whispersystems.textsecuregcm.entities.CachyComment;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.MessageProtos;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
@@ -65,11 +66,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final ClusterLuaScript getPostsScript;
     private final ClusterLuaScript removeQueueScript;
     private final ClusterLuaScript getQueuesToPersistScript;
+    private final ClusterLuaScript getLikesScript;
 
     private final Map<String, MessageAvailabilityListener> messageListenersByQueueName = new HashMap<>();
     private final Map<MessageAvailabilityListener, String> queueNamesByMessageListener = new IdentityHashMap<>();
 
     private final Timer   insertTimer                         = Metrics.timer(name(MessagesCache.class, "insert"), "ephemeral", "false");
+    private final Timer   getLikesTimer                         = Metrics.timer(name(MessagesCache.class, "getLikes"), "ephemeral", "false");
     private final Timer   insertEphemeralTimer                = Metrics.timer(name(MessagesCache.class, "insert"), "ephemeral", "true");
     private final Timer   getMessagesTimer                    = Metrics.timer(name(MessagesCache.class, "get"));
     private final Timer   getQueuesToPersistTimer             = Metrics.timer(name(MessagesCache.class, "getQueuesToPersist"));
@@ -120,6 +123,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         this.removeQueueScript        = ClusterLuaScript.fromResource(readDeleteCluster, "lua/remove_queue.lua",          ScriptOutputType.STATUS);
         this.getQueuesToPersistScript = ClusterLuaScript.fromResource(readDeleteCluster, "lua/get_queues_to_persist.lua", ScriptOutputType.MULTI);
         this.getPostsScript               = ClusterLuaScript.fromResource(readDeleteCluster, "lua/get_posts.lua",             ScriptOutputType.MULTI);
+        this.getLikesScript             = ClusterLuaScript.fromResource(insertCluster, "lua/get_likes.lua",           ScriptOutputType.INTEGER);
     }
 
     @Override
@@ -241,6 +245,19 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public boolean hasMessages(final UUID destinationUuid, final long destinationDevice) {
         return readDeleteCluster.withBinaryCluster(connection -> connection.sync().zcard(getMessageQueueKey(destinationUuid, destinationDevice)) > 0);
     }
+    public List<CachyComment> getComments(final String postId, final long start, final long end) {
+        final List<byte[]> comments = (List<byte[]>) readDeleteCluster.withBinaryCluster(connection -> connection.sync().lrange(getCommentQueueKey(postId), start, end)   ); 
+        List<CachyComment> list = new ArrayList();
+        comments.stream().forEach(comment  ->  {
+           
+            try{
+                String cmt =  new String(comment);
+                list.add(mapper.readValue(cmt, CachyComment.class));
+                System.out.println(cmt);
+            }catch(Exception e){}
+        });
+        return list;
+    }
 
     @SuppressWarnings("unchecked")
     public List<OutgoingMessageEntity> get(final UUID destinationUuid, final long destinationDevice, final int limit) {
@@ -329,7 +346,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     @VisibleForTesting
     Optional<CachyUserPostResponse> takePostWallMessage(final UUID uuid, final long destinationDevice, final long currentTimeMillis) {
 
-        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, 1, false);
+        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, 1, true, false, true);
         if(list.size()!=1){
             return Optional.of(list.get(0));
         }
@@ -557,13 +574,17 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     //#region
     @SuppressWarnings("unchecked")
-    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final int limit, boolean isPosts) {
+    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final int limit, boolean isPosts, boolean isStory, boolean isWall) {
          return getMessagesTimer.record(() -> {
             final byte[] queueName;
-            if(isPosts){
+            if(isPosts && !isWall){
                 queueName = getPostMessageQueueKey(destinationUuid, destinationDevice);
-            }else{
+            }else if(isPosts && isWall){
                 queueName = getPostWallQueueKey(destinationUuid, destinationDevice);
+            }else if(isStory && !isWall){
+                queueName = getStoryMessageQueueKey(destinationUuid, destinationDevice);
+            }else{
+                queueName = getStoryWallQueueKey(destinationUuid, destinationDevice);
             }
 
             final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
@@ -579,6 +600,19 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         //System.out.println(new String(queueItems.get(i)));
                         CachyUserPostResponse post = mapper.readValue(new String(queueItems.get(i)), CachyUserPostResponse.class);
                         post.setSeq(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
+                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
+                        if(likeCount != null){
+                            post.setLikes(Long.parseLong(new String(likeCount)));
+                        }
+
+                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
+                        post.setLiked(isLiked);   
+
+
+                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
+                        if(commentCount != null){
+                            post.setComments(Long.parseLong(new String(commentCount)));
+                        }
                         messageEntities.add(post );
                     } catch (Exception e) {
                         logger.warn("Failed to parse envelope", e);
@@ -600,6 +634,26 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     @VisibleForTesting
     static byte[] getPostWallQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] getLikeQueueKey(final String postId) {
+        return ("user_posts_like_queue::{" + postId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] getCommentCountQueueKey(final String postId) {
+        return ("user_posts_comment_count_queue::{" + postId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    
+    private static byte[] getCommentQueueKey(final String postId) {
+        return ("user_posts_comment_queue::{" + postId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    static byte[] getStoryMessageQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_stories_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    static byte[] getStoryWallQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_story_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }
