@@ -70,21 +70,21 @@ public class MessagesManager {
     return messagesCache.hasMessages(destinationUuid, destinationDevice);
   }
 
-  public List<CachyUserPostResponse> getPosts(final UUID uuid, final long device, final int limit) {
-    return messagesCache.getPosts(uuid, device, limit, true, false, false);
+  public List<CachyUserPostResponse> getPosts(final UUID uuid, final long device, final long[] range) {
+    return messagesCache.getPosts(uuid, device, range, true, false, false);
   }
-  public List<CachyUserPostResponse> getPostWall(final UUID uuid, final long device, final int limit) {
-    return messagesCache.getPosts(uuid, device, limit, true, false, true);
+  public List<CachyUserPostResponse> getPostWall(final UUID uuid, final long device, final long[] range) {
+    return messagesCache.getPosts(uuid, device, range, true, false, true);
   }
   
-  public List<CachyUserPostResponse> getStory(final UUID uuid, final long device, final int limit) {
-    return messagesCache.getPosts(uuid, device, limit, false, true, false);
+  public List<CachyUserPostResponse> getStory(final UUID uuid, final long device, final long[] range) {
+    return messagesCache.getPosts(uuid, device, range, false, true, false);
   }
-  public List<CachyUserPostResponse> getStoryWall(final UUID uuid, final long device, final int limit) {
-    return messagesCache.getPosts(uuid, device, limit, false, true, true);
+  public List<CachyUserPostResponse> getStoryWall(final UUID uuid, final long device, final long[] range) {
+    return messagesCache.getPosts(uuid, device, range, false, true, true);
   }
-  public List<CachyComment> getComments(final String uuid, final long start, final long end) {
-    return messagesCache.getComments(uuid,  start, end);
+  public List<CachyComment> getComments(final String uuid, final long[] range) {
+    return messagesCache.getComments(uuid,  range);
   }
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {
     RedisOperation.unchecked(() -> pushLatencyManager.recordQueueRead(destinationUuid, destinationDevice, userAgent));

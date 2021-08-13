@@ -245,8 +245,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public boolean hasMessages(final UUID destinationUuid, final long destinationDevice) {
         return readDeleteCluster.withBinaryCluster(connection -> connection.sync().zcard(getMessageQueueKey(destinationUuid, destinationDevice)) > 0);
     }
-    public List<CachyComment> getComments(final String postId, final long start, final long end) {
-        final List<byte[]> comments = (List<byte[]>) readDeleteCluster.withBinaryCluster(connection -> connection.sync().lrange(getCommentQueueKey(postId), start, end)   ); 
+    public List<CachyComment> getComments(final String postId, final long[] range) {
+        final List<byte[]> comments = (List<byte[]>) readDeleteCluster.withBinaryCluster(connection -> connection.sync().lrange(getCommentQueueKey(postId), range[0], range[1])   ); 
         List<CachyComment> list = new ArrayList();
         comments.stream().forEach(comment  ->  {
            
@@ -345,8 +345,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     @VisibleForTesting
     Optional<CachyUserPostResponse> takePostWallMessage(final UUID uuid, final long destinationDevice, final long currentTimeMillis) {
-
-        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, 1, true, false, true);
+        long[] range = new long[2];
+        range[0] = 0;
+        range[1] = 19;
+        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, range, true, false, true);
         if(list.size()!=1){
             return Optional.of(list.get(0));
         }
@@ -574,7 +576,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     //#region
     @SuppressWarnings("unchecked")
-    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final int limit, boolean isPosts, boolean isStory, boolean isWall) {
+    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final long[] range, boolean isPosts, boolean isStory, boolean isWall) {
          return getMessagesTimer.record(() -> {
             final byte[] queueName;
             if(isPosts && !isWall){
@@ -588,7 +590,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             }
 
             final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
-                                                                                       List.of(String.valueOf(limit).getBytes(StandardCharsets.UTF_8)));
+                                                                                       List.of(String.valueOf(range[0]).getBytes(StandardCharsets.UTF_8), String.valueOf(range[1]).getBytes(StandardCharsets.UTF_8)  ));
             
             
             final List<CachyUserPostResponse> messageEntities;
