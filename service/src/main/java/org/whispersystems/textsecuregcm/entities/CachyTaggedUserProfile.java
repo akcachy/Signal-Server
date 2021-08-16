@@ -19,6 +19,9 @@ public class CachyTaggedUserProfile {
     private String un;
     
     @JsonProperty
+    private String num;
+    
+    @JsonProperty
     private String ua;
 
     @JsonProperty
@@ -35,11 +38,12 @@ public class CachyTaggedUserProfile {
     }
 
 
-    public CachyTaggedUserProfile(String uuid, String fn, String ln, String un, String ua, String pk) {
+    public CachyTaggedUserProfile(String uuid, String fn, String ln, String un, String num, String ua, String pk) {
         this.uuid = uuid;
         this.fn = fn;
         this.ln = ln;
         this.un = un;
+        this.num = num;
         this.ua = ua;
         this.pk = pk;
     }
@@ -122,6 +126,16 @@ public class CachyTaggedUserProfile {
 
     public void setPre(boolean pre) {
         this.pre = pre;
+    }
+
+
+    public String getNum() {
+        return num;
+    }
+
+
+    public void setNum(String num) {
+        this.num = num;
     }
 
 
