@@ -7,6 +7,7 @@ package org.whispersystems.textsecuregcm.push;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -20,6 +21,7 @@ import org.whispersystems.textsecuregcm.storage.Account;
 import org.whispersystems.textsecuregcm.storage.AccountsManager;
 import org.whispersystems.textsecuregcm.storage.Device;
 import org.whispersystems.textsecuregcm.util.Constants;
+import org.whispersystems.textsecuregcm.util.SystemMapper;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -49,6 +51,7 @@ public class APNSender implements Managed {
   private final String             bundleId;
   private final boolean            sandbox;
   private final RetryingApnsClient apnsClient;
+  private static ObjectMapper mapper = SystemMapper.getMapper();
 
   public APNSender(ExecutorService executor, AccountsManager accountsManager, ApnConfiguration configuration)
       throws IOException, NoSuchAlgorithmException, InvalidKeyException
@@ -79,6 +82,10 @@ public class APNSender implements Managed {
       topic = topic + ".voip";
     }
     
+    try{
+      logger.info("%%%%%%%%%%%%%%%%%%  APN MESSAGE "+ mapper.writeValueAsString(message));
+    }catch(Exception e){}
+
     ListenableFuture<ApnResult> future = apnsClient.send(message.getApnId(), topic,
                                                          message.getMessage(),
                                                          Instant.ofEpochMilli(message.getExpirationTime()),

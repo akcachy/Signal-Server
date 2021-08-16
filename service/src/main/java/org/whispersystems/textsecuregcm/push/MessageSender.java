@@ -15,10 +15,13 @@ import org.whispersystems.textsecuregcm.redis.RedisOperation;
 import org.whispersystems.textsecuregcm.storage.Account;
 import org.whispersystems.textsecuregcm.storage.Device;
 import org.whispersystems.textsecuregcm.storage.MessagesManager;
+import org.whispersystems.textsecuregcm.util.SystemMapper;
 import org.whispersystems.textsecuregcm.util.Util;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import static org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope;
@@ -50,7 +53,7 @@ public class MessageSender implements Managed {
   private static final String EPHEMERAL_TAG_NAME     = "ephemeral";
   private static final String CLIENT_ONLINE_TAG_NAME = "clientOnline";
   private final Logger         logger                           = LoggerFactory.getLogger(MessageSender.class);
-
+  private static ObjectMapper mapper = SystemMapper.getMapper();
   public MessageSender(ApnFallbackManager    apnFallbackManager,
                        ClientPresenceManager clientPresenceManager,
                        MessagesManager       messagesManager,
@@ -145,6 +148,10 @@ public class MessageSender implements Managed {
       apnMessage = new ApnMessage(device.getApnId(), account.getNumber(), device.getId(), false, Optional.empty());
     }
 
+    try{
+      logger.info("%%%%%%%%%%%%%%%%%% NUMBER "+ account.getNumber()  +" APN MESSAGE "+ mapper.writeValueAsString(apnMessage));
+    }catch(Exception e){}
+    
     apnSender.sendMessage(apnMessage);
 
     RedisOperation.unchecked(() -> pushLatencyManager.recordPushSent(account.getUuid(), device.getId()));
