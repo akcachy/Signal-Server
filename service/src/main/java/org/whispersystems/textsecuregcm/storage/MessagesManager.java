@@ -86,6 +86,12 @@ public class MessagesManager {
   public List<CachyComment> getComments(final String uuid, final long[] range) {
     return messagesCache.getComments(uuid,  range);
   }
+  public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> list) {
+     messagesCache.insertMultiplePost(uuid,  list);
+  }
+  public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> list) {
+     messagesCache.insertMultipleStory(uuid,  list);
+  }
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {
     RedisOperation.unchecked(() -> pushLatencyManager.recordQueueRead(destinationUuid, destinationDevice, userAgent));
 

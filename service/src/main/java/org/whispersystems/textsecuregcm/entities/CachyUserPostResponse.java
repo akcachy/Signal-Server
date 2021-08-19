@@ -148,4 +148,34 @@ public class CachyUserPostResponse {
     public void setLiked(boolean isLiked) {
         this.isLiked = isLiked;
     }
+
+
+    public long getDuration() {
+        return duration;
+    }
+
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    public List<CachyTaggedUserProfile> getContributorsDetails() {
+        return contributorsDetails;
+    }
+
+
+    public void setContributorsDetails(List<CachyTaggedUserProfile> contributorsDetails) {
+        this.contributorsDetails = contributorsDetails;
+    }
 }

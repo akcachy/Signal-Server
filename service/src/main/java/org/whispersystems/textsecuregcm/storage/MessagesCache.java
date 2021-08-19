@@ -59,6 +59,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final ExecutorService notificationExecutorService;
 
     private final ClusterLuaScript insertScript;
+    private final ClusterLuaScript insertMultiPostScript;
     private final ClusterLuaScript removeByIdScript;
     private final ClusterLuaScript removeBySenderScript;
     private final ClusterLuaScript removeByGuidScript;
@@ -116,6 +117,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         this.notificationExecutorService = notificationExecutorService;
 
         this.insertScript             = ClusterLuaScript.fromResource(insertCluster, "lua/insert_item.lua",           ScriptOutputType.INTEGER);
+        this.insertMultiPostScript         = ClusterLuaScript.fromResource(readDeleteCluster, "lua/insert_multiple_post.lua",     ScriptOutputType.VALUE);
         this.removeByIdScript         = ClusterLuaScript.fromResource(readDeleteCluster, "lua/remove_item_by_id.lua",     ScriptOutputType.VALUE);
         this.removeBySenderScript     = ClusterLuaScript.fromResource(readDeleteCluster, "lua/remove_item_by_sender.lua", ScriptOutputType.VALUE);
         this.removeByGuidScript       = ClusterLuaScript.fromResource(readDeleteCluster, "lua/remove_item_by_guid.lua",   ScriptOutputType.MULTI);
@@ -628,6 +630,63 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             return messageEntities;
         });
     }
+
+    public void insertRating(final UUID uuid,  final Integer count, final Double average  ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getMessageQueueMetadataKey(uuid, 1);
+
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().hset(ephemeralQueueKey, "callcount".getBytes() ,  String.valueOf(count).getBytes());
+                    connection.sync().hset(ephemeralQueueKey, "callavgrating".getBytes() , String.valueOf(average).getBytes());
+                });
+        });
+    }
+    
+    public void insertLikeCount(final UUID uuid,  final Integer count ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getMessageQueueMetadataKey(uuid, 1);
+
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().hset(ephemeralQueueKey, "likecount".getBytes() ,  String.valueOf(count).getBytes());
+                });
+        });
+    }
+
+    public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> messages) {
+        insertTimer.record(() ->
+                insertMultiPostScript.executeBinary(List.of(getPostMessageQueueKey(uuid, 1),
+                                            getMessageQueueMetadataKey(uuid, 1)),
+                                            messages.stream().map(message -> {
+                                                    byte [] msg;
+                                                    try{
+                                                        msg =  mapper.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);
+                                                    }catch(Exception e){
+                                                        msg = new byte[0];
+                                                    }
+                                                    return msg;
+                                                }
+                                            ).collect(Collectors.toList()))  
+                
+        );     
+    }
+    public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> messages) {
+        insertTimer.record(() ->
+                insertMultiPostScript.executeBinary(List.of(getStoryMessageQueueKey(uuid, 1),
+                                            getMessageQueueMetadataKey(uuid, 1)),
+                                            messages.stream().map(message -> {
+                                                    byte [] msg;
+                                                    try{
+                                                        msg =  mapper.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);
+                                                    }catch(Exception e){
+                                                        msg = new byte[0];
+                                                    }
+                                                    return msg;
+                                                }
+                                            ).collect(Collectors.toList()))  
+                
+        );     
+    }
+
     @VisibleForTesting
     static byte[] getPostMessageQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
