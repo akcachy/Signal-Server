@@ -10,7 +10,9 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -91,6 +93,12 @@ public class MessagesManager {
   }
   public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> list) {
      messagesCache.insertMultipleStory(uuid,  list);
+  }
+  public void addUserInterest(final UUID uuid, final Map<Integer , Double> data) {
+     messagesCache.addUserInterest(uuid,  data);
+  }
+  public Map<Integer, Double> getUserInterest(final UUID uuid) {
+     return messagesCache.getUserInterest(uuid);
   }
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {
     RedisOperation.unchecked(() -> pushLatencyManager.recordQueueRead(destinationUuid, destinationDevice, userAgent));

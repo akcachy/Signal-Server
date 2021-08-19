@@ -687,6 +687,29 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         );     
     }
 
+    void addUserInterest(final UUID accountUuid, final Map<Integer , Double> data) {
+        
+        readDeleteCluster.useBinaryCluster(connection ->{
+                data.forEach((key, value) -> connection.sync().zadd(getUserInterestedCategoryQueueKey(accountUuid), ZAddArgs.Builder.nx(), value, key.toString().getBytes(StandardCharsets.UTF_8)   ));
+                connection.sync().expire(getUserInterestedCategoryQueueKey(accountUuid), 600);
+            }  
+        );
+    }
+    Map<Integer, Double> getUserInterest(final UUID accountUuid) {
+        
+        final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(getUserInterestedCategoryQueueKey(accountUuid)),
+                                                                                       List.of(String.valueOf(0).getBytes(StandardCharsets.UTF_8), String.valueOf(-1).getBytes(StandardCharsets.UTF_8)  ));
+                                            
+        Map<Integer, Double> map= new HashMap<>();
+        if (queueItems.size() % 2 == 0) {
+                for (int i = 0; i < queueItems.size() - 1; i += 2) {
+                    map.put(Integer.parseInt(new String(queueItems.get(i))) , Double.parseDouble(  new String(queueItems.get(i+1)) ));
+                }
+        }
+        return map;
+
+    }
+
     @VisibleForTesting
     static byte[] getPostMessageQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
@@ -715,6 +738,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     static byte[] getStoryWallQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_story_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] getUserInterestedCategoryQueueKey(final UUID accountUuid) {
+        return ("user_interested_category_queue::{" + accountUuid.toString() + "}").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }

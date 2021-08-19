@@ -25,12 +25,17 @@ import org.whispersystems.textsecuregcm.redis.FaultTolerantRedisCluster;
 import org.whispersystems.textsecuregcm.util.Constants;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -61,6 +66,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     private final ScheduledExecutorService scheduledExecutorService;
     private       ScheduledFuture<?>       pruneMissingPeersFuture;
 
+    private final HttpClient               httpClient;
     private final Map<String, DisplacedPresenceListener> displacementListenersByPresenceKey = new ConcurrentHashMap<>();
 
     private final Timer checkPresenceTimer;
@@ -94,6 +100,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
         this.pruneClientMeter        = metricRegistry.meter(name(getClass(), "pruneClient"));
         this.remoteDisplacementMeter = metricRegistry.meter(name(getClass(), "remoteDisplacement"));
         this.pubSubMessageMeter      = metricRegistry.meter(name(getClass(), "pubSubMessage"));
+        this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build(); 
     }
 
     @VisibleForTesting
@@ -188,6 +195,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     }
 
     public boolean clearPresence(final UUID accountUuid, final long deviceId) {
+        removeFromMatchingQueue(accountUuid);
         return clearPresence(getPresenceKey(accountUuid, deviceId));
     }
 
@@ -283,5 +291,26 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     @VisibleForTesting
     static String getManagerPresenceChannel(final String managerId) {
         return "presence::manager::" + managerId;
+    }
+
+    public void removeFromMatchingQueue(UUID uuid){
+        URI uri                        = URI.create("http://localhost:8084/cachy/v1/matching/delete/"+uuid.toString());
+        HttpRequest request = HttpRequest.newBuilder().uri(uri)
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .header("Content-Type", "application/json")
+                .build();
+            try {
+                CompletableFuture<HttpResponse<String>> resp = httpClient
+                        .sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(response -> {
+                            try{
+                            if (response.statusCode() == 200 ) {
+                                return response;
+                            }
+                            }catch(Exception e){}
+                            return null;
+                        });
+                    
+                        System.out.println(resp);
+            } catch (Exception e) {}
     }
 }
