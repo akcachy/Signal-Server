@@ -75,6 +75,8 @@ public class GCMSender {
       case NOTIFICATION: key = "notification"; break;
       case CHALLENGE:    key = "challenge";    break;
       case FOLLOW:       key = "follow";       break;
+      case LIKE:         key = "like";         break;
+      case COMMENT:      key = "comment";      break;
 
       default:           throw new AssertionError();
     }
