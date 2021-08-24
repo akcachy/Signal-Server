@@ -74,10 +74,12 @@ public class GCMSender {
     switch (message.getType()) {
       case NOTIFICATION: key = "notification"; break;
       case CHALLENGE:    key = "challenge";    break;
+      case FOLLOW:       key = "follow";       break;
+
       default:           throw new AssertionError();
     }
 
-    logger.info("************ /v1/messages/{destination} MESSAGE TYPE "+ key );
+    logger.info("************ SEND GCM  MESSAGE ********** TYPE "+ key );
     Message request = builder.withDataPart(key, message.getData().orElse("")).build();
 
     CompletableFuture<Result> future = signalSender.send(request);

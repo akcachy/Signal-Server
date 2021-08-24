@@ -157,17 +157,17 @@ public class MessageSender implements Managed {
     RedisOperation.unchecked(() -> pushLatencyManager.recordPushSent(account.getUuid(), device.getId()));
   }
 
-  public void sendNewMessageNotificationWithData(final Account account, final Device device, final Optional<String> body) {
+  public void sendNewMessageNotificationWithData(final Account account, final Device device, GcmMessage.Type type, final Optional<String> body) {
     if (!Util.isEmpty(device.getGcmId())) {
-      sendGcmNotificationWithData(account, device, body);
+      sendGcmNotificationWithData(account, device, type, body);
     } else if (!Util.isEmpty(device.getApnId()) || !Util.isEmpty(device.getVoipApnId())) {
       sendApnNotificationWithData(account, device, body);
     }
   }
 
-  private void sendGcmNotificationWithData(Account account, Device device, final Optional<String> body) {
+  private void sendGcmNotificationWithData(Account account, Device device, GcmMessage.Type type, final Optional<String> body) {
     GcmMessage gcmMessage = new GcmMessage(device.getGcmId(), account.getNumber(),
-                                           (int)device.getId(), GcmMessage.Type.NOTIFICATION, body);
+                                           (int)device.getId(), type, body);
 
     gcmSender.sendMessage(gcmMessage);
 

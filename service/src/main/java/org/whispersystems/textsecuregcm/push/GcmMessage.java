@@ -12,7 +12,7 @@ import java.util.Optional;
 public class GcmMessage {
 
   public enum Type {
-    NOTIFICATION, CHALLENGE
+    NOTIFICATION, CHALLENGE, FOLLOW, LIKE, COMMENT
   }
 
   private final String           gcmId;
