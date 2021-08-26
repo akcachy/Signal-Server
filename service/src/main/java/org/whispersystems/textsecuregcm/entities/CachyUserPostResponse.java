@@ -26,13 +26,13 @@ public class CachyUserPostResponse {
     public String url;
     
     @JsonProperty
-    public long seq;
+    public long score;
     
     @JsonProperty
-    public long likes;
+    public long likesCount;
     
     @JsonProperty
-    public long comments;
+    public long commentsCount;
 
     @JsonProperty
     public long duration;
@@ -111,32 +111,33 @@ public class CachyUserPostResponse {
     }
 
 
-    public long getSeq() {
-        return seq;
-    }
-
-    public void setSeq(long seq) {
-        this.seq = seq;
+    public long getLikesCount() {
+        return likesCount;
     }
 
 
-    public long getLikes() {
-        return likes;
+    public void setLikesCount(long likesCount) {
+        this.likesCount = likesCount;
     }
 
 
-    public void setLikes(long likes) {
-        this.likes = likes;
+    public long getScore() {
+        return score;
     }
 
 
-    public long getComments() {
-        return comments;
+    public void setScore(long score) {
+        this.score = score;
     }
 
 
-    public void setComments(long comments) {
-        this.comments = comments;
+    public long getCommentsCount() {
+        return commentsCount;
+    }
+
+
+    public void setCommentsCount(long commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
 
