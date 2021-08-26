@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope;
 import org.whispersystems.textsecuregcm.entities.CachyComment;
+import org.whispersystems.textsecuregcm.entities.CachyTaggedUserProfile;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
@@ -87,6 +88,9 @@ public class MessagesManager {
   }
   public List<CachyComment> getComments(final String uuid, final long[] range) {
     return messagesCache.getComments(uuid,  range);
+  }
+  public List<CachyTaggedUserProfile> getContributorsStory(final List<CachyTaggedUserProfile> contributorsDetails) {
+    return messagesCache.getContributorsStory(contributorsDetails);
   }
   public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> list) {
      messagesCache.insertMultiplePost(uuid,  list);

@@ -45,6 +45,9 @@ public class GCMSender {
     put("receipt", metricRegistry.meter(name(getClass(), "outbound", "receipt")));
     put("notification", metricRegistry.meter(name(getClass(), "outbound", "notification")));
     put("challenge", metricRegistry.meter(name(getClass(), "outbound", "challenge")));
+    put("like", metricRegistry.meter(name(getClass(), "outbound", "like")));
+    put("follow", metricRegistry.meter(name(getClass(), "outbound", "follow")));
+    put("comment", metricRegistry.meter(name(getClass(), "outbound", "comment")));
   }};
 
   private final AccountsManager   accountsManager;

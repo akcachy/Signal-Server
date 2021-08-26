@@ -22,6 +22,7 @@ import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.entities.CachyComment;
+import org.whispersystems.textsecuregcm.entities.CachyTaggedUserProfile;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.MessageProtos;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
@@ -603,6 +604,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                     try {
                         //System.out.println(new String(queueItems.get(i)));
                         CachyUserPostResponse post = mapper.readValue(new String(queueItems.get(i)), CachyUserPostResponse.class);
+                        List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
+                        for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
+                            final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1), contributors.getUuid().getBytes()));
+                            contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
+                            contributorsList.add(contributors);
+                        }
+                        post.setContributorsDetails(contributorsList);
                         post.setSeq(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
                         final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
                         if(likeCount != null){
@@ -631,6 +639,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+    public List<CachyTaggedUserProfile> getContributorsStory(List<CachyTaggedUserProfile> contributorsDetails ){
+        List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
+        for (CachyTaggedUserProfile contributors : contributorsDetails){
+            final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1)));
+            contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
+            contributorsList.add(contributors);
+        }
+        return contributorsList;
+    }
     public void insertRating(final UUID uuid,  final Integer count, final Double average  ) {
         insertEphemeralTimer.record(() -> {
                 final byte[] ephemeralQueueKey = getMessageQueueMetadataKey(uuid, 1);
@@ -653,38 +670,31 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
 
     public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> messages) {
-        insertTimer.record(() ->
-                insertMultiPostScript.executeBinary(List.of(getPostMessageQueueKey(uuid, 1),
-                                            getMessageQueueMetadataKey(uuid, 1)),
-                                            messages.stream().map(message -> {
-                                                    byte [] msg;
-                                                    try{
-                                                        msg =  mapper.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);
-                                                    }catch(Exception e){
-                                                        msg = new byte[0];
-                                                    }
-                                                    return msg;
-                                                }
-                                            ).collect(Collectors.toList()))  
-                
-        );     
+        insertTimer.record(() -> {
+            insertCluster.useBinaryCluster(connection -> {
+                    try{   
+                        for(CachyUserPostResponse post : messages) {
+                            connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8)   );    
+                        }                   
+                    }catch(Exception e){
+                    }
+                });
+        });   
     }
     public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> messages) {
-        insertTimer.record(() ->
-                insertMultiPostScript.executeBinary(List.of(getStoryMessageQueueKey(uuid, 1),
-                                            getMessageQueueMetadataKey(uuid, 1)),
-                                            messages.stream().map(message -> {
-                                                    byte [] msg;
-                                                    try{
-                                                        msg =  mapper.writeValueAsString(message).getBytes(StandardCharsets.UTF_8);
-                                                    }catch(Exception e){
-                                                        msg = new byte[0];
-                                                    }
-                                                    return msg;
-                                                }
-                                            ).collect(Collectors.toList()))  
-                
-        );     
+        insertTimer.record(() -> {
+            insertCluster.useBinaryCluster(connection -> {
+                    try{   
+                        for(CachyUserPostResponse post : messages) {
+                            connection.sync().zadd(getStoryMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8)   );    
+                        }                   
+                        connection.sync().expire(getStoryMessageQueueKey(uuid, 1), 86400);
+                        
+                    }catch(Exception e){
+                        System.out.println("x");
+                    }
+                });
+        });
     }
 
     void addUserInterest(final UUID accountUuid, final Map<Integer , Double> data) {
@@ -733,7 +743,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
 
     static byte[] getStoryMessageQueueKey(final UUID accountUuid, final long deviceId) {
-        return ("user_stories_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+        return ("user_story_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
 
     static byte[] getStoryWallQueueKey(final UUID accountUuid, final long deviceId) {
@@ -742,6 +752,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     private static byte[] getUserInterestedCategoryQueueKey(final UUID accountUuid) {
         return ("user_interested_category_queue::{" + accountUuid.toString() + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    static byte[] getUserStoryExistsQueueKey(final String accountUuid, final long deviceId) {
+        return ("user_story_exists::{" + accountUuid + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }

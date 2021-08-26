@@ -33,6 +33,9 @@ public class CachyTaggedUserProfile {
     @JsonProperty
     private boolean pre;
 
+    @JsonProperty
+    private boolean isUserStoryExists;
+
     public CachyTaggedUserProfile(){
 
     }
@@ -136,6 +139,16 @@ public class CachyTaggedUserProfile {
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+
+    public boolean isUserStoryExists() {
+        return isUserStoryExists;
+    }
+
+
+    public void setUserStoryExists(boolean isUserStoryExists) {
+        this.isUserStoryExists = isUserStoryExists;
     }
 
 
