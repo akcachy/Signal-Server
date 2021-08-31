@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 
 public class CachyUserPostResponse {
     @JsonProperty
@@ -13,9 +12,7 @@ public class CachyUserPostResponse {
 
     @JsonIgnore
     private String uuid;
- 
-    @JsonProperty
-    public String coverImg;
+
 
     @JsonProperty
     public String metadata;
@@ -23,8 +20,6 @@ public class CachyUserPostResponse {
     @JsonProperty
     public long createdAt;
     
-    @JsonProperty
-    public String url;
     
     @JsonProperty
     public long score;
@@ -48,33 +43,10 @@ public class CachyUserPostResponse {
     public List<CachyTaggedUserProfile> contributorsDetails;
     
     @JsonProperty
-    public  int                             cdnNumber;
+    public SignalServiceAttachmentPointer video;
+    
     @JsonProperty
-    public  String                          remoteId;
-    @JsonProperty
-    public  Optional<Integer>               size;
-    @JsonProperty
-    public  Optional<byte[]>                preview;
-    @JsonProperty
-    public  Optional<String>                fileName;
-    @JsonProperty
-    public  boolean                         voiceNote;
-    @JsonProperty
-    public  boolean                         borderless;
-    @JsonProperty
-    public  boolean                         gif;
-    @JsonProperty
-    public  int                             width;
-    @JsonProperty
-    public  int                             height;
-    @JsonProperty
-    public  Optional<String>                caption;
-    @JsonProperty
-    public  Optional<String>                blurHash;
-    @JsonProperty
-    public  long                            uploadTimestamp;
-    @JsonProperty
-    public  String                          contentType;
+    public SignalServiceAttachmentPointer coverImg;
 
     public CachyUserPostResponse() {
     }
@@ -100,16 +72,6 @@ public class CachyUserPostResponse {
     }
 
 
-    public String getCoverImg() {
-        return coverImg;
-    }
-
-
-    public void setCoverImg(String coverImg) {
-        this.coverImg = coverImg;
-    }
-
-
     public String getMetadata() {
         return metadata;
     }
@@ -128,17 +90,6 @@ public class CachyUserPostResponse {
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
 
     public long getLikesCount() {
         return likesCount;
@@ -210,142 +161,23 @@ public class CachyUserPostResponse {
     }
 
 
-    public int getCdnNumber() {
-        return cdnNumber;
+    public SignalServiceAttachmentPointer getVideo() {
+        return video;
     }
 
 
-    public void setCdnNumber(int cdnNumber) {
-        this.cdnNumber = cdnNumber;
+    public void setVideo(SignalServiceAttachmentPointer video) {
+        this.video = video;
     }
 
 
-    public String getRemoteId() {
-        return remoteId;
+    public SignalServiceAttachmentPointer getCoverImg() {
+        return coverImg;
     }
 
 
-    public void setRemoteId(String remoteId) {
-        this.remoteId = remoteId;
+    public void setCoverImg(SignalServiceAttachmentPointer coverImg) {
+        this.coverImg = coverImg;
     }
-
-
-    public Optional<Integer> getSize() {
-        return size;
-    }
-
-
-    public void setSize(Optional<Integer> size) {
-        this.size = size;
-    }
-
-
-    public Optional<byte[]> getPreview() {
-        return preview;
-    }
-
-
-    public void setPreview(Optional<byte[]> preview) {
-        this.preview = preview;
-    }
-
-
-    public Optional<String> getFileName() {
-        return fileName;
-    }
-
-
-    public void setFileName(Optional<String> fileName) {
-        this.fileName = fileName;
-    }
-
-
-    public boolean isVoiceNote() {
-        return voiceNote;
-    }
-
-
-    public void setVoiceNote(boolean voiceNote) {
-        this.voiceNote = voiceNote;
-    }
-
-
-    public boolean isBorderless() {
-        return borderless;
-    }
-
-
-    public void setBorderless(boolean borderless) {
-        this.borderless = borderless;
-    }
-
-
-    public boolean isGif() {
-        return gif;
-    }
-
-
-    public void setGif(boolean gif) {
-        this.gif = gif;
-    }
-
-
-    public int getWidth() {
-        return width;
-    }
-
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-
-    public int getHeight() {
-        return height;
-    }
-
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-
-    public Optional<String> getCaption() {
-        return caption;
-    }
-
-
-    public void setCaption(Optional<String> caption) {
-        this.caption = caption;
-    }
-
-
-    public Optional<String> getBlurHash() {
-        return blurHash;
-    }
-
-
-    public void setBlurHash(Optional<String> blurHash) {
-        this.blurHash = blurHash;
-    }
-
-
-    public long getUploadTimestamp() {
-        return uploadTimestamp;
-    }
-
-
-    public void setUploadTimestamp(long uploadTimestamp) {
-        this.uploadTimestamp = uploadTimestamp;
-    }
-
-
-    public String getContentType() {
-        return contentType;
-    }
-
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+   
 }
