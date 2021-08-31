@@ -10,7 +10,7 @@ public class SignalServiceAttachmentPointer {
     public  int                             cdnNumber;
     
     @JsonProperty
-    public  String                          remoteId;
+    public  String                          remoteid;
     
     @JsonProperty
     public  Optional<Integer>               size;
@@ -63,11 +63,11 @@ public class SignalServiceAttachmentPointer {
     }
 
     public String getRemoteId() {
-        return remoteId;
+        return remoteid;
     }
 
-    public void setRemoteId(String remoteId) {
-        this.remoteId = remoteId;
+    public void setRemoteId(String remoteid) {
+        this.remoteid = remoteid;
     }
 
     public Optional<Integer> getSize() {
