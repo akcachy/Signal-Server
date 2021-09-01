@@ -351,7 +351,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         long[] range = new long[2];
         range[0] = 0;
         range[1] = 19;
-        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, range, true, false, true);
+        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, range, true, false, true, null, false);
         if(list.size()!=1){
             return Optional.of(list.get(0));
         }
@@ -579,7 +579,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     //#region
     @SuppressWarnings("unchecked")
-    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final long[] range, boolean isPosts, boolean isStory, boolean isWall) {
+    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final long[] range, boolean isPosts, boolean isStory, boolean isWall, String categoryId, boolean isCategory) {
          return getMessagesTimer.record(() -> {
             final byte[] queueName;
             if(isPosts && !isWall){
@@ -588,8 +588,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 queueName = getPostWallQueueKey(destinationUuid, destinationDevice);
             }else if(isStory && !isWall){
                 queueName = getStoryMessageQueueKey(destinationUuid, destinationDevice);
-            }else{
+            }else if(isStory && isWall){
                 queueName = getStoryWallQueueKey(destinationUuid, destinationDevice);
+            }else if(isCategory){
+                queueName = getPostCategoryQueueKey(categoryId);
+            }else{
+                queueName = new byte[0];
             }
 
             final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
@@ -755,6 +759,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
     static byte[] getUserStoryExistsQueueKey(final String accountUuid, final long deviceId) {
         return ("user_story_exists::{" + accountUuid + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] getPostCategoryQueueKey(final String category) {
+        return ("user_posts_by_category::"+ category).getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }

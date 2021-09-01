@@ -74,18 +74,23 @@ public class MessagesManager {
   }
 
   public List<CachyUserPostResponse> getPosts(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, true, false, false);
+    return messagesCache.getPosts(uuid, device, range, true, false, false, null, false);
   }
   public List<CachyUserPostResponse> getPostWall(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, true, false, true);
+    return messagesCache.getPosts(uuid, device, range, true, false, true, null, false);
   }
   
   public List<CachyUserPostResponse> getStory(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, false, true, false);
+    return messagesCache.getPosts(uuid, device, range, false, true, false, null, false);
   }
   public List<CachyUserPostResponse> getStoryWall(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, false, true, true);
+    return messagesCache.getPosts(uuid, device, range, false, true, true, null, false);
   }
+
+  public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryId) {
+    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryId, true);
+  }
+
   public List<CachyComment> getComments(final String uuid, final long[] range) {
     return messagesCache.getComments(uuid,  range);
   }
