@@ -609,10 +609,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         //System.out.println(new String(queueItems.get(i)));
                         CachyUserPostResponse post = mapper.readValue(new String(queueItems.get(i)), CachyUserPostResponse.class);
                         List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
-                        for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
-                            final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1), contributors.getUuid().getBytes()));
-                            contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
-                            contributorsList.add(contributors);
+                        if(post.getContributorsDetails() != null && post.getContributorsDetails().size()!=0){    
+                            for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
+                                final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1), contributors.getUuid().getBytes()));
+                                contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
+                                contributorsList.add(contributors);
+                            }
                         }
                         post.setContributorsDetails(contributorsList);
                         post.setScore(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
@@ -703,7 +705,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     void addUserInterest(final UUID accountUuid, final Map<Integer , Double> data) {
         
-        readDeleteCluster.useBinaryCluster(connection ->{
+        insertCluster.useBinaryCluster(connection ->{
                 data.forEach((key, value) -> connection.sync().zadd(getUserInterestedCategoryQueueKey(accountUuid), ZAddArgs.Builder.nx(), value, key.toString().getBytes(StandardCharsets.UTF_8)   ));
                 connection.sync().expire(getUserInterestedCategoryQueueKey(accountUuid), 600);
             }  
@@ -722,6 +724,21 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }
         return map;
 
+    }
+
+    Map<Integer , Double> getCommonInterestedCategory() {
+        final Map<Integer , Double> map = new HashMap<>();
+        Double total  = 0.0 ; 
+        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey()));
+        for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
+            Double count = Double.parseDouble(new String(entry.getValue()));
+            total += count;
+            map.put(Integer.parseInt(new String(entry.getKey())), count  );       
+        }
+        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
+            map.put(entry.getKey(), (entry.getValue()*100)/total);
+        }
+        return map;
     }
 
     @VisibleForTesting
@@ -763,6 +780,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     private static byte[] getPostCategoryQueueKey(final String category) {
         return ("user_posts_by_category::"+ category).getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] getPostCategoryQueueMetadataKey() {
+        return ("user_posts_by_category_metadata::").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }
