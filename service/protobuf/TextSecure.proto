@@ -29,6 +29,7 @@ message Envelope {
     RECEIPT             = 5;
     UNIDENTIFIED_SENDER = 6;
     MATCHING_MESSAGE    = 7;
+    PROFESSIONAL_STATUS    = 8;
   }
 
   optional Type   type             = 1;
@@ -42,7 +43,18 @@ message Envelope {
   optional string serverGuid       = 9;
   optional uint64 server_timestamp = 10;
   optional MatchingMessage  matchingMessage = 12;
+  optional ProfessionalStatusMessage  professionalStatusMessage = 14;
 }
+message ProfessionalStatusMessage {
+  repeated ProfessionalMessage professionalMessage = 1;
+
+}
+message ProfessionalMessage {
+  optional string uuid = 1;
+  optional string status = 2;
+}
+
+
 message MatchingMessage {
   optional string uuid = 1;
   repeated uint32 matchingKeyword = 2;

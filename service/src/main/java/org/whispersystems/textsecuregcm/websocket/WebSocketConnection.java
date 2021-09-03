@@ -20,6 +20,7 @@ import io.micrometer.core.instrument.Tag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -40,6 +41,8 @@ import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage;
 import org.whispersystems.textsecuregcm.metrics.UserAgentTagUtil;
 import org.whispersystems.textsecuregcm.push.DisplacedPresenceListener;
 import org.whispersystems.textsecuregcm.push.ReceiptSender;
@@ -151,7 +154,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     // X-Signal-Key: false must be sent until Android stops assuming it missing means true
     return client.sendRequest("PUT", "/api/v1/message", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
-        logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
+        logger.info("############### SEND /api/v1/message RESPONSE "+ response.getMessage());
         if (isSuccessResponse(response)) {
           if (storedMessageInfo.isPresent()) {
             messagesManager.delete(account.getUuid(), device.getId(), storedMessageInfo.get().getGuid());
@@ -321,19 +324,48 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     messagesManager.takePostWallMessage(account.getUuid(), device.getId())
                    .ifPresent(message -> sendPostWallMessage(message));
   }
+  @Override
+  public void professionalStatusAvailable() {
   
+    Map<String , String> message = messagesManager.takeProfessionalStatusMessage();
+    if(message.size() != 0 ){
+       sendProfessionalStatusMessage(message);
+    }
+  }
+  
+  private CompletableFuture<WebSocketResponseMessage> sendProfessionalStatusMessage(final Map<String , String> message) {
+    final ProfessionalStatusMessage.Builder  professionalStatusMessage =   ProfessionalStatusMessage.newBuilder();
+    
+    for (Map.Entry<String, String> entry : message.entrySet()) {
+      final ProfessionalMessage.Builder       professionalMessage            = ProfessionalMessage.newBuilder()
+                                                    .setUuid(entry.getKey())
+                                                    .setStatus(entry.getValue());
+    professionalStatusMessage.addProfessionalMessage(professionalMessage);      
+    }
+                                      
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.PROFESSIONAL_STATUS)
+                                                    .setProfessionalStatusMessage(professionalStatusMessage);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/professional/status", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### PUT /api/v1/professional/status RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
+  }
+
   private CompletableFuture<WebSocketResponseMessage> sendPostWallMessage(final CachyUserPostResponse message) {
 
     sendMessageMeter.mark();
     sentMessageCounter.increment();
     
-    final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder();
-                                                  // .setCallId(matchingUser.getCallId())
-                                                  // .setNumber(matchingUser.getNumber())
-                                                  // .setUuid(matchingUser.getUuid())
-                                                  // .setIsCaller(matchingUser.isCaller())
-                                                  // .setFollowEnable(matchingUser.isFollowEnable());                                      
-
+    final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder();                                    
     final Envelope.Builder      builder = Envelope.newBuilder()
                                                     .setType(Envelope.Type.MATCHING_MESSAGE)
                                                     .setMatchingMessage(builder1);
@@ -343,7 +375,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     return client.sendRequest("PUT", "/api/v1/wall", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
         if (isSuccessResponse(response)) {
-          logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
+          logger.info("############### PUT /api/v1/wall RESPONSE "+ response.getMessage());
         }
       } else {
         sendFailuresMeter.mark();
@@ -380,7 +412,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     return client.sendRequest("PUT", "/api/v1/matching", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
         if (isSuccessResponse(response)) {
-          logger.info("############### SEND REQUEST RESPONSE "+ response.getMessage());
+          logger.info("############### PUT /api/v1/matching RESPONSE "+ response.getMessage());
         }
       } else {
         sendFailuresMeter.mark();

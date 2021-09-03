@@ -182,6 +182,21 @@ public final class MessageProtos {
      * <code>optional .textsecure.MatchingMessage matchingMessage = 12;</code>
      */
     org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessageOrBuilder getMatchingMessageOrBuilder();
+
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     * @return Whether the professionalStatusMessage field is set.
+     */
+    boolean hasProfessionalStatusMessage();
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     * @return The professionalStatusMessage.
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getProfessionalStatusMessage();
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder getProfessionalStatusMessageOrBuilder();
   }
   /**
    * Protobuf type {@code textsecure.Envelope}
@@ -310,6 +325,19 @@ public final class MessageProtos {
               bitField0_ |= 0x00000400;
               break;
             }
+            case 114: {
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000800) != 0)) {
+                subBuilder = professionalStatusMessage_.toBuilder();
+              }
+              professionalStatusMessage_ = input.readMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(professionalStatusMessage_);
+                professionalStatusMessage_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000800;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -375,6 +403,10 @@ public final class MessageProtos {
        * <code>MATCHING_MESSAGE = 7;</code>
        */
       MATCHING_MESSAGE(7),
+      /**
+       * <code>PROFESSIONAL_STATUS = 8;</code>
+       */
+      PROFESSIONAL_STATUS(8),
       ;
 
       /**
@@ -405,6 +437,10 @@ public final class MessageProtos {
        * <code>MATCHING_MESSAGE = 7;</code>
        */
       public static final int MATCHING_MESSAGE_VALUE = 7;
+      /**
+       * <code>PROFESSIONAL_STATUS = 8;</code>
+       */
+      public static final int PROFESSIONAL_STATUS_VALUE = 8;
 
 
       public final int getNumber() {
@@ -434,6 +470,7 @@ public final class MessageProtos {
           case 5: return RECEIPT;
           case 6: return UNIDENTIFIED_SENDER;
           case 7: return MATCHING_MESSAGE;
+          case 8: return PROFESSIONAL_STATUS;
           default: return null;
         }
       }
@@ -832,6 +869,32 @@ public final class MessageProtos {
       return matchingMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage.getDefaultInstance() : matchingMessage_;
     }
 
+    public static final int PROFESSIONALSTATUSMESSAGE_FIELD_NUMBER = 14;
+    private org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage professionalStatusMessage_;
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     * @return Whether the professionalStatusMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasProfessionalStatusMessage() {
+      return ((bitField0_ & 0x00000800) != 0);
+    }
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     * @return The professionalStatusMessage.
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getProfessionalStatusMessage() {
+      return professionalStatusMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance() : professionalStatusMessage_;
+    }
+    /**
+     * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder getProfessionalStatusMessageOrBuilder() {
+      return professionalStatusMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance() : professionalStatusMessage_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -878,6 +941,9 @@ public final class MessageProtos {
       }
       if (((bitField0_ & 0x00000400) != 0)) {
         output.writeMessage(12, getMatchingMessage());
+      }
+      if (((bitField0_ & 0x00000800) != 0)) {
+        output.writeMessage(14, getProfessionalStatusMessage());
       }
       unknownFields.writeTo(output);
     }
@@ -927,6 +993,10 @@ public final class MessageProtos {
       if (((bitField0_ & 0x00000400) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(12, getMatchingMessage());
+      }
+      if (((bitField0_ & 0x00000800) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(14, getProfessionalStatusMessage());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -997,6 +1067,11 @@ public final class MessageProtos {
         if (!getMatchingMessage()
             .equals(other.getMatchingMessage())) return false;
       }
+      if (hasProfessionalStatusMessage() != other.hasProfessionalStatusMessage()) return false;
+      if (hasProfessionalStatusMessage()) {
+        if (!getProfessionalStatusMessage()
+            .equals(other.getProfessionalStatusMessage())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1053,6 +1128,10 @@ public final class MessageProtos {
       if (hasMatchingMessage()) {
         hash = (37 * hash) + MATCHINGMESSAGE_FIELD_NUMBER;
         hash = (53 * hash) + getMatchingMessage().hashCode();
+      }
+      if (hasProfessionalStatusMessage()) {
+        hash = (37 * hash) + PROFESSIONALSTATUSMESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getProfessionalStatusMessage().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1183,6 +1262,7 @@ public final class MessageProtos {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getMatchingMessageFieldBuilder();
+          getProfessionalStatusMessageFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1214,6 +1294,12 @@ public final class MessageProtos {
           matchingMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000400);
+        if (professionalStatusMessageBuilder_ == null) {
+          professionalStatusMessage_ = null;
+        } else {
+          professionalStatusMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
 
@@ -1289,6 +1375,14 @@ public final class MessageProtos {
             result.matchingMessage_ = matchingMessageBuilder_.build();
           }
           to_bitField0_ |= 0x00000400;
+        }
+        if (((from_bitField0_ & 0x00000800) != 0)) {
+          if (professionalStatusMessageBuilder_ == null) {
+            result.professionalStatusMessage_ = professionalStatusMessage_;
+          } else {
+            result.professionalStatusMessage_ = professionalStatusMessageBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000800;
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1379,6 +1473,9 @@ public final class MessageProtos {
         }
         if (other.hasMatchingMessage()) {
           mergeMatchingMessage(other.getMatchingMessage());
+        }
+        if (other.hasProfessionalStatusMessage()) {
+          mergeProfessionalStatusMessage(other.getProfessionalStatusMessage());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2141,6 +2238,126 @@ public final class MessageProtos {
         }
         return matchingMessageBuilder_;
       }
+
+      private org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage professionalStatusMessage_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder> professionalStatusMessageBuilder_;
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       * @return Whether the professionalStatusMessage field is set.
+       */
+      public boolean hasProfessionalStatusMessage() {
+        return ((bitField0_ & 0x00000800) != 0);
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       * @return The professionalStatusMessage.
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getProfessionalStatusMessage() {
+        if (professionalStatusMessageBuilder_ == null) {
+          return professionalStatusMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance() : professionalStatusMessage_;
+        } else {
+          return professionalStatusMessageBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public Builder setProfessionalStatusMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage value) {
+        if (professionalStatusMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          professionalStatusMessage_ = value;
+          onChanged();
+        } else {
+          professionalStatusMessageBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000800;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public Builder setProfessionalStatusMessage(
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder builderForValue) {
+        if (professionalStatusMessageBuilder_ == null) {
+          professionalStatusMessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          professionalStatusMessageBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000800;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public Builder mergeProfessionalStatusMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage value) {
+        if (professionalStatusMessageBuilder_ == null) {
+          if (((bitField0_ & 0x00000800) != 0) &&
+              professionalStatusMessage_ != null &&
+              professionalStatusMessage_ != org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance()) {
+            professionalStatusMessage_ =
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.newBuilder(professionalStatusMessage_).mergeFrom(value).buildPartial();
+          } else {
+            professionalStatusMessage_ = value;
+          }
+          onChanged();
+        } else {
+          professionalStatusMessageBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000800;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public Builder clearProfessionalStatusMessage() {
+        if (professionalStatusMessageBuilder_ == null) {
+          professionalStatusMessage_ = null;
+          onChanged();
+        } else {
+          professionalStatusMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000800);
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder getProfessionalStatusMessageBuilder() {
+        bitField0_ |= 0x00000800;
+        onChanged();
+        return getProfessionalStatusMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder getProfessionalStatusMessageOrBuilder() {
+        if (professionalStatusMessageBuilder_ != null) {
+          return professionalStatusMessageBuilder_.getMessageOrBuilder();
+        } else {
+          return professionalStatusMessage_ == null ?
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance() : professionalStatusMessage_;
+        }
+      }
+      /**
+       * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder> 
+          getProfessionalStatusMessageFieldBuilder() {
+        if (professionalStatusMessageBuilder_ == null) {
+          professionalStatusMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder>(
+                  getProfessionalStatusMessage(),
+                  getParentForChildren(),
+                  isClean());
+          professionalStatusMessage_ = null;
+        }
+        return professionalStatusMessageBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2189,6 +2406,1587 @@ public final class MessageProtos {
 
     @java.lang.Override
     public org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProfessionalStatusMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:textsecure.ProfessionalStatusMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> 
+        getProfessionalMessageList();
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getProfessionalMessage(int index);
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    int getProfessionalMessageCount();
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    java.util.List<? extends org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder> 
+        getProfessionalMessageOrBuilderList();
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder getProfessionalMessageOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code textsecure.ProfessionalStatusMessage}
+   */
+  public static final class ProfessionalStatusMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:textsecure.ProfessionalStatusMessage)
+      ProfessionalStatusMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProfessionalStatusMessage.newBuilder() to construct.
+    private ProfessionalStatusMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProfessionalStatusMessage() {
+      professionalMessage_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ProfessionalStatusMessage();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProfessionalStatusMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                professionalMessage_ = new java.util.ArrayList<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              professionalMessage_.add(
+                  input.readMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.PARSER, extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          professionalMessage_ = java.util.Collections.unmodifiableList(professionalMessage_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalStatusMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder.class);
+    }
+
+    public static final int PROFESSIONALMESSAGE_FIELD_NUMBER = 1;
+    private java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> professionalMessage_;
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> getProfessionalMessageList() {
+      return professionalMessage_;
+    }
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder> 
+        getProfessionalMessageOrBuilderList() {
+      return professionalMessage_;
+    }
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    @java.lang.Override
+    public int getProfessionalMessageCount() {
+      return professionalMessage_.size();
+    }
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getProfessionalMessage(int index) {
+      return professionalMessage_.get(index);
+    }
+    /**
+     * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder getProfessionalMessageOrBuilder(
+        int index) {
+      return professionalMessage_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < professionalMessage_.size(); i++) {
+        output.writeMessage(1, professionalMessage_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < professionalMessage_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, professionalMessage_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage)) {
+        return super.equals(obj);
+      }
+      org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage other = (org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage) obj;
+
+      if (!getProfessionalMessageList()
+          .equals(other.getProfessionalMessageList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getProfessionalMessageCount() > 0) {
+        hash = (37 * hash) + PROFESSIONALMESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getProfessionalMessageList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code textsecure.ProfessionalStatusMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:textsecure.ProfessionalStatusMessage)
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalStatusMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.Builder.class);
+      }
+
+      // Construct using org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getProfessionalMessageFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (professionalMessageBuilder_ == null) {
+          professionalMessage_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          professionalMessageBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalStatusMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getDefaultInstanceForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage build() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage buildPartial() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage result = new org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage(this);
+        int from_bitField0_ = bitField0_;
+        if (professionalMessageBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            professionalMessage_ = java.util.Collections.unmodifiableList(professionalMessage_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.professionalMessage_ = professionalMessage_;
+        } else {
+          result.professionalMessage_ = professionalMessageBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage) {
+          return mergeFrom((org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage other) {
+        if (other == org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance()) return this;
+        if (professionalMessageBuilder_ == null) {
+          if (!other.professionalMessage_.isEmpty()) {
+            if (professionalMessage_.isEmpty()) {
+              professionalMessage_ = other.professionalMessage_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureProfessionalMessageIsMutable();
+              professionalMessage_.addAll(other.professionalMessage_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.professionalMessage_.isEmpty()) {
+            if (professionalMessageBuilder_.isEmpty()) {
+              professionalMessageBuilder_.dispose();
+              professionalMessageBuilder_ = null;
+              professionalMessage_ = other.professionalMessage_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              professionalMessageBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getProfessionalMessageFieldBuilder() : null;
+            } else {
+              professionalMessageBuilder_.addAllMessages(other.professionalMessage_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> professionalMessage_ =
+        java.util.Collections.emptyList();
+      private void ensureProfessionalMessageIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          professionalMessage_ = new java.util.ArrayList<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage>(professionalMessage_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder> professionalMessageBuilder_;
+
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> getProfessionalMessageList() {
+        if (professionalMessageBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(professionalMessage_);
+        } else {
+          return professionalMessageBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public int getProfessionalMessageCount() {
+        if (professionalMessageBuilder_ == null) {
+          return professionalMessage_.size();
+        } else {
+          return professionalMessageBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getProfessionalMessage(int index) {
+        if (professionalMessageBuilder_ == null) {
+          return professionalMessage_.get(index);
+        } else {
+          return professionalMessageBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder setProfessionalMessage(
+          int index, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage value) {
+        if (professionalMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.set(index, value);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder setProfessionalMessage(
+          int index, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder builderForValue) {
+        if (professionalMessageBuilder_ == null) {
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          professionalMessageBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder addProfessionalMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage value) {
+        if (professionalMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.add(value);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder addProfessionalMessage(
+          int index, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage value) {
+        if (professionalMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.add(index, value);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder addProfessionalMessage(
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder builderForValue) {
+        if (professionalMessageBuilder_ == null) {
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.add(builderForValue.build());
+          onChanged();
+        } else {
+          professionalMessageBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder addProfessionalMessage(
+          int index, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder builderForValue) {
+        if (professionalMessageBuilder_ == null) {
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          professionalMessageBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder addAllProfessionalMessage(
+          java.lang.Iterable<? extends org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage> values) {
+        if (professionalMessageBuilder_ == null) {
+          ensureProfessionalMessageIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, professionalMessage_);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder clearProfessionalMessage() {
+        if (professionalMessageBuilder_ == null) {
+          professionalMessage_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public Builder removeProfessionalMessage(int index) {
+        if (professionalMessageBuilder_ == null) {
+          ensureProfessionalMessageIsMutable();
+          professionalMessage_.remove(index);
+          onChanged();
+        } else {
+          professionalMessageBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder getProfessionalMessageBuilder(
+          int index) {
+        return getProfessionalMessageFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder getProfessionalMessageOrBuilder(
+          int index) {
+        if (professionalMessageBuilder_ == null) {
+          return professionalMessage_.get(index);  } else {
+          return professionalMessageBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public java.util.List<? extends org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder> 
+           getProfessionalMessageOrBuilderList() {
+        if (professionalMessageBuilder_ != null) {
+          return professionalMessageBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(professionalMessage_);
+        }
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder addProfessionalMessageBuilder() {
+        return getProfessionalMessageFieldBuilder().addBuilder(
+            org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder addProfessionalMessageBuilder(
+          int index) {
+        return getProfessionalMessageFieldBuilder().addBuilder(
+            index, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .textsecure.ProfessionalMessage professionalMessage = 1;</code>
+       */
+      public java.util.List<org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder> 
+           getProfessionalMessageBuilderList() {
+        return getProfessionalMessageFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder> 
+          getProfessionalMessageFieldBuilder() {
+        if (professionalMessageBuilder_ == null) {
+          professionalMessageBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder>(
+                  professionalMessage_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          professionalMessage_ = null;
+        }
+        return professionalMessageBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:textsecure.ProfessionalStatusMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:textsecure.ProfessionalStatusMessage)
+    private static final org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage();
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ProfessionalStatusMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProfessionalStatusMessage>() {
+      @java.lang.Override
+      public ProfessionalStatusMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProfessionalStatusMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProfessionalStatusMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProfessionalStatusMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProfessionalMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:textsecure.ProfessionalMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return Whether the uuid field is set.
+     */
+    boolean hasUuid();
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The uuid.
+     */
+    java.lang.String getUuid();
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The bytes for uuid.
+     */
+    com.google.protobuf.ByteString
+        getUuidBytes();
+
+    /**
+     * <code>optional string status = 2;</code>
+     * @return Whether the status field is set.
+     */
+    boolean hasStatus();
+    /**
+     * <code>optional string status = 2;</code>
+     * @return The status.
+     */
+    java.lang.String getStatus();
+    /**
+     * <code>optional string status = 2;</code>
+     * @return The bytes for status.
+     */
+    com.google.protobuf.ByteString
+        getStatusBytes();
+  }
+  /**
+   * Protobuf type {@code textsecure.ProfessionalMessage}
+   */
+  public static final class ProfessionalMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:textsecure.ProfessionalMessage)
+      ProfessionalMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProfessionalMessage.newBuilder() to construct.
+    private ProfessionalMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProfessionalMessage() {
+      uuid_ = "";
+      status_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ProfessionalMessage();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProfessionalMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              uuid_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              status_ = bs;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int UUID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object uuid_;
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return Whether the uuid field is set.
+     */
+    @java.lang.Override
+    public boolean hasUuid() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The uuid.
+     */
+    @java.lang.Override
+    public java.lang.String getUuid() {
+      java.lang.Object ref = uuid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          uuid_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The bytes for uuid.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getUuidBytes() {
+      java.lang.Object ref = uuid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        uuid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int STATUS_FIELD_NUMBER = 2;
+    private volatile java.lang.Object status_;
+    /**
+     * <code>optional string status = 2;</code>
+     * @return Whether the status field is set.
+     */
+    @java.lang.Override
+    public boolean hasStatus() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional string status = 2;</code>
+     * @return The status.
+     */
+    @java.lang.Override
+    public java.lang.String getStatus() {
+      java.lang.Object ref = status_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          status_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string status = 2;</code>
+     * @return The bytes for status.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getStatusBytes() {
+      java.lang.Object ref = status_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        status_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, status_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, status_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage)) {
+        return super.equals(obj);
+      }
+      org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage other = (org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage) obj;
+
+      if (hasUuid() != other.hasUuid()) return false;
+      if (hasUuid()) {
+        if (!getUuid()
+            .equals(other.getUuid())) return false;
+      }
+      if (hasStatus() != other.hasStatus()) return false;
+      if (hasStatus()) {
+        if (!getStatus()
+            .equals(other.getStatus())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasUuid()) {
+        hash = (37 * hash) + UUID_FIELD_NUMBER;
+        hash = (53 * hash) + getUuid().hashCode();
+      }
+      if (hasStatus()) {
+        hash = (37 * hash) + STATUS_FIELD_NUMBER;
+        hash = (53 * hash) + getStatus().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code textsecure.ProfessionalMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:textsecure.ProfessionalMessage)
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.Builder.class);
+      }
+
+      // Construct using org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        uuid_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        status_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_ProfessionalMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getDefaultInstanceForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage build() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage buildPartial() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage result = new org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.uuid_ = uuid_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.status_ = status_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage) {
+          return mergeFrom((org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage other) {
+        if (other == org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage.getDefaultInstance()) return this;
+        if (other.hasUuid()) {
+          bitField0_ |= 0x00000001;
+          uuid_ = other.uuid_;
+          onChanged();
+        }
+        if (other.hasStatus()) {
+          bitField0_ |= 0x00000002;
+          status_ = other.status_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object uuid_ = "";
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return Whether the uuid field is set.
+       */
+      public boolean hasUuid() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return The uuid.
+       */
+      public java.lang.String getUuid() {
+        java.lang.Object ref = uuid_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            uuid_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return The bytes for uuid.
+       */
+      public com.google.protobuf.ByteString
+          getUuidBytes() {
+        java.lang.Object ref = uuid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          uuid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @param value The uuid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUuid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        uuid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUuid() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        uuid_ = getDefaultInstance().getUuid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @param value The bytes for uuid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUuidBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        uuid_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object status_ = "";
+      /**
+       * <code>optional string status = 2;</code>
+       * @return Whether the status field is set.
+       */
+      public boolean hasStatus() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional string status = 2;</code>
+       * @return The status.
+       */
+      public java.lang.String getStatus() {
+        java.lang.Object ref = status_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            status_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string status = 2;</code>
+       * @return The bytes for status.
+       */
+      public com.google.protobuf.ByteString
+          getStatusBytes() {
+        java.lang.Object ref = status_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          status_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string status = 2;</code>
+       * @param value The status to set.
+       * @return This builder for chaining.
+       */
+      public Builder setStatus(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        status_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string status = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearStatus() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        status_ = getDefaultInstance().getStatus();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string status = 2;</code>
+       * @param value The bytes for status to set.
+       * @return This builder for chaining.
+       */
+      public Builder setStatusBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        status_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:textsecure.ProfessionalMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:textsecure.ProfessionalMessage)
+    private static final org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage();
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ProfessionalMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProfessionalMessage>() {
+      @java.lang.Override
+      public ProfessionalMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProfessionalMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProfessionalMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProfessionalMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7343,6 +9141,16 @@ public final class MessageProtos {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_textsecure_Envelope_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_textsecure_ProfessionalStatusMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_textsecure_ProfessionalMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_textsecure_ProfessionalMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_textsecure_MatchingMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -7381,31 +9189,38 @@ public final class MessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020TextSecure.proto\022\ntextsecure\"\242\003\n\010Envel" +
+      "\n\020TextSecure.proto\022\ntextsecure\"\205\004\n\010Envel" +
       "ope\022\'\n\004type\030\001 \001(\0162\031.textsecure.Envelope." +
       "Type\022\016\n\006source\030\002 \001(\t\022\022\n\nsourceUuid\030\013 \001(\t" +
       "\022\024\n\014sourceDevice\030\007 \001(\r\022\r\n\005relay\030\003 \001(\t\022\021\n" +
       "\ttimestamp\030\005 \001(\004\022\025\n\rlegacyMessage\030\006 \001(\014\022" +
       "\017\n\007content\030\010 \001(\014\022\022\n\nserverGuid\030\t \001(\t\022\030\n\020" +
       "server_timestamp\030\n \001(\004\0224\n\017matchingMessag" +
-      "e\030\014 \001(\0132\033.textsecure.MatchingMessage\"\204\001\n" +
-      "\004Type\022\013\n\007UNKNOWN\020\000\022\016\n\nCIPHERTEXT\020\001\022\020\n\014KE" +
-      "Y_EXCHANGE\020\002\022\021\n\rPREKEY_BUNDLE\020\003\022\013\n\007RECEI" +
-      "PT\020\005\022\027\n\023UNIDENTIFIED_SENDER\020\006\022\024\n\020MATCHIN" +
-      "G_MESSAGE\020\007\"\200\001\n\017MatchingMessage\022\014\n\004uuid\030" +
-      "\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003(\r\022\016\n\006number" +
-      "\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(\010\022\016\n\006callId\030\005 \001(\t" +
-      "\022\024\n\014followEnable\030\006 \001(\010\" \n\020ProvisioningUu" +
-      "id\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertificate\022\023\n" +
-      "\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032&\n" +
-      "\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014\"\332\001" +
-      "\n\021SenderCertificate\022\023\n\013certificate\030\001 \001(\014" +
-      "\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certificate\022\016\n\006s" +
-      "ender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014sende" +
-      "rDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013identi" +
-      "tyKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.textsecure" +
-      ".ServerCertificateB:\n)org.whispersystems" +
-      ".textsecuregcm.entitiesB\rMessageProtos"
+      "e\030\014 \001(\0132\033.textsecure.MatchingMessage\022H\n\031" +
+      "professionalStatusMessage\030\016 \001(\0132%.textse" +
+      "cure.ProfessionalStatusMessage\"\235\001\n\004Type\022" +
+      "\013\n\007UNKNOWN\020\000\022\016\n\nCIPHERTEXT\020\001\022\020\n\014KEY_EXCH" +
+      "ANGE\020\002\022\021\n\rPREKEY_BUNDLE\020\003\022\013\n\007RECEIPT\020\005\022\027" +
+      "\n\023UNIDENTIFIED_SENDER\020\006\022\024\n\020MATCHING_MESS" +
+      "AGE\020\007\022\027\n\023PROFESSIONAL_STATUS\020\010\"Y\n\031Profes" +
+      "sionalStatusMessage\022<\n\023professionalMessa" +
+      "ge\030\001 \003(\0132\037.textsecure.ProfessionalMessag" +
+      "e\"3\n\023ProfessionalMessage\022\014\n\004uuid\030\001 \001(\t\022\016" +
+      "\n\006status\030\002 \001(\t\"\200\001\n\017MatchingMessage\022\014\n\004uu" +
+      "id\030\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003(\r\022\016\n\006num" +
+      "ber\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(\010\022\016\n\006callId\030\005 " +
+      "\001(\t\022\024\n\014followEnable\030\006 \001(\010\" \n\020Provisionin" +
+      "gUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertificate" +
+      "\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014" +
+      "\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014" +
+      "\"\332\001\n\021SenderCertificate\022\023\n\013certificate\030\001 " +
+      "\001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certificate\022\016" +
+      "\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014se" +
+      "nderDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013ide" +
+      "ntityKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.textsec" +
+      "ure.ServerCertificateB:\n)org.whispersyst" +
+      "ems.textsecuregcm.entitiesB\rMessageProto" +
+      "s"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7416,21 +9231,33 @@ public final class MessageProtos {
     internal_static_textsecure_Envelope_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_Envelope_descriptor,
-        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", });
-    internal_static_textsecure_MatchingMessage_descriptor =
+        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", "ProfessionalStatusMessage", });
+    internal_static_textsecure_ProfessionalStatusMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_textsecure_ProfessionalStatusMessage_descriptor,
+        new java.lang.String[] { "ProfessionalMessage", });
+    internal_static_textsecure_ProfessionalMessage_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_textsecure_ProfessionalMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_textsecure_ProfessionalMessage_descriptor,
+        new java.lang.String[] { "Uuid", "Status", });
+    internal_static_textsecure_MatchingMessage_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_textsecure_MatchingMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_MatchingMessage_descriptor,
         new java.lang.String[] { "Uuid", "MatchingKeyword", "Number", "IsCaller", "CallId", "FollowEnable", });
     internal_static_textsecure_ProvisioningUuid_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_textsecure_ProvisioningUuid_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProvisioningUuid_descriptor,
         new java.lang.String[] { "Uuid", });
     internal_static_textsecure_ServerCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_textsecure_ServerCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ServerCertificate_descriptor,
@@ -7442,7 +9269,7 @@ public final class MessageProtos {
         internal_static_textsecure_ServerCertificate_Certificate_descriptor,
         new java.lang.String[] { "Id", "Key", });
     internal_static_textsecure_SenderCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_textsecure_SenderCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_SenderCertificate_descriptor,

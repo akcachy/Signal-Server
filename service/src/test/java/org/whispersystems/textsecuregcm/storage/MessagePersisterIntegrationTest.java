@@ -134,6 +134,9 @@ public class MessagePersisterIntegrationTest extends AbstractRedisClusterTest {
             @Override
             public void handlePostWallMessageAvailable() {
             }
+            @Override
+            public void professionalStatusAvailable() {
+            }
         });
 
         messagePersister.start();

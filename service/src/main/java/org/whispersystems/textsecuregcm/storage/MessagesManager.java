@@ -68,6 +68,10 @@ public class MessagesManager {
   public Optional<CachyUserPostResponse> takePostWallMessage(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.takePostWallMessage(destinationUuid, destinationDevice);
   }
+  
+  public Map<String , String> takeProfessionalStatusMessage() {
+    return messagesCache.takeProfessionalStatusMessage();
+  }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.hasMessages(destinationUuid, destinationDevice);

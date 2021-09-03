@@ -21,4 +21,6 @@ public interface MessageAvailabilityListener {
     void handleNewMatchingMessageAvailable();
     
     void handlePostWallMessageAvailable();
+
+    void professionalStatusAvailable();
 }

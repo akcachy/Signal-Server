@@ -322,6 +322,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             @Override
             public void handlePostWallMessageAvailable() {
             }
+            @Override
+            public void professionalStatusAvailable() {
+            }
         };
 
         messagesCache.addMessageAvailabilityListener(DESTINATION_UUID, DESTINATION_DEVICE_ID, listener);
@@ -362,6 +365,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handlePostWallMessageAvailable() {
+            }
+            @Override
+            public void professionalStatusAvailable() {
             }
         };
 
@@ -405,6 +411,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handlePostWallMessageAvailable() {
+            }
+            @Override
+            public void professionalStatusAvailable() {
             }
         };
 

@@ -97,6 +97,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String MATCHER_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_matcher_queue::";
     private static final String POSTS_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_posts_queue::";
     private static final String POSTS_WALL_QUEUE_KEYSPACE_PREFIX      = "__keyspace@0__:user_posts_wall_queue::";
+    private static final String PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX      = "__keyspace@0__:professionals_user_status::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -462,6 +463,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
                 MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 POSTS_WALL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
+                PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX 
         };
     }
 
@@ -489,9 +491,17 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMatchingMessageAvailable));
         }
         else if (channel.startsWith(POSTS_WALL_QUEUE_KEYSPACE_PREFIX) && "zadd".equals(message)) {
-            logger.info("####################### CHANNEL START WITH ######## HSET MATCHING");
+            logger.info("####################### CHANNEL START WITH ######## zadd POST");
             postWallMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handlePostWallMessageAvailable));
+        }
+        else if (channel.startsWith(PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX) && "hset".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## HSET PROFESSIONAL");
+            for (Map.Entry<String, MessageAvailabilityListener> entry : messageListenersByQueueName.entrySet()){
+                final String channelName = "{"+entry.getKey()+"}";
+                notificationExecutorService.execute(() -> findListener(channelName).ifPresent(MessageAvailabilityListener::professionalStatusAvailable));
+            }
+           
         }
     }
 
@@ -741,6 +751,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return map;
     }
 
+    public Map<String , String> takeProfessionalStatusMessage() {
+       final Map<String , String> map = new HashMap<>();
+       Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getProfessionalUserStatusQueueKey()));
+       for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
+                map.put(new String(entry.getKey()), new String(entry.getValue()));       
+        }
+       return map;
+    }
+
     @VisibleForTesting
     static byte[] getPostMessageQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
@@ -784,6 +803,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     private static byte[] getPostCategoryQueueMetadataKey() {
         return ("user_posts_by_category_metadata::").getBytes(StandardCharsets.UTF_8);
+    }
+    private static byte[] getProfessionalUserStatusQueueKey() {
+        return ("professionals_user_status::").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }
