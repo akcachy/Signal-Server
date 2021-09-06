@@ -95,6 +95,13 @@ public class MessagesManager {
     return messagesCache.getPosts(uuid, device, range, false, false, false, categoryId, true);
   }
 
+  public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl) {
+     messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl);
+  }
+  public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String uuid) {
+     messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid);
+  }
+
   public List<CachyComment> getComments(final String uuid, final long[] range) {
     return messagesCache.getComments(uuid,  range);
   }
