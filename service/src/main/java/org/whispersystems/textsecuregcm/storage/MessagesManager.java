@@ -69,6 +69,10 @@ public class MessagesManager {
     return messagesCache.takePostWallMessage(destinationUuid, destinationDevice);
   }
   
+  public Optional<String> takeRecordingConsentMessage(final UUID destinationUuid, final long destinationDevice) {
+    return messagesCache.takeRecordingConsentMessage(destinationUuid, destinationDevice);
+  }
+  
   public Map<String , String> takeProfessionalStatusMessage() {
     return messagesCache.takeProfessionalStatusMessage();
   }
@@ -93,6 +97,9 @@ public class MessagesManager {
 
   public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryId) {
     return messagesCache.getPosts(uuid, device, range, false, false, false, categoryId, true);
+  }
+  public void setRecordingConsent(final UUID uuid,  String callId) {
+    messagesCache.setRecordingConsent(uuid, callId);
   }
 
   public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl) {

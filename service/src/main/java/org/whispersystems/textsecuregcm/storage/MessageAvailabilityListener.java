@@ -23,4 +23,6 @@ public interface MessageAvailabilityListener {
     void handlePostWallMessageAvailable();
 
     void professionalStatusAvailable();
+
+    void recordingConsentMessageAvailable();
 }

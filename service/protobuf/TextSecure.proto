@@ -29,7 +29,8 @@ message Envelope {
     RECEIPT             = 5;
     UNIDENTIFIED_SENDER = 6;
     MATCHING_MESSAGE    = 7;
-    PROFESSIONAL_STATUS    = 8;
+    PROFESSIONAL_STATUS = 8;
+    RECORDING_CONSENT   = 9;
   }
 
   optional Type   type             = 1;
@@ -44,6 +45,7 @@ message Envelope {
   optional uint64 server_timestamp = 10;
   optional MatchingMessage  matchingMessage = 12;
   optional ProfessionalStatusMessage  professionalStatusMessage = 14;
+  optional RecordingConsentMessage    recordingConsentMessage = 15;
 }
 message ProfessionalStatusMessage {
   repeated ProfessionalMessage professionalMessage = 1;
@@ -54,6 +56,12 @@ message ProfessionalMessage {
   optional string status = 2;
 }
 
+message RecordingConsentMessage { 
+  optional string uuid      = 1;
+  optional string callId    = 2;
+  optional bool   isRequest = 3;
+  optional bool   consent   = 4;
+}
 
 message MatchingMessage {
   optional string uuid = 1;

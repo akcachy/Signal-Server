@@ -80,12 +80,14 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final Timer   getQueuesToPersistTimer             = Metrics.timer(name(MessagesCache.class, "getQueuesToPersist"));
     private final Timer   clearQueueTimer                     = Metrics.timer(name(MessagesCache.class, "clear"));
     private final Timer   takeEphemeralMessageTimer           = Metrics.timer(name(MessagesCache.class, "takeEphemeral"));
+    private final Timer   takeRecordingRequestMessageTimer    = Metrics.timer(name(MessagesCache.class, "takeRecordingRequest"));
     private final Timer   takePostWallMessageTimer           = Metrics.timer(name(MessagesCache.class, "takePostWall"));
     private final Counter pubSubMessageCounter                = Metrics.counter(name(MessagesCache.class, "pubSubMessage"));
     private final Counter newMessageNotificationCounter       = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "false");
     private final Counter ephemeralMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMessageNotification"), "ephemeral", "true");
     private final Counter ephemeralMatchingMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "newMatchingMessageNotification"));
     private final Counter postWallMessageNotificationCounter = Metrics.counter(name(MessagesCache.class, "postWallMessageNotification"));
+    private final Counter recordingRequestCounter = Metrics.counter(name(MessagesCache.class, "recordingRequestCounter"));
     private final Counter queuePersistedNotificationCounter   = Metrics.counter(name(MessagesCache.class, "queuePersisted"));
 
     static final         String NEXT_SLOT_TO_PERSIST_KEY  = "user_queue_persist_slot";
@@ -99,6 +101,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String POSTS_WALL_QUEUE_KEYSPACE_PREFIX      = "__keyspace@0__:user_posts_wall_queue::";
     private static final String PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX      = "__keyspace@0__:professionals_user_status::";
     private static final String PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX      = "__keyspace@0__:user_schedule_timing_queue::";
+    private static final String USER_RECORDING_CONSENT_KEYSPACE_PREFIX          = "__keyspace@0__:user_recording_consent_queue::";
 
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
 
@@ -343,6 +346,16 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public Optional<String> takeMatchingMessage(final UUID destinationUuid, final long destinationDevice) {
         return takeMatchingMessage(destinationUuid, destinationDevice, System.currentTimeMillis());
     }
+    public Optional<String> takeRecordingConsentMessage(final UUID destinationUuid, final long destinationDevice) {
+        return takeRecordingRequestMessageTimer.record(() -> readDeleteCluster.withBinaryCluster(connection -> {
+
+            byte[] messageBytes = connection.sync().get(getRecordingConsentQueueKey(destinationUuid, destinationDevice));
+            if(messageBytes != null){
+                return Optional.of(new String(messageBytes));
+            } 
+            return Optional.empty();
+        }));
+    }
     
     public Optional<CachyUserPostResponse> takePostWallMessage(final UUID destinationUuid, final long destinationDevice) {
         return takePostWallMessage(destinationUuid, destinationDevice, System.currentTimeMillis());
@@ -486,7 +499,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
                 MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 POSTS_WALL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
-                PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX 
+                PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX,
+                USER_RECORDING_CONSENT_KEYSPACE_PREFIX + "{" + queueName + "}",
         };
     }
 
@@ -517,6 +531,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             logger.info("####################### CHANNEL START WITH ######## zadd POST");
             postWallMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handlePostWallMessageAvailable));
+        }
+        else if (channel.startsWith(USER_RECORDING_CONSENT_KEYSPACE_PREFIX) && "set".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## set RECORDING REQUEST");
+            recordingRequestCounter.increment();
+            notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::recordingConsentMessageAvailable));
         }
         else if (channel.startsWith(PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX) && "expired".equals(message)) {
             logger.info("####################### CHANNEL START WITH ######## expired SCHEDULE");
@@ -767,6 +786,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         );
     }
     
+    public  void setRecordingConsent(UUID uuid, String status) {
+        insertCluster.useBinaryCluster(connection -> {
+          connection.sync().set(getRecordingConsentQueueKey(uuid, 1) , status.getBytes(StandardCharsets.UTF_8));
+          connection.sync().expire(getRecordingConsentQueueKey(uuid, 1), 10);
+        });
+      }
     public  void setOnlineStatus(UUID uuid, String status) {
         insertCluster.useCluster(connection -> {
             connection.sync().hset("professionals_user_status::" , uuid.toString(), status);
@@ -850,6 +875,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
     static byte[] getUserStoryExistsQueueKey(final String accountUuid, final long deviceId) {
         return ("user_story_exists::{" + accountUuid + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    static byte[] getRecordingConsentQueueKey(final UUID accountUuid, final long deviceId) {
+        return ("user_recording_consent_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
     }
 
     private static byte[] getPostCategoryQueueKey(final String category) {

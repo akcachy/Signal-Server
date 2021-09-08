@@ -197,6 +197,21 @@ public final class MessageProtos {
      * <code>optional .textsecure.ProfessionalStatusMessage professionalStatusMessage = 14;</code>
      */
     org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessageOrBuilder getProfessionalStatusMessageOrBuilder();
+
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     * @return Whether the recordingConsentMessage field is set.
+     */
+    boolean hasRecordingConsentMessage();
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     * @return The recordingConsentMessage.
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getRecordingConsentMessage();
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder getRecordingConsentMessageOrBuilder();
   }
   /**
    * Protobuf type {@code textsecure.Envelope}
@@ -338,6 +353,19 @@ public final class MessageProtos {
               bitField0_ |= 0x00000800;
               break;
             }
+            case 122: {
+              org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder subBuilder = null;
+              if (((bitField0_ & 0x00001000) != 0)) {
+                subBuilder = recordingConsentMessage_.toBuilder();
+              }
+              recordingConsentMessage_ = input.readMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(recordingConsentMessage_);
+                recordingConsentMessage_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00001000;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -407,6 +435,10 @@ public final class MessageProtos {
        * <code>PROFESSIONAL_STATUS = 8;</code>
        */
       PROFESSIONAL_STATUS(8),
+      /**
+       * <code>RECORDING_CONSENT = 9;</code>
+       */
+      RECORDING_CONSENT(9),
       ;
 
       /**
@@ -441,6 +473,10 @@ public final class MessageProtos {
        * <code>PROFESSIONAL_STATUS = 8;</code>
        */
       public static final int PROFESSIONAL_STATUS_VALUE = 8;
+      /**
+       * <code>RECORDING_CONSENT = 9;</code>
+       */
+      public static final int RECORDING_CONSENT_VALUE = 9;
 
 
       public final int getNumber() {
@@ -471,6 +507,7 @@ public final class MessageProtos {
           case 6: return UNIDENTIFIED_SENDER;
           case 7: return MATCHING_MESSAGE;
           case 8: return PROFESSIONAL_STATUS;
+          case 9: return RECORDING_CONSENT;
           default: return null;
         }
       }
@@ -895,6 +932,32 @@ public final class MessageProtos {
       return professionalStatusMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage.getDefaultInstance() : professionalStatusMessage_;
     }
 
+    public static final int RECORDINGCONSENTMESSAGE_FIELD_NUMBER = 15;
+    private org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage recordingConsentMessage_;
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     * @return Whether the recordingConsentMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasRecordingConsentMessage() {
+      return ((bitField0_ & 0x00001000) != 0);
+    }
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     * @return The recordingConsentMessage.
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getRecordingConsentMessage() {
+      return recordingConsentMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance() : recordingConsentMessage_;
+    }
+    /**
+     * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder getRecordingConsentMessageOrBuilder() {
+      return recordingConsentMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance() : recordingConsentMessage_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -944,6 +1007,9 @@ public final class MessageProtos {
       }
       if (((bitField0_ & 0x00000800) != 0)) {
         output.writeMessage(14, getProfessionalStatusMessage());
+      }
+      if (((bitField0_ & 0x00001000) != 0)) {
+        output.writeMessage(15, getRecordingConsentMessage());
       }
       unknownFields.writeTo(output);
     }
@@ -997,6 +1063,10 @@ public final class MessageProtos {
       if (((bitField0_ & 0x00000800) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, getProfessionalStatusMessage());
+      }
+      if (((bitField0_ & 0x00001000) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(15, getRecordingConsentMessage());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1072,6 +1142,11 @@ public final class MessageProtos {
         if (!getProfessionalStatusMessage()
             .equals(other.getProfessionalStatusMessage())) return false;
       }
+      if (hasRecordingConsentMessage() != other.hasRecordingConsentMessage()) return false;
+      if (hasRecordingConsentMessage()) {
+        if (!getRecordingConsentMessage()
+            .equals(other.getRecordingConsentMessage())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1132,6 +1207,10 @@ public final class MessageProtos {
       if (hasProfessionalStatusMessage()) {
         hash = (37 * hash) + PROFESSIONALSTATUSMESSAGE_FIELD_NUMBER;
         hash = (53 * hash) + getProfessionalStatusMessage().hashCode();
+      }
+      if (hasRecordingConsentMessage()) {
+        hash = (37 * hash) + RECORDINGCONSENTMESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getRecordingConsentMessage().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1263,6 +1342,7 @@ public final class MessageProtos {
                 .alwaysUseFieldBuilders) {
           getMatchingMessageFieldBuilder();
           getProfessionalStatusMessageFieldBuilder();
+          getRecordingConsentMessageFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1300,6 +1380,12 @@ public final class MessageProtos {
           professionalStatusMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000800);
+        if (recordingConsentMessageBuilder_ == null) {
+          recordingConsentMessage_ = null;
+        } else {
+          recordingConsentMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00001000);
         return this;
       }
 
@@ -1383,6 +1469,14 @@ public final class MessageProtos {
             result.professionalStatusMessage_ = professionalStatusMessageBuilder_.build();
           }
           to_bitField0_ |= 0x00000800;
+        }
+        if (((from_bitField0_ & 0x00001000) != 0)) {
+          if (recordingConsentMessageBuilder_ == null) {
+            result.recordingConsentMessage_ = recordingConsentMessage_;
+          } else {
+            result.recordingConsentMessage_ = recordingConsentMessageBuilder_.build();
+          }
+          to_bitField0_ |= 0x00001000;
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1476,6 +1570,9 @@ public final class MessageProtos {
         }
         if (other.hasProfessionalStatusMessage()) {
           mergeProfessionalStatusMessage(other.getProfessionalStatusMessage());
+        }
+        if (other.hasRecordingConsentMessage()) {
+          mergeRecordingConsentMessage(other.getRecordingConsentMessage());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2357,6 +2454,126 @@ public final class MessageProtos {
           professionalStatusMessage_ = null;
         }
         return professionalStatusMessageBuilder_;
+      }
+
+      private org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage recordingConsentMessage_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder> recordingConsentMessageBuilder_;
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       * @return Whether the recordingConsentMessage field is set.
+       */
+      public boolean hasRecordingConsentMessage() {
+        return ((bitField0_ & 0x00001000) != 0);
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       * @return The recordingConsentMessage.
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getRecordingConsentMessage() {
+        if (recordingConsentMessageBuilder_ == null) {
+          return recordingConsentMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance() : recordingConsentMessage_;
+        } else {
+          return recordingConsentMessageBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public Builder setRecordingConsentMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage value) {
+        if (recordingConsentMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          recordingConsentMessage_ = value;
+          onChanged();
+        } else {
+          recordingConsentMessageBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00001000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public Builder setRecordingConsentMessage(
+          org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder builderForValue) {
+        if (recordingConsentMessageBuilder_ == null) {
+          recordingConsentMessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          recordingConsentMessageBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00001000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public Builder mergeRecordingConsentMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage value) {
+        if (recordingConsentMessageBuilder_ == null) {
+          if (((bitField0_ & 0x00001000) != 0) &&
+              recordingConsentMessage_ != null &&
+              recordingConsentMessage_ != org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance()) {
+            recordingConsentMessage_ =
+              org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.newBuilder(recordingConsentMessage_).mergeFrom(value).buildPartial();
+          } else {
+            recordingConsentMessage_ = value;
+          }
+          onChanged();
+        } else {
+          recordingConsentMessageBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00001000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public Builder clearRecordingConsentMessage() {
+        if (recordingConsentMessageBuilder_ == null) {
+          recordingConsentMessage_ = null;
+          onChanged();
+        } else {
+          recordingConsentMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00001000);
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder getRecordingConsentMessageBuilder() {
+        bitField0_ |= 0x00001000;
+        onChanged();
+        return getRecordingConsentMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder getRecordingConsentMessageOrBuilder() {
+        if (recordingConsentMessageBuilder_ != null) {
+          return recordingConsentMessageBuilder_.getMessageOrBuilder();
+        } else {
+          return recordingConsentMessage_ == null ?
+              org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance() : recordingConsentMessage_;
+        }
+      }
+      /**
+       * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder> 
+          getRecordingConsentMessageFieldBuilder() {
+        if (recordingConsentMessageBuilder_ == null) {
+          recordingConsentMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder>(
+                  getRecordingConsentMessage(),
+                  getParentForChildren(),
+                  isClean());
+          recordingConsentMessage_ = null;
+        }
+        return recordingConsentMessageBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -3987,6 +4204,994 @@ public final class MessageProtos {
 
     @java.lang.Override
     public org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface RecordingConsentMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:textsecure.RecordingConsentMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return Whether the uuid field is set.
+     */
+    boolean hasUuid();
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The uuid.
+     */
+    java.lang.String getUuid();
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The bytes for uuid.
+     */
+    com.google.protobuf.ByteString
+        getUuidBytes();
+
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return Whether the callId field is set.
+     */
+    boolean hasCallId();
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return The callId.
+     */
+    java.lang.String getCallId();
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return The bytes for callId.
+     */
+    com.google.protobuf.ByteString
+        getCallIdBytes();
+
+    /**
+     * <code>optional bool isRequest = 3;</code>
+     * @return Whether the isRequest field is set.
+     */
+    boolean hasIsRequest();
+    /**
+     * <code>optional bool isRequest = 3;</code>
+     * @return The isRequest.
+     */
+    boolean getIsRequest();
+
+    /**
+     * <code>optional bool consent = 4;</code>
+     * @return Whether the consent field is set.
+     */
+    boolean hasConsent();
+    /**
+     * <code>optional bool consent = 4;</code>
+     * @return The consent.
+     */
+    boolean getConsent();
+  }
+  /**
+   * Protobuf type {@code textsecure.RecordingConsentMessage}
+   */
+  public static final class RecordingConsentMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:textsecure.RecordingConsentMessage)
+      RecordingConsentMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use RecordingConsentMessage.newBuilder() to construct.
+    private RecordingConsentMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private RecordingConsentMessage() {
+      uuid_ = "";
+      callId_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RecordingConsentMessage();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private RecordingConsentMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              uuid_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              callId_ = bs;
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              isRequest_ = input.readBool();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              consent_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_RecordingConsentMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int UUID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object uuid_;
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return Whether the uuid field is set.
+     */
+    @java.lang.Override
+    public boolean hasUuid() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The uuid.
+     */
+    @java.lang.Override
+    public java.lang.String getUuid() {
+      java.lang.Object ref = uuid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          uuid_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string uuid = 1;</code>
+     * @return The bytes for uuid.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getUuidBytes() {
+      java.lang.Object ref = uuid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        uuid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CALLID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object callId_;
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return Whether the callId field is set.
+     */
+    @java.lang.Override
+    public boolean hasCallId() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return The callId.
+     */
+    @java.lang.Override
+    public java.lang.String getCallId() {
+      java.lang.Object ref = callId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          callId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string callId = 2;</code>
+     * @return The bytes for callId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getCallIdBytes() {
+      java.lang.Object ref = callId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        callId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ISREQUEST_FIELD_NUMBER = 3;
+    private boolean isRequest_;
+    /**
+     * <code>optional bool isRequest = 3;</code>
+     * @return Whether the isRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasIsRequest() {
+      return ((bitField0_ & 0x00000004) != 0);
+    }
+    /**
+     * <code>optional bool isRequest = 3;</code>
+     * @return The isRequest.
+     */
+    @java.lang.Override
+    public boolean getIsRequest() {
+      return isRequest_;
+    }
+
+    public static final int CONSENT_FIELD_NUMBER = 4;
+    private boolean consent_;
+    /**
+     * <code>optional bool consent = 4;</code>
+     * @return Whether the consent field is set.
+     */
+    @java.lang.Override
+    public boolean hasConsent() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional bool consent = 4;</code>
+     * @return The consent.
+     */
+    @java.lang.Override
+    public boolean getConsent() {
+      return consent_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, callId_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        output.writeBool(3, isRequest_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        output.writeBool(4, consent_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, callId_);
+      }
+      if (((bitField0_ & 0x00000004) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, isRequest_);
+      }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, consent_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage)) {
+        return super.equals(obj);
+      }
+      org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage other = (org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage) obj;
+
+      if (hasUuid() != other.hasUuid()) return false;
+      if (hasUuid()) {
+        if (!getUuid()
+            .equals(other.getUuid())) return false;
+      }
+      if (hasCallId() != other.hasCallId()) return false;
+      if (hasCallId()) {
+        if (!getCallId()
+            .equals(other.getCallId())) return false;
+      }
+      if (hasIsRequest() != other.hasIsRequest()) return false;
+      if (hasIsRequest()) {
+        if (getIsRequest()
+            != other.getIsRequest()) return false;
+      }
+      if (hasConsent() != other.hasConsent()) return false;
+      if (hasConsent()) {
+        if (getConsent()
+            != other.getConsent()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasUuid()) {
+        hash = (37 * hash) + UUID_FIELD_NUMBER;
+        hash = (53 * hash) + getUuid().hashCode();
+      }
+      if (hasCallId()) {
+        hash = (37 * hash) + CALLID_FIELD_NUMBER;
+        hash = (53 * hash) + getCallId().hashCode();
+      }
+      if (hasIsRequest()) {
+        hash = (37 * hash) + ISREQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getIsRequest());
+      }
+      if (hasConsent()) {
+        hash = (37 * hash) + CONSENT_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getConsent());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code textsecure.RecordingConsentMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:textsecure.RecordingConsentMessage)
+        org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_RecordingConsentMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.Builder.class);
+      }
+
+      // Construct using org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        uuid_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        callId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        isRequest_ = false;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        consent_ = false;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_RecordingConsentMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getDefaultInstanceForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage build() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage buildPartial() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage result = new org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.uuid_ = uuid_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.callId_ = callId_;
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.isRequest_ = isRequest_;
+          to_bitField0_ |= 0x00000004;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.consent_ = consent_;
+          to_bitField0_ |= 0x00000008;
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage) {
+          return mergeFrom((org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage other) {
+        if (other == org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance()) return this;
+        if (other.hasUuid()) {
+          bitField0_ |= 0x00000001;
+          uuid_ = other.uuid_;
+          onChanged();
+        }
+        if (other.hasCallId()) {
+          bitField0_ |= 0x00000002;
+          callId_ = other.callId_;
+          onChanged();
+        }
+        if (other.hasIsRequest()) {
+          setIsRequest(other.getIsRequest());
+        }
+        if (other.hasConsent()) {
+          setConsent(other.getConsent());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object uuid_ = "";
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return Whether the uuid field is set.
+       */
+      public boolean hasUuid() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return The uuid.
+       */
+      public java.lang.String getUuid() {
+        java.lang.Object ref = uuid_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            uuid_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return The bytes for uuid.
+       */
+      public com.google.protobuf.ByteString
+          getUuidBytes() {
+        java.lang.Object ref = uuid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          uuid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @param value The uuid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUuid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        uuid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUuid() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        uuid_ = getDefaultInstance().getUuid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string uuid = 1;</code>
+       * @param value The bytes for uuid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUuidBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        uuid_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object callId_ = "";
+      /**
+       * <code>optional string callId = 2;</code>
+       * @return Whether the callId field is set.
+       */
+      public boolean hasCallId() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional string callId = 2;</code>
+       * @return The callId.
+       */
+      public java.lang.String getCallId() {
+        java.lang.Object ref = callId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            callId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string callId = 2;</code>
+       * @return The bytes for callId.
+       */
+      public com.google.protobuf.ByteString
+          getCallIdBytes() {
+        java.lang.Object ref = callId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          callId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string callId = 2;</code>
+       * @param value The callId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCallId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        callId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string callId = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCallId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        callId_ = getDefaultInstance().getCallId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string callId = 2;</code>
+       * @param value The bytes for callId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCallIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        callId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean isRequest_ ;
+      /**
+       * <code>optional bool isRequest = 3;</code>
+       * @return Whether the isRequest field is set.
+       */
+      @java.lang.Override
+      public boolean hasIsRequest() {
+        return ((bitField0_ & 0x00000004) != 0);
+      }
+      /**
+       * <code>optional bool isRequest = 3;</code>
+       * @return The isRequest.
+       */
+      @java.lang.Override
+      public boolean getIsRequest() {
+        return isRequest_;
+      }
+      /**
+       * <code>optional bool isRequest = 3;</code>
+       * @param value The isRequest to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsRequest(boolean value) {
+        bitField0_ |= 0x00000004;
+        isRequest_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isRequest = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsRequest() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        isRequest_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean consent_ ;
+      /**
+       * <code>optional bool consent = 4;</code>
+       * @return Whether the consent field is set.
+       */
+      @java.lang.Override
+      public boolean hasConsent() {
+        return ((bitField0_ & 0x00000008) != 0);
+      }
+      /**
+       * <code>optional bool consent = 4;</code>
+       * @return The consent.
+       */
+      @java.lang.Override
+      public boolean getConsent() {
+        return consent_;
+      }
+      /**
+       * <code>optional bool consent = 4;</code>
+       * @param value The consent to set.
+       * @return This builder for chaining.
+       */
+      public Builder setConsent(boolean value) {
+        bitField0_ |= 0x00000008;
+        consent_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool consent = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearConsent() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        consent_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:textsecure.RecordingConsentMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:textsecure.RecordingConsentMessage)
+    private static final org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage();
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<RecordingConsentMessage>
+        PARSER = new com.google.protobuf.AbstractParser<RecordingConsentMessage>() {
+      @java.lang.Override
+      public RecordingConsentMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new RecordingConsentMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<RecordingConsentMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RecordingConsentMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -9151,6 +10356,11 @@ public final class MessageProtos {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_textsecure_ProfessionalMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_textsecure_RecordingConsentMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_textsecure_MatchingMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9189,7 +10399,7 @@ public final class MessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020TextSecure.proto\022\ntextsecure\"\205\004\n\010Envel" +
+      "\n\020TextSecure.proto\022\ntextsecure\"\342\004\n\010Envel" +
       "ope\022\'\n\004type\030\001 \001(\0162\031.textsecure.Envelope." +
       "Type\022\016\n\006source\030\002 \001(\t\022\022\n\nsourceUuid\030\013 \001(\t" +
       "\022\024\n\014sourceDevice\030\007 \001(\r\022\r\n\005relay\030\003 \001(\t\022\021\n" +
@@ -9198,29 +10408,33 @@ public final class MessageProtos {
       "server_timestamp\030\n \001(\004\0224\n\017matchingMessag" +
       "e\030\014 \001(\0132\033.textsecure.MatchingMessage\022H\n\031" +
       "professionalStatusMessage\030\016 \001(\0132%.textse" +
-      "cure.ProfessionalStatusMessage\"\235\001\n\004Type\022" +
-      "\013\n\007UNKNOWN\020\000\022\016\n\nCIPHERTEXT\020\001\022\020\n\014KEY_EXCH" +
-      "ANGE\020\002\022\021\n\rPREKEY_BUNDLE\020\003\022\013\n\007RECEIPT\020\005\022\027" +
-      "\n\023UNIDENTIFIED_SENDER\020\006\022\024\n\020MATCHING_MESS" +
-      "AGE\020\007\022\027\n\023PROFESSIONAL_STATUS\020\010\"Y\n\031Profes" +
-      "sionalStatusMessage\022<\n\023professionalMessa" +
-      "ge\030\001 \003(\0132\037.textsecure.ProfessionalMessag" +
-      "e\"3\n\023ProfessionalMessage\022\014\n\004uuid\030\001 \001(\t\022\016" +
-      "\n\006status\030\002 \001(\t\"\200\001\n\017MatchingMessage\022\014\n\004uu" +
-      "id\030\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003(\r\022\016\n\006num" +
-      "ber\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(\010\022\016\n\006callId\030\005 " +
-      "\001(\t\022\024\n\014followEnable\030\006 \001(\010\" \n\020Provisionin" +
-      "gUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertificate" +
-      "\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014" +
-      "\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014" +
-      "\"\332\001\n\021SenderCertificate\022\023\n\013certificate\030\001 " +
-      "\001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certificate\022\016" +
-      "\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014se" +
-      "nderDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013ide" +
-      "ntityKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.textsec" +
-      "ure.ServerCertificateB:\n)org.whispersyst" +
-      "ems.textsecuregcm.entitiesB\rMessageProto" +
-      "s"
+      "cure.ProfessionalStatusMessage\022D\n\027record" +
+      "ingConsentMessage\030\017 \001(\0132#.textsecure.Rec" +
+      "ordingConsentMessage\"\264\001\n\004Type\022\013\n\007UNKNOWN" +
+      "\020\000\022\016\n\nCIPHERTEXT\020\001\022\020\n\014KEY_EXCHANGE\020\002\022\021\n\r" +
+      "PREKEY_BUNDLE\020\003\022\013\n\007RECEIPT\020\005\022\027\n\023UNIDENTI" +
+      "FIED_SENDER\020\006\022\024\n\020MATCHING_MESSAGE\020\007\022\027\n\023P" +
+      "ROFESSIONAL_STATUS\020\010\022\025\n\021RECORDING_CONSEN" +
+      "T\020\t\"Y\n\031ProfessionalStatusMessage\022<\n\023prof" +
+      "essionalMessage\030\001 \003(\0132\037.textsecure.Profe" +
+      "ssionalMessage\"3\n\023ProfessionalMessage\022\014\n" +
+      "\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"[\n\027Recording" +
+      "ConsentMessage\022\014\n\004uuid\030\001 \001(\t\022\016\n\006callId\030\002" +
+      " \001(\t\022\021\n\tisRequest\030\003 \001(\010\022\017\n\007consent\030\004 \001(\010" +
+      "\"\200\001\n\017MatchingMessage\022\014\n\004uuid\030\001 \001(\t\022\027\n\017ma" +
+      "tchingKeyword\030\002 \003(\r\022\016\n\006number\030\003 \001(\t\022\020\n\010i" +
+      "sCaller\030\004 \001(\010\022\016\n\006callId\030\005 \001(\t\022\024\n\014followE" +
+      "nable\030\006 \001(\010\" \n\020ProvisioningUuid\022\014\n\004uuid\030" +
+      "\001 \001(\t\"c\n\021ServerCertificate\022\023\n\013certificat" +
+      "e\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032&\n\013Certificat" +
+      "e\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014\"\332\001\n\021SenderCer" +
+      "tificate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignatu" +
+      "re\030\002 \001(\014\032\234\001\n\013Certificate\022\016\n\006sender\030\001 \001(\t" +
+      "\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014senderDevice\030\002 \001" +
+      "(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013identityKey\030\004 \001(\014" +
+      "\022-\n\006signer\030\005 \001(\0132\035.textsecure.ServerCert" +
+      "ificateB:\n)org.whispersystems.textsecure" +
+      "gcm.entitiesB\rMessageProtos"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9231,7 +10445,7 @@ public final class MessageProtos {
     internal_static_textsecure_Envelope_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_Envelope_descriptor,
-        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", "ProfessionalStatusMessage", });
+        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", "ProfessionalStatusMessage", "RecordingConsentMessage", });
     internal_static_textsecure_ProfessionalStatusMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable = new
@@ -9244,20 +10458,26 @@ public final class MessageProtos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProfessionalMessage_descriptor,
         new java.lang.String[] { "Uuid", "Status", });
-    internal_static_textsecure_MatchingMessage_descriptor =
+    internal_static_textsecure_RecordingConsentMessage_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_textsecure_RecordingConsentMessage_descriptor,
+        new java.lang.String[] { "Uuid", "CallId", "IsRequest", "Consent", });
+    internal_static_textsecure_MatchingMessage_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_textsecure_MatchingMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_MatchingMessage_descriptor,
         new java.lang.String[] { "Uuid", "MatchingKeyword", "Number", "IsCaller", "CallId", "FollowEnable", });
     internal_static_textsecure_ProvisioningUuid_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_textsecure_ProvisioningUuid_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProvisioningUuid_descriptor,
         new java.lang.String[] { "Uuid", });
     internal_static_textsecure_ServerCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_textsecure_ServerCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ServerCertificate_descriptor,
@@ -9269,7 +10489,7 @@ public final class MessageProtos {
         internal_static_textsecure_ServerCertificate_Certificate_descriptor,
         new java.lang.String[] { "Id", "Key", });
     internal_static_textsecure_SenderCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_textsecure_SenderCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_SenderCertificate_descriptor,

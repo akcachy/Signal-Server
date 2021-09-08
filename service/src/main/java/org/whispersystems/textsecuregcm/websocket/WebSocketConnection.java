@@ -43,6 +43,8 @@ import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage;
+import org.whispersystems.textsecuregcm.entities.CachyRecordingConsent;
 import org.whispersystems.textsecuregcm.metrics.UserAgentTagUtil;
 import org.whispersystems.textsecuregcm.push.DisplacedPresenceListener;
 import org.whispersystems.textsecuregcm.push.ReceiptSender;
@@ -332,6 +334,12 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
        sendProfessionalStatusMessage(message);
     }
   }
+  @Override
+  public void recordingConsentMessageAvailable() {
+  
+    messagesManager.takeRecordingConsentMessage(account.getUuid(), device.getId())
+                   .ifPresent(message -> sendRecordingConsentMessage(message));
+  }
   
   private CompletableFuture<WebSocketResponseMessage> sendProfessionalStatusMessage(final Map<String , String> message) {
     final ProfessionalStatusMessage.Builder  professionalStatusMessage =   ProfessionalStatusMessage.newBuilder();
@@ -376,6 +384,38 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
       if (throwable == null) {
         if (isSuccessResponse(response)) {
           logger.info("############### PUT /api/v1/wall RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
+  }
+
+  private CompletableFuture<WebSocketResponseMessage> sendRecordingConsentMessage(final String message) {
+
+    CachyRecordingConsent cachyRecordingConsent = null;
+    try{
+      cachyRecordingConsent = mapper.readValue(message, CachyRecordingConsent.class);
+    }catch(Exception e){}
+
+    sendMessageMeter.mark();
+    sentMessageCounter.increment();
+    
+    final RecordingConsentMessage.Builder  builder1 =   RecordingConsentMessage.newBuilder()
+                                                        .setUuid(cachyRecordingConsent.getUuid().toString())
+                                                        .setCallId(cachyRecordingConsent.getCallId())
+                                                        .setIsRequest(cachyRecordingConsent.isRequest())
+                                                        .setConsent(cachyRecordingConsent.isConsent());                              
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.RECORDING_CONSENT)
+                                                    .setRecordingConsentMessage(builder1);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/recording/consent", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### PUT /api/v1/recording/consent RESPONSE "+ response.getMessage());
         }
       } else {
         sendFailuresMeter.mark();
