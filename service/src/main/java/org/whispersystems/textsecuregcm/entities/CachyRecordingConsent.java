@@ -14,10 +14,8 @@ public class CachyRecordingConsent {
     private String callId;
     
     @JsonProperty
-    private boolean isRequest;
+    private String type;
     
-    @JsonProperty
-    private boolean consent;
     
     public CachyRecordingConsent() {
     }
@@ -38,20 +36,12 @@ public class CachyRecordingConsent {
         this.callId = callId;
     }
 
-    public boolean isRequest() {
-        return isRequest;
+    public String getType() {
+        return type;
     }
 
-    public void setRequest(boolean isRequest) {
-        this.isRequest = isRequest;
-    }
-
-    public boolean isConsent() {
-        return consent;
-    }
-
-    public void setConsent(boolean consent) {
-        this.consent = consent;
+    public void setType(String type) {
+        this.type = type;
     }
    
 }

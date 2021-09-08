@@ -59,8 +59,7 @@ message ProfessionalMessage {
 message RecordingConsentMessage { 
   optional string uuid      = 1;
   optional string callId    = 2;
-  optional bool   isRequest = 3;
-  optional bool   consent   = 4;
+  optional string type      = 3;
 }
 
 message MatchingMessage {

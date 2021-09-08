@@ -404,8 +404,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     final RecordingConsentMessage.Builder  builder1 =   RecordingConsentMessage.newBuilder()
                                                         .setUuid(cachyRecordingConsent.getUuid().toString())
                                                         .setCallId(cachyRecordingConsent.getCallId())
-                                                        .setIsRequest(cachyRecordingConsent.isRequest())
-                                                        .setConsent(cachyRecordingConsent.isConsent());                              
+                                                        .setType(cachyRecordingConsent.getType());                              
     final Envelope.Builder      builder = Envelope.newBuilder()
                                                     .setType(Envelope.Type.RECORDING_CONSENT)
                                                     .setRecordingConsentMessage(builder1);

@@ -4248,26 +4248,21 @@ public final class MessageProtos {
         getCallIdBytes();
 
     /**
-     * <code>optional bool isRequest = 3;</code>
-     * @return Whether the isRequest field is set.
+     * <code>optional string type = 3;</code>
+     * @return Whether the type field is set.
      */
-    boolean hasIsRequest();
+    boolean hasType();
     /**
-     * <code>optional bool isRequest = 3;</code>
-     * @return The isRequest.
+     * <code>optional string type = 3;</code>
+     * @return The type.
      */
-    boolean getIsRequest();
-
+    java.lang.String getType();
     /**
-     * <code>optional bool consent = 4;</code>
-     * @return Whether the consent field is set.
+     * <code>optional string type = 3;</code>
+     * @return The bytes for type.
      */
-    boolean hasConsent();
-    /**
-     * <code>optional bool consent = 4;</code>
-     * @return The consent.
-     */
-    boolean getConsent();
+    com.google.protobuf.ByteString
+        getTypeBytes();
   }
   /**
    * Protobuf type {@code textsecure.RecordingConsentMessage}
@@ -4284,6 +4279,7 @@ public final class MessageProtos {
     private RecordingConsentMessage() {
       uuid_ = "";
       callId_ = "";
+      type_ = "";
     }
 
     @java.lang.Override
@@ -4329,14 +4325,10 @@ public final class MessageProtos {
               callId_ = bs;
               break;
             }
-            case 24: {
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
-              isRequest_ = input.readBool();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              consent_ = input.readBool();
+              type_ = bs;
               break;
             }
             default: {
@@ -4468,42 +4460,52 @@ public final class MessageProtos {
       }
     }
 
-    public static final int ISREQUEST_FIELD_NUMBER = 3;
-    private boolean isRequest_;
+    public static final int TYPE_FIELD_NUMBER = 3;
+    private volatile java.lang.Object type_;
     /**
-     * <code>optional bool isRequest = 3;</code>
-     * @return Whether the isRequest field is set.
+     * <code>optional string type = 3;</code>
+     * @return Whether the type field is set.
      */
     @java.lang.Override
-    public boolean hasIsRequest() {
+    public boolean hasType() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>optional bool isRequest = 3;</code>
-     * @return The isRequest.
+     * <code>optional string type = 3;</code>
+     * @return The type.
      */
     @java.lang.Override
-    public boolean getIsRequest() {
-      return isRequest_;
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
     }
-
-    public static final int CONSENT_FIELD_NUMBER = 4;
-    private boolean consent_;
     /**
-     * <code>optional bool consent = 4;</code>
-     * @return Whether the consent field is set.
+     * <code>optional string type = 3;</code>
+     * @return The bytes for type.
      */
     @java.lang.Override
-    public boolean hasConsent() {
-      return ((bitField0_ & 0x00000008) != 0);
-    }
-    /**
-     * <code>optional bool consent = 4;</code>
-     * @return The consent.
-     */
-    @java.lang.Override
-    public boolean getConsent() {
-      return consent_;
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -4527,10 +4529,7 @@ public final class MessageProtos {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, callId_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeBool(3, isRequest_);
-      }
-      if (((bitField0_ & 0x00000008) != 0)) {
-        output.writeBool(4, consent_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, type_);
       }
       unknownFields.writeTo(output);
     }
@@ -4548,12 +4547,7 @@ public final class MessageProtos {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, callId_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, isRequest_);
-      }
-      if (((bitField0_ & 0x00000008) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, consent_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, type_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4580,15 +4574,10 @@ public final class MessageProtos {
         if (!getCallId()
             .equals(other.getCallId())) return false;
       }
-      if (hasIsRequest() != other.hasIsRequest()) return false;
-      if (hasIsRequest()) {
-        if (getIsRequest()
-            != other.getIsRequest()) return false;
-      }
-      if (hasConsent() != other.hasConsent()) return false;
-      if (hasConsent()) {
-        if (getConsent()
-            != other.getConsent()) return false;
+      if (hasType() != other.hasType()) return false;
+      if (hasType()) {
+        if (!getType()
+            .equals(other.getType())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -4609,15 +4598,9 @@ public final class MessageProtos {
         hash = (37 * hash) + CALLID_FIELD_NUMBER;
         hash = (53 * hash) + getCallId().hashCode();
       }
-      if (hasIsRequest()) {
-        hash = (37 * hash) + ISREQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getIsRequest());
-      }
-      if (hasConsent()) {
-        hash = (37 * hash) + CONSENT_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getConsent());
+      if (hasType()) {
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getType().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -4756,10 +4739,8 @@ public final class MessageProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         callId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        isRequest_ = false;
+        type_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        consent_ = false;
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -4797,13 +4778,9 @@ public final class MessageProtos {
         }
         result.callId_ = callId_;
         if (((from_bitField0_ & 0x00000004) != 0)) {
-          result.isRequest_ = isRequest_;
           to_bitField0_ |= 0x00000004;
         }
-        if (((from_bitField0_ & 0x00000008) != 0)) {
-          result.consent_ = consent_;
-          to_bitField0_ |= 0x00000008;
-        }
+        result.type_ = type_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4863,11 +4840,10 @@ public final class MessageProtos {
           callId_ = other.callId_;
           onChanged();
         }
-        if (other.hasIsRequest()) {
-          setIsRequest(other.getIsRequest());
-        }
-        if (other.hasConsent()) {
-          setConsent(other.getConsent());
+        if (other.hasType()) {
+          bitField0_ |= 0x00000004;
+          type_ = other.type_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -5067,80 +5043,86 @@ public final class MessageProtos {
         return this;
       }
 
-      private boolean isRequest_ ;
+      private java.lang.Object type_ = "";
       /**
-       * <code>optional bool isRequest = 3;</code>
-       * @return Whether the isRequest field is set.
+       * <code>optional string type = 3;</code>
+       * @return Whether the type field is set.
        */
-      @java.lang.Override
-      public boolean hasIsRequest() {
+      public boolean hasType() {
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>optional bool isRequest = 3;</code>
-       * @return The isRequest.
+       * <code>optional string type = 3;</code>
+       * @return The type.
        */
-      @java.lang.Override
-      public boolean getIsRequest() {
-        return isRequest_;
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional bool isRequest = 3;</code>
-       * @param value The isRequest to set.
+       * <code>optional string type = 3;</code>
+       * @return The bytes for type.
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 3;</code>
+       * @param value The type to set.
        * @return This builder for chaining.
        */
-      public Builder setIsRequest(boolean value) {
-        bitField0_ |= 0x00000004;
-        isRequest_ = value;
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        type_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool isRequest = 3;</code>
+       * <code>optional string type = 3;</code>
        * @return This builder for chaining.
        */
-      public Builder clearIsRequest() {
+      public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        isRequest_ = false;
-        onChanged();
-        return this;
-      }
-
-      private boolean consent_ ;
-      /**
-       * <code>optional bool consent = 4;</code>
-       * @return Whether the consent field is set.
-       */
-      @java.lang.Override
-      public boolean hasConsent() {
-        return ((bitField0_ & 0x00000008) != 0);
-      }
-      /**
-       * <code>optional bool consent = 4;</code>
-       * @return The consent.
-       */
-      @java.lang.Override
-      public boolean getConsent() {
-        return consent_;
-      }
-      /**
-       * <code>optional bool consent = 4;</code>
-       * @param value The consent to set.
-       * @return This builder for chaining.
-       */
-      public Builder setConsent(boolean value) {
-        bitField0_ |= 0x00000008;
-        consent_ = value;
+        type_ = getDefaultInstance().getType();
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool consent = 4;</code>
+       * <code>optional string type = 3;</code>
+       * @param value The bytes for type to set.
        * @return This builder for chaining.
        */
-      public Builder clearConsent() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        consent_ = false;
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        type_ = value;
         onChanged();
         return this;
       }
@@ -10418,23 +10400,23 @@ public final class MessageProtos {
       "T\020\t\"Y\n\031ProfessionalStatusMessage\022<\n\023prof" +
       "essionalMessage\030\001 \003(\0132\037.textsecure.Profe" +
       "ssionalMessage\"3\n\023ProfessionalMessage\022\014\n" +
-      "\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"[\n\027Recording" +
+      "\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"E\n\027Recording" +
       "ConsentMessage\022\014\n\004uuid\030\001 \001(\t\022\016\n\006callId\030\002" +
-      " \001(\t\022\021\n\tisRequest\030\003 \001(\010\022\017\n\007consent\030\004 \001(\010" +
-      "\"\200\001\n\017MatchingMessage\022\014\n\004uuid\030\001 \001(\t\022\027\n\017ma" +
-      "tchingKeyword\030\002 \003(\r\022\016\n\006number\030\003 \001(\t\022\020\n\010i" +
-      "sCaller\030\004 \001(\010\022\016\n\006callId\030\005 \001(\t\022\024\n\014followE" +
-      "nable\030\006 \001(\010\" \n\020ProvisioningUuid\022\014\n\004uuid\030" +
-      "\001 \001(\t\"c\n\021ServerCertificate\022\023\n\013certificat" +
-      "e\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032&\n\013Certificat" +
-      "e\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014\"\332\001\n\021SenderCer" +
-      "tificate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignatu" +
-      "re\030\002 \001(\014\032\234\001\n\013Certificate\022\016\n\006sender\030\001 \001(\t" +
-      "\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014senderDevice\030\002 \001" +
-      "(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013identityKey\030\004 \001(\014" +
-      "\022-\n\006signer\030\005 \001(\0132\035.textsecure.ServerCert" +
-      "ificateB:\n)org.whispersystems.textsecure" +
-      "gcm.entitiesB\rMessageProtos"
+      " \001(\t\022\014\n\004type\030\003 \001(\t\"\200\001\n\017MatchingMessage\022\014" +
+      "\n\004uuid\030\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003(\r\022\016\n" +
+      "\006number\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(\010\022\016\n\006callI" +
+      "d\030\005 \001(\t\022\024\n\014followEnable\030\006 \001(\010\" \n\020Provisi" +
+      "oningUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertifi" +
+      "cate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002" +
+      " \001(\014\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002" +
+      " \001(\014\"\332\001\n\021SenderCertificate\022\023\n\013certificat" +
+      "e\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certifica" +
+      "te\022\016\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024" +
+      "\n\014senderDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n" +
+      "\013identityKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.tex" +
+      "tsecure.ServerCertificateB:\n)org.whisper" +
+      "systems.textsecuregcm.entitiesB\rMessageP" +
+      "rotos"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10463,7 +10445,7 @@ public final class MessageProtos {
     internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_RecordingConsentMessage_descriptor,
-        new java.lang.String[] { "Uuid", "CallId", "IsRequest", "Consent", });
+        new java.lang.String[] { "Uuid", "CallId", "Type", });
     internal_static_textsecure_MatchingMessage_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_textsecure_MatchingMessage_fieldAccessorTable = new
