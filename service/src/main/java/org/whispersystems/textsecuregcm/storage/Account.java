@@ -327,6 +327,9 @@ public class Account implements Principal  {
 
     @JsonProperty
     private String profileVersion;
+
+    @JsonProperty
+    private long updatedAt;
     
       public String getUserName() {
         return username;
@@ -446,6 +449,14 @@ public class Account implements Principal  {
 
     public void setProfileVersion(String profileVersion) {
       this.profileVersion = profileVersion;
+    }
+
+    public long getUpdatedAt() {
+      return updatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+      this.updatedAt = updatedAt;
     }
     
 
