@@ -71,6 +71,7 @@ public class Accounts {
         handle.createUpdate("UPDATE accounts SET " + DATA + " = CAST(:data AS json) WHERE " + UID + " = :uuid")
               .bind("uuid", account.getUuid())
               .bind("data", mapper.writeValueAsString(account))
+              .bind("updated_at", account.getUpdatedAt())
               .execute();
       } catch (JsonProcessingException e) {
         throw new IllegalArgumentException(e);

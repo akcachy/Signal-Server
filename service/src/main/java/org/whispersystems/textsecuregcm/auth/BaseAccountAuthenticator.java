@@ -36,7 +36,7 @@ public class BaseAccountAuthenticator {
   private final Meter          deviceDisabledMeter          = metricRegistry.meter(name(getClass(), "authentication", "deviceDisabled" ));
   private final Meter          invalidAuthHeaderMeter       = metricRegistry.meter(name(getClass(), "authentication", "invalidHeader"  ));
 
-  private final Logger logger = LoggerFactory.getLogger(AccountAuthenticator.class);
+  private final Logger logger = LoggerFactory.getLogger(BaseAccountAuthenticator.class);
 
   private final AccountsManager accountsManager;
   private final Clock           clock;
@@ -108,6 +108,7 @@ public class BaseAccountAuthenticator {
 
     if (device.getLastSeen() < todayInMillisWithOffset) {
       device.setLastSeen(Util.todayInMillis(clock));
+      account.setUpdatedAt(System.currentTimeMillis());
       accountsManager.update(account);
     }
   }
