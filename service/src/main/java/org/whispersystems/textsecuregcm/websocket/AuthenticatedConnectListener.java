@@ -23,6 +23,7 @@ import org.whispersystems.textsecuregcm.storage.MessagesManager;
 import org.whispersystems.textsecuregcm.util.Constants;
 import org.whispersystems.websocket.session.WebSocketSessionContext;
 import org.whispersystems.websocket.setup.WebSocketConnectListener;
+import org.whispersystems.websocket.WebSocketClient;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
@@ -55,6 +56,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
   @Override
   public void onWebSocketConnect(WebSocketSessionContext context) {
     if (context.getAuthenticated() != null) {
+      logger.info("############## WEBSOCKET CONNECT ADDREDD" + context.getClient().getRemoteAddredd());
       final Account                 account        = context.getAuthenticated(Account.class);
       final Device                  device         = account.getAuthenticatedDevice().get();
       final Timer.Context           timer          = durationTimer.time();

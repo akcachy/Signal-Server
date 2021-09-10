@@ -88,6 +88,10 @@ public class WebSocketClient {
   public String getUserAgent() {
     return session.getUpgradeRequest().getHeader("User-Agent");
   }
+  public String getRemoteAddredd() {
+     return session.getRemote().getInetSocketAddress().getAddress().toString();
+
+  }
 
   public long getCreatedTimestamp() {
     return this.created;
