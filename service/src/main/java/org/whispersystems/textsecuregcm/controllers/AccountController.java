@@ -597,7 +597,7 @@ public class AccountController {
         return new CaptchaRequirement(false, false);
       } else {
         captchaFailureMeter.mark();
-        return new CaptchaRequirement(false, false);
+        return new CaptchaRequirement(true, false);
       }
     }
 
@@ -605,10 +605,10 @@ public class AccountController {
       Optional<String> storedPushChallenge = storedVerificationCode.map(StoredVerificationCode::getPushCode);
 
       if (!pushChallenge.get().equals(storedPushChallenge.orElse(null))) {
-        return new CaptchaRequirement(false, false);
+        return new CaptchaRequirement(true, false);
       }
     } else {
-      return new CaptchaRequirement(false, false);
+      return new CaptchaRequirement(true, false);
     }
 
     List<AbusiveHostRule> abuseRules = abusiveHostRules.getAbusiveHostRulesFor(requester);
