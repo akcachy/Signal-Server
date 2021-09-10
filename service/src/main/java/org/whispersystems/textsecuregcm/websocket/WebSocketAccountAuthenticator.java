@@ -35,6 +35,7 @@ public class WebSocketAccountAuthenticator implements WebSocketAuthenticator<Acc
     List<String>              usernames  = parameters.get("login");
     List<String>              passwords  = parameters.get("password");
 
+    logger.info("################ WEBSOCKET AUTHENTICATOR HOST "+ request.getHost());;
     logger.info("################ WEBSOCKET AUTHENTICATOR ");
     if (usernames == null || usernames.size() == 0 ||
         passwords == null || passwords.size() == 0)
