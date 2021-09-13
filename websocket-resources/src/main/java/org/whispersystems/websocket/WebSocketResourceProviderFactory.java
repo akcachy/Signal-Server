@@ -73,8 +73,6 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
           authenticated = authenticationResult.getUser().orElse(null);
           if(authenticated != null){
             addLoginHistory(request, "SUCCESS");
-          }else{
-            addLoginHistory(request, "FAILED");
           }
           
         }
