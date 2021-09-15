@@ -10,6 +10,8 @@ import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jdbi.v3.core.transaction.TransactionIsolationLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.whispersystems.textsecuregcm.storage.mappers.AccountRowMapper;
 import org.whispersystems.textsecuregcm.util.Constants;
 import org.whispersystems.textsecuregcm.util.SystemMapper;
@@ -29,6 +31,7 @@ public class Accounts {
 
   private static final ObjectMapper mapper = SystemMapper.getMapper();
 
+  private final Logger         logger                           = LoggerFactory.getLogger(Accounts.class);
   private final MetricRegistry metricRegistry        = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
   private final Timer          createTimer           = metricRegistry.timer(name(Accounts.class, "create"          ));
   private final Timer          updateTimer           = metricRegistry.timer(name(Accounts.class, "update"          ));
@@ -66,6 +69,12 @@ public class Accounts {
   }
 
   public void update(Account account) {
+    try{
+      logger.info("*******************  UPDATE ACCOUNT ***** "+mapper.writeValueAsString(account));
+      if(account.getProfileKey() == null){
+        logger.info("#################################################\n#################################################\n ");
+      }
+    }catch(Exception e){}
     database.use(jdbi -> jdbi.useHandle(handle -> {
       try (Timer.Context ignored = updateTimer.time()) {
         handle.createUpdate("UPDATE accounts SET " + DATA + " = CAST(:data AS json) WHERE " + UID + " = :uuid")
