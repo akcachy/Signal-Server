@@ -70,8 +70,8 @@ public class Accounts {
 
   public void update(Account account) {
     try{
-      logger.info("*******************  UPDATE ACCOUNT ***** "+mapper.writeValueAsString(account));
       if(account.getProfileKey() == null){
+        logger.info("*******************  UPDATE ACCOUNT ***** "+mapper.writeValueAsString(account));
         logger.info("#################################################\n#################################################\n ");
       }
     }catch(Exception e){}
