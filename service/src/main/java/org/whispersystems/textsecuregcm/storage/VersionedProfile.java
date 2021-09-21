@@ -31,6 +31,9 @@ public class VersionedProfile {
   private String paymentAddress;
 
   @JsonProperty
+  private String profileKey;
+
+  @JsonProperty
   @JsonSerialize(using = ByteArrayAdapter.Serializing.class)
   @JsonDeserialize(using = ByteArrayAdapter.Deserializing.class)
   private byte[] commitment;
@@ -47,6 +50,11 @@ public class VersionedProfile {
     this.about = about;
     this.paymentAddress = paymentAddress;
     this.commitment = commitment;
+  }
+
+  public VersionedProfile(String version, String profileKey) {
+    this.version = version;
+    this.profileKey = profileKey;
   }
 
   public String getVersion() {
@@ -75,5 +83,13 @@ public class VersionedProfile {
 
   public byte[] getCommitment() {
     return commitment;
+  }
+
+  public String getProfileKey() {
+    return profileKey;
+  }
+
+  public void setProfileKey(String profileKey) {
+    this.profileKey = profileKey;
   }
 }

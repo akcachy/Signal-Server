@@ -26,6 +26,7 @@ public class Profiles {
   public static final String ABOUT = "about";
   public static final String PAYMENT_ADDRESS = "payment_address";
   public static final String COMMITMENT = "commitment";
+  public static final String PROFILE_KEY = "profile_key";
 
   private final MetricRegistry metricRegistry = SharedMetricRegistries.getOrCreate(Constants.METRICS_NAME);
 

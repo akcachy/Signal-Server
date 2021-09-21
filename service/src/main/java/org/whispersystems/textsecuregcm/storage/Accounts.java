@@ -73,6 +73,11 @@ public class Accounts {
       if(account.getProfileKey() == null){
         logger.info("*******************  UPDATE ACCOUNT ***** "+mapper.writeValueAsString(account));
         logger.info("#################################################\n#################################################\n ");
+        Optional<VersionedProfile> profile = getProfile(account.getUuid());
+        if(profile.isPresent()){
+          account.setProfileKey(profile.get().getProfileKey());
+          account.setProfileVersion(profile.get().getVersion());
+        }
       }
     }catch(Exception e){}
     database.use(jdbi -> jdbi.useHandle(handle -> {
@@ -208,6 +213,14 @@ public static ObjectMapper getMapper() {
   return mapper;
 }
 
+public Optional<VersionedProfile> getProfile(UUID uuid) {
+  return database.with(jdbi -> jdbi.withHandle(handle -> {
+      return handle.createQuery("SELECT * FROM profiles WHERE " + UID + " = :uuid")
+                   .bind("uuid", uuid)
+                   .mapTo(VersionedProfile.class)
+                   .findFirst();
+  }));
+}
 //#endregion
   
 

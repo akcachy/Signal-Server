@@ -16,7 +16,7 @@ public class VersionedProfileMapper implements RowMapper<VersionedProfile> {
 
   @Override
   public VersionedProfile map(ResultSet resultSet, StatementContext ctx) throws SQLException {
-    return new VersionedProfile(
+    VersionedProfile profile =  new VersionedProfile(
         resultSet.getString(Profiles.VERSION),
         resultSet.getString(Profiles.NAME),
         resultSet.getString(Profiles.AVATAR),
@@ -24,5 +24,7 @@ public class VersionedProfileMapper implements RowMapper<VersionedProfile> {
         resultSet.getString(Profiles.ABOUT),
         resultSet.getString(Profiles.PAYMENT_ADDRESS),
         resultSet.getBytes(Profiles.COMMITMENT));
+    profile.setProfileKey(resultSet.getString(Profiles.PROFILE_KEY));
+    return profile;
   }
 }
