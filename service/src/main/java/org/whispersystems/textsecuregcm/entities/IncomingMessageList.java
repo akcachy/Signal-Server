@@ -30,8 +30,6 @@ public class IncomingMessageList {
   @JsonProperty
   private boolean isMonetizeMessage;
 
-  @JsonProperty
-  private boolean agreeToPay;
 
   public IncomingMessageList() {}
 
@@ -47,15 +45,19 @@ public class IncomingMessageList {
     return online;
   }
 
-  public boolean isAgreeToPay() {
-    return agreeToPay;
-  }
-
   public UUID getMyUUID() {
     return myUUID;
   }
 
   public void setMyUUID(UUID myUUID) {
     this.myUUID = myUUID;
+  }
+
+  public boolean isMonetizeMessage() {
+    return isMonetizeMessage;
+  }
+
+  public void setMonetizeMessage(boolean isMonetizeMessage) {
+    this.isMonetizeMessage = isMonetizeMessage;
   }
 }
