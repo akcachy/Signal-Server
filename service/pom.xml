@@ -4,13 +4,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.cachysecureserver</groupId>
-    <artifactId>CachySecureServer</artifactId>
+    <artifactId>MatchingService</artifactId>
     <version>1.0</version>
+    <relativePath>../../MatchingService/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>service</artifactId>
-  <version>${CachySecureServer.version}</version>
+  <version>${MatchingService.version}</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,22 +21,22 @@
     <dependency>
       <groupId>com.cachysecureserver</groupId>
       <artifactId>redis-dispatch</artifactId>
-      <version>${CachySecureServer.version}</version>
+      <version>${MatchingService.version}</version>
     </dependency>
     <dependency>
       <groupId>com.cachysecureserver</groupId>
       <artifactId>websocket-resources</artifactId>
-      <version>${CachySecureServer.version}</version>
+      <version>${MatchingService.version}</version>
     </dependency>
     <!--        <dependency>-->
     <!--            <groupId>com.cachysecureserver</groupId>-->
     <!--            <artifactId>cachy-services</artifactId>-->
-    <!--            <version>${CachySecureServer.version}</version>-->
+    <!--            <version>${MatchingService.version}</version>-->
     <!--        </dependency>-->
     <dependency>
       <groupId>com.cachysecureserver</groupId>
       <artifactId>gcm-sender-async</artifactId>
-      <version>${CachySecureServer.version}</version>
+      <version>${MatchingService.version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>
@@ -230,7 +231,7 @@
 
 
   <!-- <build>
-       <finalName>${parent.artifactId}-${CachySecureServer.version}</finalName>
+       <finalName>${parent.artifactId}-${MatchingService.version}</finalName>
        <plugins>
            <plugin>
                <groupId>org.apache.maven.plugins</groupId>

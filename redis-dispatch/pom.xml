@@ -5,13 +5,14 @@
 
   <parent>
     <groupId>com.cachysecureserver</groupId>
-    <artifactId>CachySecureServer</artifactId>
+    <artifactId>MatchingService</artifactId>
     <version>1.0</version>
+    <relativePath>../../MatchingService/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>redis-dispatch</artifactId>
-  <version>${CachySecureServer.version}</version>
+  <version>${MatchingService.version}</version>
 
 
 </project>
