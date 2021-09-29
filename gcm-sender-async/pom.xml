@@ -4,13 +4,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.cachysecureserver</groupId>
-    <artifactId>CachySecureServer</artifactId>
+    <artifactId>SocialService</artifactId>
     <version>1.0</version>
+    <relativePath>../../SocialService/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>gcm-sender-async</artifactId>
-  <version>${CachySecureServer.version}</version>
+  <version>${SocialService.version}</version>
 
 
   <dependencies>
