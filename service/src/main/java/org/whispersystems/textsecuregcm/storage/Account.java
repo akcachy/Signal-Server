@@ -328,8 +328,6 @@ public class Account implements Principal  {
     @JsonProperty
     private String profileVersion;
     
-    @JsonProperty
-    private boolean privateAccount;
 
     @JsonProperty
     private long updatedAt;
@@ -462,13 +460,6 @@ public class Account implements Principal  {
       this.updatedAt = updatedAt;
     }
 
-    public boolean isPrivateAccount() {
-      return privateAccount;
-    }
-
-    public void setPrivateAccount(boolean privateAccount) {
-      this.privateAccount = privateAccount;
-    }
     
 
 //#endregion
