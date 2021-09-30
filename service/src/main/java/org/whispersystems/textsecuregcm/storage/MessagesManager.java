@@ -109,9 +109,6 @@ public class MessagesManager {
      messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid);
   }
 
-  public List<CachyComment> getComments(final String uuid, final long[] range) {
-    return messagesCache.getComments(uuid,  range);
-  }
   public  Map<Integer , Double> getCommonInterestedCategory() {
     return messagesCache.getCommonInterestedCategory();
   }

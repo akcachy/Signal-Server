@@ -253,19 +253,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     public boolean hasMessages(final UUID destinationUuid, final long destinationDevice) {
         return readDeleteCluster.withBinaryCluster(connection -> connection.sync().zcard(getMessageQueueKey(destinationUuid, destinationDevice)) > 0);
     }
-    public List<CachyComment> getComments(final String postId, final long[] range) {
-        final List<byte[]> comments = (List<byte[]>) readDeleteCluster.withBinaryCluster(connection -> connection.sync().lrange(getCommentQueueKey(postId), range[0], range[1])   ); 
-        List<CachyComment> list = new ArrayList();
-        comments.stream().forEach(comment  ->  {
-           
-            try{
-                String cmt =  new String(comment);
-                list.add(mapper.readValue(cmt, CachyComment.class));
-                System.out.println(cmt);
-            }catch(Exception e){}
-        });
-        return list;
-    }
+
 
     @SuppressWarnings("unchecked")
     public List<OutgoingMessageEntity> get(final UUID destinationUuid, final long destinationDevice, final int limit) {
