@@ -80,6 +80,7 @@ public class GCMSender {
       case FOLLOW:       key = "follow";       break;
       case LIKE:         key = "like";         break;
       case COMMENT:      key = "comment";      break;
+      case FOLLOW_REQUEST:  key = "follow_request";      break;
 
       default:           throw new AssertionError();
     }
