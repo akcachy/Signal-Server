@@ -113,7 +113,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
   }
 
   private void addLoginHistory(ServletUpgradeRequest servletUpgradeRequest, String status){
-    URI  uri                        = URI.create("http://localhost:8080/cachy/v1/login/history");
+    URI  uri                        = URI.create("http://localhost:8086/cachy/v1/login/history");
 
     Map<String, List<String>> parameters = servletUpgradeRequest.getParameterMap();
     List<String>              usernames  = parameters.get("login");
