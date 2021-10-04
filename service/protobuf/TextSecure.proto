@@ -69,6 +69,8 @@ message MatchingMessage {
   optional bool isCaller = 4;
   optional string callId = 5;
   optional bool followEnable = 6;
+  optional string unidentifiedAccess = 7;
+  optional string profileKey         = 8;
 }
 
 message ProvisioningUuid {
