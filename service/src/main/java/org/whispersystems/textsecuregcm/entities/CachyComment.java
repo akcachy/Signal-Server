@@ -35,10 +35,10 @@ public class CachyComment {
   private String pk;
 
   @JsonProperty
-  private boolean pro;
+  private int pro;
 
   @JsonProperty
-  private boolean pre;
+  private int pre;
 
   @JsonProperty
   private boolean isUserStoryExists;
