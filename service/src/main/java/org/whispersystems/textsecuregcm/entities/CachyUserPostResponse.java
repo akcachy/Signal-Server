@@ -10,7 +10,7 @@ public class CachyUserPostResponse {
     @JsonProperty
     private String postId;
 
-    @JsonIgnore
+    @JsonProperty
     private String uuid;
 
 
