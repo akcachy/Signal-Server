@@ -26,6 +26,9 @@ public class CachyUserPostResponse {
     
     @JsonProperty
     public long likesCount;
+
+    @JsonProperty
+    public long views;
     
     @JsonProperty
     public long commentsCount;
