@@ -442,25 +442,31 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }
     }
 
-    public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String queueName) {
+    public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String queueName, final int slotIndex) {
         logger.info("####################### QUEUE NAME " + queueName);
         final int slot = SlotHash.getSlot(queueName+"::1");
 
         pubSubConnection.usePubSubConnection(connection -> connection.sync().nodes(node -> node.is(RedisClusterNode.NodeFlag.MASTER) && node.hasSlot(slot))
                                                                      .commands()
-                                                                     .subscribe(getKeyspaceChannelsForProfessionalUsers(queueName)));
+                                                                     .subscribe(getKeyspaceChannelsForProfessionalUsers(queueName, slotIndex)));
     }
 
-    public void unsubscribeFromKeyspaceNotificationsForProfessionalUsers(final String queueName) {
+    public void unsubscribeFromKeyspaceNotificationsForProfessionalUsers(final String queueName, final String key, final String slotIndex) {
         pubSubConnection.usePubSubConnection(connection -> connection.sync().masters()
                                                                      .commands()
-                                                                     .unsubscribe(getKeyspaceChannelsForProfessionalUsers(queueName)));
+                                                                     .unsubscribe(getKeyspaceChannelsForProfessionalUsersForUnsub(queueName, key, slotIndex)));
     }
 
-    private static String[] getKeyspaceChannelsForProfessionalUsers(final String queueName) {
+    private static String[] getKeyspaceChannelsForProfessionalUsers(final String queueName, final int slotIndex) {
         return new String[] {
-                PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::start",
-                PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::end"
+                PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::start::"+slotIndex,
+                PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::end::"+slotIndex
+        };
+    }
+
+    private static String[] getKeyspaceChannelsForProfessionalUsersForUnsub(final String queueName, final String key, final String slotIndex) {
+        return new String[] {
+                PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::"+key+"::"+slotIndex,
         };
     }
 
@@ -529,10 +535,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             final int startOfHashTag = channel.indexOf('{');
             final int endOfHashTag = channel.lastIndexOf('}');
             final String queueName = channel.substring(startOfHashTag + 1, endOfHashTag-3);
-            if(channel.contains("::start"))
-                setOnlineStatus(UUID.fromString(queueName), "ONLINE");
-            else if(channel.contains("::end"))
-                setOnlineStatus(UUID.fromString(queueName), "OFFLINE");
+            if(channel.contains("::start")){
+                String slotIndex[]  = channel.split("::start::");
+                setOnlineStatus(UUID.fromString(queueName), "ONLINE", slotIndex[1] );
+            }   
+            else if(channel.contains("::end")){
+                String slotIndex[]  = channel.split("::end::");
+                setOnlineStatus(UUID.fromString(queueName), "OFFLINE", slotIndex[1] );
+            }
+                
             //postWallMessageNotificationCounter.increment();
             //notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handlePostWallMessageAvailable));
         }
@@ -762,13 +773,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             }  
         );
     }
-    void addScheduleTimeKey(final UUID accountUuid, final long deviceId, final long startttl, final long endttl   ) {
+    void addScheduleTimeKey(final UUID accountUuid, final long deviceId, final long startttl, final long endttl, final int slotIndex   ) {
         
         insertCluster.useBinaryCluster(connection ->{
-               connection.sync().set(getScheduleTimeQueueKey(accountUuid, 1, "start"), "true".getBytes(StandardCharsets.UTF_8)   );
-               connection.sync().expire(getScheduleTimeQueueKey(accountUuid, 1,"start"), startttl);
-               connection.sync().set(getScheduleTimeQueueKey(accountUuid, 1, "end"), "true".getBytes(StandardCharsets.UTF_8)   );
-               connection.sync().expire(getScheduleTimeQueueKey(accountUuid, 1,"end"), endttl);
+               connection.sync().set(getScheduleTimeQueueKey(accountUuid, 1, "start", slotIndex), "true".getBytes(StandardCharsets.UTF_8)   );
+               connection.sync().expire(getScheduleTimeQueueKey(accountUuid, 1,"start", slotIndex), startttl);
+               connection.sync().set(getScheduleTimeQueueKey(accountUuid, 1, "end", slotIndex), "true".getBytes(StandardCharsets.UTF_8)   );
+               connection.sync().expire(getScheduleTimeQueueKey(accountUuid, 1,"end", slotIndex), endttl);
             }  
         );
     }
@@ -779,13 +790,19 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
           connection.sync().expire(getRecordingConsentQueueKey(uuid, 1), 10);
         });
       }
-    public  void setOnlineStatus(UUID uuid, String status) {
-        insertCluster.useCluster(connection -> {
-            connection.sync().hset("professionals_user_status::" , uuid.toString(), status);
-            // if(status.equals("OFFLINE")){
-            //     connection.sync().hdel("professionals_user_status::" , uuid.toString());
-            // }
-        });
+    public  void setOnlineStatus(UUID uuid, String status, String slotIndex) {
+        if(status.equals("ONLINE")){
+            insertCluster.useCluster(connection -> {
+                connection.sync().hset("professionals_user_status::" , uuid.toString(), status);
+            });
+            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
+        }
+        else if(status.equals("OFFLINE")){
+            insertCluster.useCluster(connection -> {
+                connection.sync().hdel("professionals_user_status::" , uuid.toString());
+            });
+            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
+        }         
       }
 
     Map<Integer, Double> getUserInterest(final UUID accountUuid) {
@@ -877,8 +894,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static byte[] getProfessionalUserStatusQueueKey() {
         return ("professionals_user_status::").getBytes(StandardCharsets.UTF_8);
     }
-    static byte[] getScheduleTimeQueueKey(final UUID accountUuid, final long deviceId, final String type) {
-        return ("user_schedule_timing_queue::{" + accountUuid.toString() + "::" + deviceId + "}::"+type).getBytes(StandardCharsets.UTF_8);
+    static byte[] getScheduleTimeQueueKey(final UUID accountUuid, final long deviceId, final String type, final int slotIndex) {
+        return ("user_schedule_timing_queue::{" + accountUuid.toString() + "::" + deviceId + "}::"+type+"::"+slotIndex).getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }

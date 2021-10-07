@@ -101,11 +101,11 @@ public class MessagesManager {
     messagesCache.setRecordingConsent(uuid, callId);
   }
 
-  public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl) {
-     messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl);
+  public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl, int slotIndex) {
+     messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl, slotIndex);
   }
-  public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String uuid) {
-     messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid);
+  public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String uuid, int slotIndex) {
+     messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid, slotIndex);
   }
 
   public  Map<Integer , Double> getCommonInterestedCategory() {
