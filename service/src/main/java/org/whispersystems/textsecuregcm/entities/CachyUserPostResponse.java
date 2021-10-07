@@ -182,5 +182,15 @@ public class CachyUserPostResponse {
     public void setCoverImg(SignalServiceAttachmentPointer coverImg) {
         this.coverImg = coverImg;
     }
+
+
+    public long getViews() {
+        return views;
+    }
+
+
+    public void setViews(long views) {
+        this.views = views;
+    }
    
 }

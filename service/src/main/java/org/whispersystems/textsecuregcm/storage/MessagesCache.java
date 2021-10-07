@@ -685,6 +685,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                             post.setLikesCount(Long.parseLong(new String(likeCount)));
                         }
 
+                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
+                        if(viewCount != null){
+                            post.setViews(Long.parseLong(new String(viewCount)));
+                        }
+
                         final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
                         post.setLiked(isLiked);   
 
@@ -896,6 +901,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
     static byte[] getScheduleTimeQueueKey(final UUID accountUuid, final long deviceId, final String type, final int slotIndex) {
         return ("user_schedule_timing_queue::{" + accountUuid.toString() + "::" + deviceId + "}::"+type+"::"+slotIndex).getBytes(StandardCharsets.UTF_8);
+    }
+    private static byte[] getViewQueueKey(final String postId) {
+        return ("user_posts_view_queue::{" + postId + "}").getBytes(StandardCharsets.UTF_8);
     }
     //#endregion
 }
