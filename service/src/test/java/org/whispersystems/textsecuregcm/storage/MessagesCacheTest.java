@@ -328,6 +328,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             @Override
             public void recordingConsentMessageAvailable() {
             }
+            @Override
+            public void userDisableMessageAvailable() {
+            }
         };
 
         messagesCache.addMessageAvailabilityListener(DESTINATION_UUID, DESTINATION_DEVICE_ID, listener);
@@ -374,6 +377,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void recordingConsentMessageAvailable() {
+            }
+            @Override
+            public void userDisableMessageAvailable() {
             }
         };
 
@@ -423,6 +429,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void recordingConsentMessageAvailable() {
+            }
+            @Override
+            public void userDisableMessageAvailable() {
             }
         };
 
