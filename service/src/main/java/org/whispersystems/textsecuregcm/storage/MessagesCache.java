@@ -810,6 +810,14 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }         
       }
 
+      public  void setOnlineStatusOnDisconnect(UUID uuid) { 
+        insertCluster.useCluster(connection -> {
+            if(connection.sync().hexists("professionals_user_status::" , uuid.toString())){
+                connection.sync().hset("professionals_user_status::" , uuid.toString(), "ONLINE");
+            }
+        }); 
+      }
+
     Map<Integer, Double> getUserInterest(final UUID accountUuid) {
         
         final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(getUserInterestedCategoryQueueKey(accountUuid)),
