@@ -466,6 +466,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         };
     }
 
+    public void unsubscribeFromKeyspaceNotificationsAndRemoveSchedule(final String queueName, final int slotIndex){
+        pubSubConnection.usePubSubConnection(connection -> connection.async().masters()
+                                                                .commands()
+                                                                .unsubscribe(getKeyspaceChannelsForProfessionalUsers(queueName, slotIndex)));
+        readDeleteCluster.useCluster(connection -> {
+            connection.sync().del("user_schedule_timing_queue::{" + queueName + "::1}::start::"+slotIndex);
+            connection.sync().del("user_schedule_timing_queue::{" + queueName + "::1}::end::"+slotIndex);
+        });
+    }
     private static String[] getKeyspaceChannelsForProfessionalUsersForUnsub(final String queueName, final String key, final String slotIndex) {
         return new String[] {
                 PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX + "{" + queueName + "::1}::"+key+"::"+slotIndex,

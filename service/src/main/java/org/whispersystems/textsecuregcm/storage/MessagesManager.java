@@ -104,6 +104,9 @@ public class MessagesManager {
   public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl, int slotIndex) {
      messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl, slotIndex);
   }
+  public void unsubscribeFromKeyspaceNotificationsAndRemoveSchedule(final String queueName, final int slotIndex) {
+    messagesCache.unsubscribeFromKeyspaceNotificationsAndRemoveSchedule(queueName, slotIndex);
+  }
   public void setOnlineStatusOnDisconnect(final UUID uuid) {
      messagesCache.setOnlineStatusOnDisconnect(uuid);
   }
