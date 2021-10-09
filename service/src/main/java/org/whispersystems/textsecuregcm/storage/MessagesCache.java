@@ -367,14 +367,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         final long earliestAllowableTimestamp = currentTimeMillis - MAX_EPHEMERAL_MESSAGE_DELAY.toMillis();
 
         return takeEphemeralMessageTimer.record(() -> readDeleteCluster.withBinaryCluster(connection -> {
-            byte[] messageBytes;
-
-            while ((messageBytes = connection.sync().lpop(getMatecingMessageQueueKey(destinationUuid, destinationDevice))) != null) {
-                //try {
-                    String msg = new String(messageBytes);
+            byte[] messageBytes = connection.sync().get(getMatecingMessageQueueKey(destinationUuid, destinationDevice));
+            if(messageBytes != null){
+                String msg = new String(messageBytes);
                     logger.info("########## MATCHING "+ msg);
                     return Optional.of(msg);
-                //}
             }
 
             return Optional.empty();
@@ -527,8 +524,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             queuePersistedNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleMessagesPersisted));
         }
-        else if (channel.startsWith(MATCHER_QUEUE_KEYSPACE_PREFIX) && "rpush".equals(message)) {
-            logger.info("####################### CHANNEL START WITH ######## RPUSH MATCHING");
+        else if (channel.startsWith(MATCHER_QUEUE_KEYSPACE_PREFIX) && "set".equals(message)) {
+            logger.info("####################### CHANNEL START WITH ######## SET MATCHING");
             ephemeralMatchingMessageNotificationCounter.increment();
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::handleNewMatchingMessageAvailable));
         }

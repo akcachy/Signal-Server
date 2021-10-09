@@ -111,7 +111,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
                    .orElseThrow();
     }
   }
-
+  
   private void addLoginHistory(ServletUpgradeRequest servletUpgradeRequest, String status){
     URI  uri                        = URI.create("http://localhost:8086/cachy/v1/login/history");
 
@@ -122,6 +122,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
     List<String>              deviceName  = parameters.get("deviceName");
     List<String>              lat  = parameters.get("lat");
     List<String>              longt  = parameters.get("long");
+    List<String>              clientVersion  = parameters.get("clientVersion");
     String requestData = null;
     Map<String, String> requestParameters = new HashMap<>();
     requestParameters.put("uuid", usernames != null ? usernames.get(0) : "");
@@ -131,6 +132,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
     requestParameters.put("ip", getRemoteAddress(servletUpgradeRequest));
     requestParameters.put("lat", lat != null ? lat.get(0) : "");
     requestParameters.put("longt", longt != null ? longt.get(0) : "");
+    requestParameters.put("clientVersion", clientVersion != null ? clientVersion.get(0) : "");
     requestParameters.put("status", status);
     try{
       requestData = mapper.writeValueAsString(requestParameters);
