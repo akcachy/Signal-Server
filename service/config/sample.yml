@@ -23,7 +23,7 @@ backupService:
 
 storageService:
   userAuthenticationTokenSharedSecret: cffe9b783677f8ee3dfb485eef000000 # Generate it with `head -c 16 /dev/urandom | hexdump -ve '1/1 "%.2x"'`
-  uri: http://localhost:8082
+  uri: http://172.20.130.10:8082
 push:
   queueSize: 200
 
@@ -35,24 +35,24 @@ turn: # Coturn server configuration
 
 cacheCluster: # redis server for cache cluster
   urls: 
-    - redis://127.0.0.1:7001/2 # change to your redis server
+    - redis://172.20.130.11:7001/2 # change to your redis server
 clientPresenceCluster: # redis server for cache cluster
   urls: 
-    - redis://127.0.0.1:7001/2 # change to your redis server
+    - redis://172.20.130.11:7001/2 # change to your redis server
 metricsCluster: # redis server for cache cluster
   urls: 
-    - redis://127.0.0.1:7001/2 # change to your redis server
+    - redis://172.20.130.11:7001/2 # change to your redis server
 pushSchedulerCluster: # redis server for push scheduler
   urls: 
-    - redis://127.0.0.1:7001/2 # change to your redis server
+    - redis://172.20.130.11:7001/2 # change to your redis server
 pubsub: # redis server for pubsub cache
-  url: redis://127.0.0.1:7001/pubsub # change to your redis server
+  url: redis://172.20.130.11:7001/pubsub # change to your redis server
   replicaUrls:
-    -  redis://127.0.0.1:7001/pubsubReplica # change to your redis server
+    -  redis://172.20.130.11:7001/pubsubReplica # change to your redis server
 messageCache: # Redis server configuration for message store cache
   cluster:
     urls:
-      - redis://127.0.0.1:7001/2
+      - redis://172.20.130.11:7001/2
 
 directory:
   client: # Configuration for interfacing with Contact Discovery Service cluster
