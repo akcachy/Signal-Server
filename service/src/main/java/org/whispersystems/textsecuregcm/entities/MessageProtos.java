@@ -5272,6 +5272,40 @@ public final class MessageProtos {
      * @return The followEnable.
      */
     boolean getFollowEnable();
+
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return Whether the unidentifiedAccess field is set.
+     */
+    boolean hasUnidentifiedAccess();
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return The unidentifiedAccess.
+     */
+    java.lang.String getUnidentifiedAccess();
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return The bytes for unidentifiedAccess.
+     */
+    com.google.protobuf.ByteString
+        getUnidentifiedAccessBytes();
+
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return Whether the profileKey field is set.
+     */
+    boolean hasProfileKey();
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return The profileKey.
+     */
+    java.lang.String getProfileKey();
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return The bytes for profileKey.
+     */
+    com.google.protobuf.ByteString
+        getProfileKeyBytes();
   }
   /**
    * Protobuf type {@code textsecure.MatchingMessage}
@@ -5290,6 +5324,8 @@ public final class MessageProtos {
       matchingKeyword_ = emptyIntList();
       number_ = "";
       callId_ = "";
+      unidentifiedAccess_ = "";
+      profileKey_ = "";
     }
 
     @java.lang.Override
@@ -5370,6 +5406,18 @@ public final class MessageProtos {
             case 48: {
               bitField0_ |= 0x00000010;
               followEnable_ = input.readBool();
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000020;
+              unidentifiedAccess_ = bs;
+              break;
+            }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000040;
+              profileKey_ = bs;
               break;
             }
             default: {
@@ -5617,6 +5665,102 @@ public final class MessageProtos {
       return followEnable_;
     }
 
+    public static final int UNIDENTIFIEDACCESS_FIELD_NUMBER = 7;
+    private volatile java.lang.Object unidentifiedAccess_;
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return Whether the unidentifiedAccess field is set.
+     */
+    @java.lang.Override
+    public boolean hasUnidentifiedAccess() {
+      return ((bitField0_ & 0x00000020) != 0);
+    }
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return The unidentifiedAccess.
+     */
+    @java.lang.Override
+    public java.lang.String getUnidentifiedAccess() {
+      java.lang.Object ref = unidentifiedAccess_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          unidentifiedAccess_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string unidentifiedAccess = 7;</code>
+     * @return The bytes for unidentifiedAccess.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getUnidentifiedAccessBytes() {
+      java.lang.Object ref = unidentifiedAccess_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        unidentifiedAccess_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PROFILEKEY_FIELD_NUMBER = 8;
+    private volatile java.lang.Object profileKey_;
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return Whether the profileKey field is set.
+     */
+    @java.lang.Override
+    public boolean hasProfileKey() {
+      return ((bitField0_ & 0x00000040) != 0);
+    }
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return The profileKey.
+     */
+    @java.lang.Override
+    public java.lang.String getProfileKey() {
+      java.lang.Object ref = profileKey_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          profileKey_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string profileKey = 8;</code>
+     * @return The bytes for profileKey.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProfileKeyBytes() {
+      java.lang.Object ref = profileKey_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        profileKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -5648,6 +5792,12 @@ public final class MessageProtos {
       }
       if (((bitField0_ & 0x00000010) != 0)) {
         output.writeBool(6, followEnable_);
+      }
+      if (((bitField0_ & 0x00000020) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, unidentifiedAccess_);
+      }
+      if (((bitField0_ & 0x00000040) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, profileKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -5683,6 +5833,12 @@ public final class MessageProtos {
       if (((bitField0_ & 0x00000010) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(6, followEnable_);
+      }
+      if (((bitField0_ & 0x00000020) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, unidentifiedAccess_);
+      }
+      if (((bitField0_ & 0x00000040) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, profileKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5726,6 +5882,16 @@ public final class MessageProtos {
         if (getFollowEnable()
             != other.getFollowEnable()) return false;
       }
+      if (hasUnidentifiedAccess() != other.hasUnidentifiedAccess()) return false;
+      if (hasUnidentifiedAccess()) {
+        if (!getUnidentifiedAccess()
+            .equals(other.getUnidentifiedAccess())) return false;
+      }
+      if (hasProfileKey() != other.hasProfileKey()) return false;
+      if (hasProfileKey()) {
+        if (!getProfileKey()
+            .equals(other.getProfileKey())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5762,6 +5928,14 @@ public final class MessageProtos {
         hash = (37 * hash) + FOLLOWENABLE_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
             getFollowEnable());
+      }
+      if (hasUnidentifiedAccess()) {
+        hash = (37 * hash) + UNIDENTIFIEDACCESS_FIELD_NUMBER;
+        hash = (53 * hash) + getUnidentifiedAccess().hashCode();
+      }
+      if (hasProfileKey()) {
+        hash = (37 * hash) + PROFILEKEY_FIELD_NUMBER;
+        hash = (53 * hash) + getProfileKey().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -5908,6 +6082,10 @@ public final class MessageProtos {
         bitField0_ = (bitField0_ & ~0x00000010);
         followEnable_ = false;
         bitField0_ = (bitField0_ & ~0x00000020);
+        unidentifiedAccess_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
+        profileKey_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -5961,6 +6139,14 @@ public final class MessageProtos {
           result.followEnable_ = followEnable_;
           to_bitField0_ |= 0x00000010;
         }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.unidentifiedAccess_ = unidentifiedAccess_;
+        if (((from_bitField0_ & 0x00000080) != 0)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.profileKey_ = profileKey_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6040,6 +6226,16 @@ public final class MessageProtos {
         }
         if (other.hasFollowEnable()) {
           setFollowEnable(other.getFollowEnable());
+        }
+        if (other.hasUnidentifiedAccess()) {
+          bitField0_ |= 0x00000040;
+          unidentifiedAccess_ = other.unidentifiedAccess_;
+          onChanged();
+        }
+        if (other.hasProfileKey()) {
+          bitField0_ |= 0x00000080;
+          profileKey_ = other.profileKey_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6476,6 +6672,174 @@ public final class MessageProtos {
       public Builder clearFollowEnable() {
         bitField0_ = (bitField0_ & ~0x00000020);
         followEnable_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object unidentifiedAccess_ = "";
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @return Whether the unidentifiedAccess field is set.
+       */
+      public boolean hasUnidentifiedAccess() {
+        return ((bitField0_ & 0x00000040) != 0);
+      }
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @return The unidentifiedAccess.
+       */
+      public java.lang.String getUnidentifiedAccess() {
+        java.lang.Object ref = unidentifiedAccess_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            unidentifiedAccess_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @return The bytes for unidentifiedAccess.
+       */
+      public com.google.protobuf.ByteString
+          getUnidentifiedAccessBytes() {
+        java.lang.Object ref = unidentifiedAccess_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          unidentifiedAccess_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @param value The unidentifiedAccess to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUnidentifiedAccess(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        unidentifiedAccess_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUnidentifiedAccess() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        unidentifiedAccess_ = getDefaultInstance().getUnidentifiedAccess();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string unidentifiedAccess = 7;</code>
+       * @param value The bytes for unidentifiedAccess to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUnidentifiedAccessBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        unidentifiedAccess_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object profileKey_ = "";
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @return Whether the profileKey field is set.
+       */
+      public boolean hasProfileKey() {
+        return ((bitField0_ & 0x00000080) != 0);
+      }
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @return The profileKey.
+       */
+      public java.lang.String getProfileKey() {
+        java.lang.Object ref = profileKey_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            profileKey_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @return The bytes for profileKey.
+       */
+      public com.google.protobuf.ByteString
+          getProfileKeyBytes() {
+        java.lang.Object ref = profileKey_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          profileKey_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @param value The profileKey to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProfileKey(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        profileKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProfileKey() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        profileKey_ = getDefaultInstance().getProfileKey();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string profileKey = 8;</code>
+       * @param value The bytes for profileKey to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProfileKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        profileKey_ = value;
         onChanged();
         return this;
       }
@@ -10402,21 +10766,22 @@ public final class MessageProtos {
       "ssionalMessage\"3\n\023ProfessionalMessage\022\014\n" +
       "\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"E\n\027Recording" +
       "ConsentMessage\022\014\n\004uuid\030\001 \001(\t\022\016\n\006callId\030\002" +
-      " \001(\t\022\014\n\004type\030\003 \001(\t\"\200\001\n\017MatchingMessage\022\014" +
+      " \001(\t\022\014\n\004type\030\003 \001(\t\"\260\001\n\017MatchingMessage\022\014" +
       "\n\004uuid\030\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003(\r\022\016\n" +
       "\006number\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(\010\022\016\n\006callI" +
-      "d\030\005 \001(\t\022\024\n\014followEnable\030\006 \001(\010\" \n\020Provisi" +
-      "oningUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertifi" +
-      "cate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002" +
-      " \001(\014\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002" +
-      " \001(\014\"\332\001\n\021SenderCertificate\022\023\n\013certificat" +
-      "e\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certifica" +
-      "te\022\016\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024" +
-      "\n\014senderDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n" +
-      "\013identityKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.tex" +
-      "tsecure.ServerCertificateB:\n)org.whisper" +
-      "systems.textsecuregcm.entitiesB\rMessageP" +
-      "rotos"
+      "d\030\005 \001(\t\022\024\n\014followEnable\030\006 \001(\010\022\032\n\022unident" +
+      "ifiedAccess\030\007 \001(\t\022\022\n\nprofileKey\030\010 \001(\t\" \n" +
+      "\020ProvisioningUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021Serve" +
+      "rCertificate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsig" +
+      "nature\030\002 \001(\014\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022" +
+      "\013\n\003key\030\002 \001(\014\"\332\001\n\021SenderCertificate\022\023\n\013ce" +
+      "rtificate\030\001 \001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013C" +
+      "ertificate\022\016\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid" +
+      "\030\006 \001(\t\022\024\n\014senderDevice\030\002 \001(\r\022\017\n\007expires\030" +
+      "\003 \001(\006\022\023\n\013identityKey\030\004 \001(\014\022-\n\006signer\030\005 \001" +
+      "(\0132\035.textsecure.ServerCertificateB:\n)org" +
+      ".whispersystems.textsecuregcm.entitiesB\r" +
+      "MessageProtos"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10451,7 +10816,7 @@ public final class MessageProtos {
     internal_static_textsecure_MatchingMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_MatchingMessage_descriptor,
-        new java.lang.String[] { "Uuid", "MatchingKeyword", "Number", "IsCaller", "CallId", "FollowEnable", });
+        new java.lang.String[] { "Uuid", "MatchingKeyword", "Number", "IsCaller", "CallId", "FollowEnable", "UnidentifiedAccess", "ProfileKey", });
     internal_static_textsecure_ProvisioningUuid_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_textsecure_ProvisioningUuid_fieldAccessorTable = new

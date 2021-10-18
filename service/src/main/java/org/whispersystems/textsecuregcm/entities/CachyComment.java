@@ -1,7 +1,4 @@
-/*
- * Copyright 2013-2020 Signal Messenger, LLC
- * SPDX-License-Identifier: AGPL-3.0-only
- */
+/***** Created By : Ankit Kumar ******/
 package org.whispersystems.textsecuregcm.entities;
 
 import java.util.UUID;
@@ -21,6 +18,31 @@ public class CachyComment {
   
   @JsonProperty
   private long ct;
+
+  @JsonProperty
+  private String fn;
+
+  @JsonProperty
+  private String ln;
+
+  @JsonProperty
+  private String un;
+
+  @JsonProperty
+  private String ua;
+
+  @JsonProperty
+  private String pk;
+
+  @JsonProperty
+  private int pro;
+
+  @JsonProperty
+  private int pre;
+
+  @JsonProperty
+  private boolean isUserStoryExists;
+
 
   public CachyComment() {
   }
@@ -55,6 +77,46 @@ public class CachyComment {
 
   public void setCt(long ct) {
     this.ct = ct;
+  }
+
+  public String getFn() {
+    return fn;
+  }
+
+  public void setFn(String fn) {
+    this.fn = fn;
+  }
+
+  public String getLn() {
+    return ln;
+  }
+
+  public void setLn(String ln) {
+    this.ln = ln;
+  }
+
+  public String getUn() {
+    return un;
+  }
+
+  public void setUn(String un) {
+    this.un = un;
+  }
+
+  public String getUa() {
+    return ua;
+  }
+
+  public void setUa(String ua) {
+    this.ua = ua;
+  }
+
+  public String getPk() {
+    return pk;
+  }
+
+  public void setPk(String pk) {
+    this.pk = pk;
   }
 
   

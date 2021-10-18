@@ -140,6 +140,9 @@ public class MessagePersisterIntegrationTest extends AbstractRedisClusterTest {
             @Override
             public void recordingConsentMessageAvailable() {
             }
+            @Override
+            public void userDisableMessageAvailable() {
+            }
         });
 
         messagePersister.start();
