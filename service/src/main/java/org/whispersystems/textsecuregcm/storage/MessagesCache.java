@@ -761,6 +761,29 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+    public void removeLike(final String postId ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getLikeQueueKey(postId);
+
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(ephemeralQueueKey);
+                });
+        });
+    }
+
+    public void removeComment(final String postId ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getCommentCountQueueKey(postId);
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(ephemeralQueueKey);
+                });
+                final byte[] commentQueueKey = getCommentQueueKey(postId);
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(commentQueueKey);
+                });
+        });
+    }
+
     public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> messages) {
         insertTimer.record(() -> {
             insertCluster.useBinaryCluster(connection -> {
@@ -833,6 +856,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
             readDeleteCluster.useCluster(connection -> {
                 connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
+            });
+            readDeleteCluster.useCluster(connection -> {
                 connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX, uuid.toString());
             });
         }         
