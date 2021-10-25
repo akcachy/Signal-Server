@@ -28,10 +28,10 @@ public class CachyTaggedUserProfile {
     private String pk;
     
     @JsonProperty
-    private boolean pro;
+    private int pro;
     
     @JsonProperty
-    private boolean pre;
+    private int pre;
 
     @JsonProperty
     private boolean isUserStoryExists;
@@ -112,22 +112,22 @@ public class CachyTaggedUserProfile {
     }
 
 
-    public boolean isPro() {
+    public int isPro() {
         return pro;
     }
 
 
-    public void setPro(boolean pro) {
+    public void setPro(int pro) {
         this.pro = pro;
     }
 
 
-    public boolean isPre() {
+    public int isPre() {
         return pre;
     }
 
 
-    public void setPre(boolean pre) {
+    public void setPre(int pre) {
         this.pre = pre;
     }
 

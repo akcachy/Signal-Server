@@ -303,6 +303,10 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     storedMessageState.compareAndSet(StoredMessageState.EMPTY, StoredMessageState.CACHED_NEW_MESSAGES_AVAILABLE);
     processStoredMessages();
   }
+  @Override
+  public void userDisableMessageAvailable() {
+    client.close(1008, "user account disabled.");
+  }
 
   @Override
   public void handleNewEphemeralMessageAvailable() {

@@ -10,7 +10,7 @@ public class CachyUserPostResponse {
     @JsonProperty
     private String postId;
 
-    @JsonIgnore
+    @JsonProperty
     private String uuid;
 
 
@@ -26,6 +26,9 @@ public class CachyUserPostResponse {
     
     @JsonProperty
     public long likesCount;
+
+    @JsonProperty
+    public long views;
     
     @JsonProperty
     public long commentsCount;
@@ -178,6 +181,16 @@ public class CachyUserPostResponse {
 
     public void setCoverImg(SignalServiceAttachmentPointer coverImg) {
         this.coverImg = coverImg;
+    }
+
+
+    public long getViews() {
+        return views;
+    }
+
+
+    public void setViews(long views) {
+        this.views = views;
     }
    
 }
