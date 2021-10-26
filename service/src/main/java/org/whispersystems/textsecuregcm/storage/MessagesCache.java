@@ -99,6 +99,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String POSTS_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_posts_queue::";
     private static final String POSTS_WALL_QUEUE_KEYSPACE_PREFIX      = "__keyspace@0__:user_posts_wall_queue::";
     private static final String PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX      = "__keyspace@0__:professionals_user_status::";
+    private static final String MONETIZE_MESSAGE_KEYSPACE_PREFIX      = "__keyspace@0__:user_monetize_message::";
     private static final String PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX      = "__keyspace@0__:user_schedule_timing_queue::";
     private static final String USER_RECORDING_CONSENT_KEYSPACE_PREFIX          = "__keyspace@0__:user_recording_consent_queue::";
     private static final String USER_DISABLE_QUEUE_KEYSPACE_PREFIX              = "__keyspace@0__:user_disabled_queue::";
@@ -441,6 +442,44 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }
     }
 
+    public void subscribeMonetizeMessageKeyspaceNotifications(final String senderUuid, final String receiverUuid) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        final int slot = SlotHash.getSlot(queueName);
+
+        pubSubConnection.usePubSubConnection(connection -> connection.sync().nodes(node -> node.is(RedisClusterNode.NodeFlag.MASTER) && node.hasSlot(slot))
+                                                                     .commands()
+                                                                     .subscribe(getKeyspaceChannelsMonetizeMessage(queueName)));
+    }
+
+    public void unsubscribeMonetizeMessageKeyspaceNotifications(final String senderUuid, final String receiverUuid) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        pubSubConnection.usePubSubConnection(connection -> connection.async().masters()
+                                                                     .commands()
+                                                                     .unsubscribe(getKeyspaceChannelsMonetizeMessage(queueName)));
+    }
+    private static String[] getKeyspaceChannelsMonetizeMessage(final String queueName) {
+        return new String[] {
+            MONETIZE_MESSAGE_KEYSPACE_PREFIX + "{" + queueName + "}"
+               
+        };
+    }
+
+    public void insertMonetizeMessage(final String senderUuid, final String receiverUuid, long expire) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getMonetizeMessageQueueKey(queueName);
+                final long messageExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(ephemeralQueueKey));
+                if(messageExists == 0){
+                    insertCluster.useBinaryCluster(connection -> {
+                        connection.sync().set(ephemeralQueueKey, "true".getBytes());
+                        connection.sync().expire(ephemeralQueueKey, expire);
+                    });
+                    subscribeMonetizeMessageKeyspaceNotifications(senderUuid, receiverUuid);
+                }
+                
+        });
+    }
+
     public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String queueName, final int slotIndex) {
         logger.info("####################### QUEUE NAME " + queueName);
         final int slot = SlotHash.getSlot(queueName+"::1");
@@ -634,6 +673,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
     private static byte[] getMessageQueueMetadataKey(final UUID accountUuid, final long deviceId) {
         return ("user_queue_metadata::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    private static byte[] getMonetizeMessageQueueKey(final String queueName) {
+        return ("user_monetize_message::{" + queueName + "}").getBytes(StandardCharsets.UTF_8);
     }
 
     private static byte[] getQueueIndexKey(final UUID accountUuid, final long deviceId) {
