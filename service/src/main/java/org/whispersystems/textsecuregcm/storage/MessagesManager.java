@@ -72,8 +72,11 @@ public class MessagesManager {
     return messagesCache.takeRecordingConsentMessage(destinationUuid, destinationDevice);
   }
   
-  public Map<String , String> takeProfessionalStatusMessage() {
-    return messagesCache.takeProfessionalStatusMessage();
+  public Map<String , String> takeProfessionalStatusMessage(UUID uuid) {
+    return messagesCache.takeProfessionalStatusMessage(uuid);
+  }
+  public void broadCastMessage(UUID uuid) {
+    messagesCache.broadCastMessage(uuid);
   }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {

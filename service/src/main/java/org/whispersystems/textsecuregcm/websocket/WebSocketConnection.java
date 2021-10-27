@@ -331,9 +331,9 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
                    .ifPresent(message -> sendPostWallMessage(message));
   }
   @Override
-  public void professionalStatusAvailable() {
+  public void professionalStatusAvailable(UUID uuid) {
   
-    Map<String , String> message = messagesManager.takeProfessionalStatusMessage();
+    Map<String , String> message = messagesManager.takeProfessionalStatusMessage(uuid);
     if(message.size() != 0 ){
        sendProfessionalStatusMessage(message);
     }
