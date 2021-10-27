@@ -323,7 +323,7 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable() {
+            public void professionalStatusAvailable(UUID uuid) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
@@ -373,7 +373,7 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable() {
+            public void professionalStatusAvailable(UUID uuid) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
@@ -425,7 +425,7 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable() {
+            public void professionalStatusAvailable(UUID uuid) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
