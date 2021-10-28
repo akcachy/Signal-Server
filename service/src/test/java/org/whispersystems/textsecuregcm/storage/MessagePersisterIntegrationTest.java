@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -135,13 +136,19 @@ public class MessagePersisterIntegrationTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable(UUID uuid) {
+            public void professionalStatusAvailable(UUID uuid, Map<String , String> map) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
             }
             @Override
             public void userDisableMessageAvailable() {
+            }
+            @Override
+            public void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
             }
         });
 

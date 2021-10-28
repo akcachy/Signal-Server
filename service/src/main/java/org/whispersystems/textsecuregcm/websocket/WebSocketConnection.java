@@ -331,12 +331,12 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
                    .ifPresent(message -> sendPostWallMessage(message));
   }
   @Override
-  public void professionalStatusAvailable(UUID uuid) {
+  public void professionalStatusAvailable(UUID uuid, Map<String , String> message) {
   
-    Map<String , String> message = messagesManager.takeProfessionalStatusMessage(uuid);
-    if(message.size() != 0 ){
+    //Map<String , String> message = messagesManager.takeProfessionalStatusMessage(uuid);
+    //if(message.size() != 0 ){
        sendProfessionalStatusMessage(message);
-    }
+    //}
   }
   @Override
   public void recordingConsentMessageAvailable() {
@@ -345,6 +345,16 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
                    .ifPresent(message -> sendRecordingConsentMessage(message));
   }
   
+  @Override
+  public void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId) {
+    
+  }
+
+  @Override
+  public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) {
+    
+  }
+
   private CompletableFuture<WebSocketResponseMessage> sendProfessionalStatusMessage(final Map<String , String> message) {
     final ProfessionalStatusMessage.Builder  professionalStatusMessage =   ProfessionalStatusMessage.newBuilder();
     

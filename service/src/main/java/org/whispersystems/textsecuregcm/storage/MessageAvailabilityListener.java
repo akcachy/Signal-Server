@@ -24,9 +24,13 @@ public interface MessageAvailabilityListener {
     
     void handlePostWallMessageAvailable();
 
-    void professionalStatusAvailable(UUID uuid);
+    void professionalStatusAvailable(UUID uuid, Map<String , String> map);
 
     void recordingConsentMessageAvailable();
 
     void userDisableMessageAvailable();
+
+    void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId);
+
+    void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId);
 }

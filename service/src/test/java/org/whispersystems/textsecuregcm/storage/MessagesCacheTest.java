@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -323,13 +324,19 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable(UUID uuid) {
+            public void professionalStatusAvailable(UUID uuid, Map<String , String> map) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
             }
             @Override
             public void userDisableMessageAvailable() {
+            }
+            @Override
+            public void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
             }
         };
 
@@ -373,13 +380,19 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable(UUID uuid) {
+            public void professionalStatusAvailable(UUID uuid, Map<String , String> map) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
             }
             @Override
             public void userDisableMessageAvailable() {
+            }
+            @Override
+            public void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
             }
         };
 
@@ -425,13 +438,19 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             public void handlePostWallMessageAvailable() {
             }
             @Override
-            public void professionalStatusAvailable(UUID uuid) {
+            public void professionalStatusAvailable(UUID uuid, Map<String , String> map) {
             }
             @Override
             public void recordingConsentMessageAvailable() {
             }
             @Override
             public void userDisableMessageAvailable() {
+            }
+            @Override
+            public void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
             }
         };
 

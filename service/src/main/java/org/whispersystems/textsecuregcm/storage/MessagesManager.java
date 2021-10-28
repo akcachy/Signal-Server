@@ -75,8 +75,8 @@ public class MessagesManager {
   public Map<String , String> takeProfessionalStatusMessage(UUID uuid) {
     return messagesCache.takeProfessionalStatusMessage(uuid);
   }
-  public void broadCastMessage(UUID uuid) {
-    messagesCache.broadCastMessage(uuid);
+  public void broadCastMessage(UUID uuid, Map<String , String> msg) {
+    messagesCache.broadCastMessage(uuid, msg);
   }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {
@@ -201,6 +201,11 @@ public class MessagesManager {
       final long destinationDeviceId,
       final MessageAvailabilityListener listener) {
     messagesCache.addMessageAvailabilityListener(destinationUuid, destinationDeviceId, listener);
+  }
+
+  public void addTransactionMessageAvailabilityListener(
+      final MessageAvailabilityListener listener) {
+    messagesCache.addTransactionMessageAvailabilityListener(listener);
   }
 
   public void removeMessageAvailabilityListener(final MessageAvailabilityListener listener) {
