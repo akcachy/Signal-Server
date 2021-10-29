@@ -970,19 +970,20 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
         }
         else if(status.equals("OFFLINE")){
-            insertCluster.useCluster(connection -> {
-                connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
+            readDeleteCluster.useCluster(connection -> {
+                connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString());
+                connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "OFFLINE");
             broadCastMessage(uuid, map); 
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
-            readDeleteCluster.useCluster(connection -> {
-                connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
-            });
-            readDeleteCluster.useCluster(connection -> {
-                connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX, uuid.toString());
-            });
+            // readDeleteCluster.useCluster(connection -> {
+            //    connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
+            // });
+            // readDeleteCluster.useCluster(connection -> {
+            //     connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX, uuid.toString());
+            // });
         }         
       }
 
