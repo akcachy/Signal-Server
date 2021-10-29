@@ -958,15 +958,16 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
       }
     public  void setOnlineStatus(UUID uuid, String status, String slotIndex) {
         if(status.equals("ONLINE")){
+            readDeleteCluster.useCluster(connection -> {
+                connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
+            });
             insertCluster.useCluster(connection -> {
                 connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "ONLINE");
             broadCastMessage(uuid, map);
-            readDeleteCluster.useCluster(connection -> {
-                connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
-            });
+            
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
         }
         else if(status.equals("OFFLINE")){
