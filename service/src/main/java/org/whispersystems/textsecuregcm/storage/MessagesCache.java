@@ -476,7 +476,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         };
     }
 
-    public void insertMonetizeMessage(final String senderUuid, final String receiverUuid, long messageId) {
+    public void insertMonetizeMessage(final String senderUuid, final String receiverUuid, long messageId, long expire) {
         String queueName = senderUuid+"::"+receiverUuid;
         insertEphemeralTimer.record(() -> {
                 final byte[] ephemeralQueueKey = getMonetizeMessageQueueKey(queueName, messageId);
@@ -484,7 +484,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 if(messageExists == 0){
                     insertCluster.useBinaryCluster(connection -> {
                         connection.sync().set(ephemeralQueueKey, "1".getBytes());
-                        connection.sync().expire(ephemeralQueueKey, 86400);
+                        connection.sync().expire(ephemeralQueueKey, expire);
                     });
                     subscribeMonetizeMessageKeyspaceNotifications(senderUuid, receiverUuid, messageId);
                 }
