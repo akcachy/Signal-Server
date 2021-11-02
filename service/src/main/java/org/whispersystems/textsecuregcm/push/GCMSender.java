@@ -83,6 +83,7 @@ public class GCMSender {
       case CONTRIBUTOR_IN_POST:       key = "contributor_in_post";      break;
       case TAGGED_IN_POST:            key = "tagged_in_post";           break;
       case FOLLOW_REQUEST:            key = "follow_request";           break;
+      case PROFESSIONAL_CALL_MISSED:            key = "professional_call_missed";           break;
 
       default:           throw new AssertionError();
     }

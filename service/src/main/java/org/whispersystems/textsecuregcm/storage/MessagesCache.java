@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.codahale.metrics.MetricRegistry.name;
@@ -70,6 +71,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private final ClusterLuaScript getLikesScript;
 
     private final Map<String, MessageAvailabilityListener> messageListenersByQueueName = new HashMap<>();
+    private final Map<String, MessageAvailabilityListener> transactionMessageListenersByQueueName = new HashMap<>();
     private final Map<MessageAvailabilityListener, String> queueNamesByMessageListener = new IdentityHashMap<>();
 
     private final Timer   insertTimer                         = Metrics.timer(name(MessagesCache.class, "insert"), "ephemeral", "false");
@@ -99,12 +101,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String POSTS_QUEUE_KEYSPACE_PREFIX           = "__keyspace@0__:user_posts_queue::";
     private static final String POSTS_WALL_QUEUE_KEYSPACE_PREFIX      = "__keyspace@0__:user_posts_wall_queue::";
     private static final String PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX      = "__keyspace@0__:professionals_user_status::";
+    private static final String MONETIZE_MESSAGE_KEYSPACE_PREFIX      = "__keyspace@0__:user_monetize_message::";
     private static final String PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX      = "__keyspace@0__:user_schedule_timing_queue::";
     private static final String USER_RECORDING_CONSENT_KEYSPACE_PREFIX          = "__keyspace@0__:user_recording_consent_queue::";
     private static final String USER_DISABLE_QUEUE_KEYSPACE_PREFIX              = "__keyspace@0__:user_disabled_queue::";
     private static final String CACHE_PROFESSIONAL_PREFIX                       = "professionalUsers::";
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
-    private static final String CACHE_ONLINE_PROFESSIONAL_PREFIX = "professionals_user_status::";
+    private static final String CACHE_ONLINE_PROFESSIONAL_PREFIX = "professionals_user_status::{aedc76c1-1e48-464b-b39e-c4949b4e4bb4::1}";
 
     private static final String REMOVE_TIMER_NAME = name(MessagesCache.class, "remove");
 
@@ -143,6 +146,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                     .filter(event -> event instanceof ClusterTopologyChangedEvent)
                     .subscribe(event -> resubscribeAll());
         });
+        subscribeProfessionalStatusForKeyspaceNotifications("aedc76c1-1e48-464b-b39e-c4949b4e4bb4::1");
     }
 
     @Override
@@ -162,6 +166,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         for (final String queueName : queueNames) {
             subscribeForKeyspaceNotifications(queueName);
         }
+       
     }
 
     public long insert(final UUID guid, final UUID destinationUuid, final long destinationDevice, final MessageProtos.Envelope message) {
@@ -429,6 +434,14 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         subscribeForKeyspaceNotifications(queueName);
     }
 
+    public void addTransactionMessageAvailabilityListener(final MessageAvailabilityListener listener) {
+
+        synchronized (transactionMessageListenersByQueueName) {
+            transactionMessageListenersByQueueName.put("transaction", listener);
+
+        }
+    }
+
     public void removeMessageAvailabilityListener(final MessageAvailabilityListener listener) {
         final String queueName = queueNamesByMessageListener.remove(listener);
 
@@ -440,6 +453,66 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             }
         }
     }
+
+    public void subscribeMonetizeMessageKeyspaceNotifications(final String senderUuid, final String receiverUuid, final long messageId) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        final int slot = SlotHash.getSlot(queueName);
+
+        pubSubConnection.usePubSubConnection(connection -> connection.sync().nodes(node -> node.is(RedisClusterNode.NodeFlag.MASTER) && node.hasSlot(slot))
+                                                                     .commands()
+                                                                     .subscribe(getKeyspaceChannelsMonetizeMessage(queueName, messageId)));
+    }
+
+    public void unsubscribeMonetizeMessageKeyspaceNotifications(final String senderUuid, final String receiverUuid, final long messageId) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        pubSubConnection.usePubSubConnection(connection -> connection.async().masters()
+                                                                     .commands()
+                                                                     .unsubscribe(getKeyspaceChannelsMonetizeMessage(queueName, messageId)));
+    }
+    private static String[] getKeyspaceChannelsMonetizeMessage(final String queueName, final long messageId) {
+        return new String[] {
+            MONETIZE_MESSAGE_KEYSPACE_PREFIX + "{" + queueName + "}::"+messageId
+               
+        };
+    }
+
+    public void insertMonetizeMessage(final String senderUuid, final String receiverUuid, long messageId, long expire) {
+        String queueName = senderUuid+"::"+receiverUuid;
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getMonetizeMessageQueueKey(queueName, messageId);
+                final long messageExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(ephemeralQueueKey));
+                if(messageExists == 0){
+                    insertCluster.useBinaryCluster(connection -> {
+                        connection.sync().set(ephemeralQueueKey, "1".getBytes());
+                        connection.sync().expire(ephemeralQueueKey, expire);
+                    });
+                    subscribeMonetizeMessageKeyspaceNotifications(senderUuid, receiverUuid, messageId);
+                }
+                
+        });
+    }
+
+    //{aedc76c1-1e48-464b-b39e-c4949b4e4bb4::1}
+    private void subscribeProfessionalStatusForKeyspaceNotifications(final String queueName) {
+        final int slot = SlotHash.getSlot(queueName);
+
+        pubSubConnection.usePubSubConnection(connection -> connection.sync().nodes(node -> node.is(RedisClusterNode.NodeFlag.MASTER) && node.hasSlot(slot))
+                                                                     .commands()
+                                                                     .subscribe(getProfessionalStatusKeyspaceChannels(queueName)));
+    }
+    
+    public void unsubscribeProfessionalStatusKeyspaceNotifications(final String queueName) {
+        pubSubConnection.usePubSubConnection(connection -> connection.async().masters()
+                                                                     .commands()
+                                                                     .unsubscribe(getProfessionalStatusKeyspaceChannels(queueName)));
+    }
+
+    private static String[] getProfessionalStatusKeyspaceChannels(final String queueName) {
+        return new String[] {
+                PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX + "{" + queueName + "}"
+        };
+    }
+    
 
     public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String queueName, final int slotIndex) {
         logger.info("####################### QUEUE NAME " + queueName);
@@ -501,7 +574,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                 PERSISTING_KEYSPACE_PREFIX + "{" + queueName + "}",
                 MATCHER_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
                 POSTS_WALL_QUEUE_KEYSPACE_PREFIX + "{" + queueName + "}",
-                PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX,
+                //PROFESSIONAL_USER_STATUS_KEYSPACE_PREFIX,
                 USER_RECORDING_CONSENT_KEYSPACE_PREFIX + "{" + queueName + "}",
         };
     }
@@ -543,6 +616,38 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             logger.info("####################### CHANNEL START WITH ######## set USER DISABLED");
             notificationExecutorService.execute(() -> findListener(channel).ifPresent(MessageAvailabilityListener::userDisableMessageAvailable));
         }
+        else if (channel.startsWith(MONETIZE_MESSAGE_KEYSPACE_PREFIX)) {
+            final int startOfHashTag = channel.indexOf('{');
+            final int endOfHashTag = channel.lastIndexOf('}');
+            final String queueName = channel.substring(startOfHashTag + 1, endOfHashTag);
+            final long messageId;
+            try{
+                messageId = Long.parseLong(channel.substring(endOfHashTag+3, channel.length()));
+            }catch(Exception e){
+                return;
+            }
+            //final String messageId = channel.substring(endOfHashTag+3, channel.length());
+            final String[] uuids = queueName.split("::");
+            if("expired".equals(message)){ 
+                logger.info("####################### CHANNEL START WITH ######## expired MSG expired");
+                notificationExecutorService.execute(() -> findTransactionListener().ifPresent(new Consumer<MessageAvailabilityListener>() {
+                    @Override
+                    public void accept(MessageAvailabilityListener listener){
+                    listener.handleMessageRefund(UUID.fromString(uuids[0]), UUID.fromString(uuids[1]), messageId);
+                    }
+                }));
+                unsubscribeMonetizeMessageKeyspaceNotifications(uuids[0], uuids[1], messageId);
+            }else  if("del".equals(message)){
+                notificationExecutorService.execute(() -> findTransactionListener().ifPresent(new Consumer<MessageAvailabilityListener>() {
+                    @Override
+                    public void accept(MessageAvailabilityListener listener){
+                    listener.handleMonetizeMessageRead(UUID.fromString(uuids[0]), UUID.fromString(uuids[1]), messageId);
+                    }
+                }));
+                unsubscribeMonetizeMessageKeyspaceNotifications(uuids[0], uuids[1], messageId);
+            }
+            
+        }
         else if (channel.startsWith(PROFESSIONAL_USER_SCHEDULE_KEYSPACE_PREFIX) && "expired".equals(message)) {
             logger.info("####################### CHANNEL START WITH ######## expired SCHEDULE");
             final int startOfHashTag = channel.indexOf('{');
@@ -570,10 +675,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         // }
     }
 
-    private void broadCastMessage(){
+    public void broadCastMessage(UUID uuid, Map<String , String> msg){
         for (Map.Entry<String, MessageAvailabilityListener> entry : messageListenersByQueueName.entrySet()){
             final String channelName = "{"+entry.getKey()+"}";
-            notificationExecutorService.execute(() -> findListener(channelName).ifPresent(MessageAvailabilityListener::professionalStatusAvailable));
+            notificationExecutorService.execute(() -> findListener(channelName).ifPresent(new Consumer<MessageAvailabilityListener>() {
+                @Override
+                public void accept(MessageAvailabilityListener listener){
+                listener.professionalStatusAvailable(uuid, msg);
+                }
+            }));
         }
     }
     private Optional<MessageAvailabilityListener> findListener(final String keyspaceChannel) {
@@ -581,6 +691,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
         synchronized (messageListenersByQueueName) {
             return Optional.ofNullable(messageListenersByQueueName.get(queueName));
+        }
+    }
+
+    private Optional<MessageAvailabilityListener> findTransactionListener() {
+        synchronized (transactionMessageListenersByQueueName) {
+            return Optional.ofNullable(transactionMessageListenersByQueueName.get("transaction"));
         }
     }
 
@@ -634,6 +750,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     }
     private static byte[] getMessageQueueMetadataKey(final UUID accountUuid, final long deviceId) {
         return ("user_queue_metadata::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+    private static byte[] getMonetizeMessageQueueKey(final String queueName, long messageId) {
+        return ("user_monetize_message::{" + queueName + "}::"+messageId).getBytes(StandardCharsets.UTF_8);
     }
 
     private static byte[] getQueueIndexKey(final UUID accountUuid, final long deviceId) {
@@ -761,6 +880,29 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+    public void removeLike(final String postId ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getLikeQueueKey(postId);
+
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(ephemeralQueueKey);
+                });
+        });
+    }
+
+    public void removeComment(final String postId ) {
+        insertEphemeralTimer.record(() -> {
+                final byte[] ephemeralQueueKey = getCommentCountQueueKey(postId);
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(ephemeralQueueKey);
+                });
+                final byte[] commentQueueKey = getCommentQueueKey(postId);
+                insertCluster.useBinaryCluster(connection -> {
+                    connection.sync().del(commentQueueKey);
+                });
+        });
+    }
+
     public void insertMultiplePost(final UUID uuid, final List<CachyUserPostResponse> messages) {
         insertTimer.record(() -> {
             insertCluster.useBinaryCluster(connection -> {
@@ -816,25 +958,33 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
       }
     public  void setOnlineStatus(UUID uuid, String status, String slotIndex) {
         if(status.equals("ONLINE")){
-            insertCluster.useCluster(connection -> {
-                connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
-            });
-            broadCastMessage();
             readDeleteCluster.useCluster(connection -> {
                 connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
             });
-            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
-        }
-        else if(status.equals("OFFLINE")){
             insertCluster.useCluster(connection -> {
                 connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
             });
-            broadCastMessage(); 
-            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
+            final Map<String , String> map = new HashMap<>();
+            map.put(uuid.toString(), "ONLINE");
+            broadCastMessage(uuid, map);
+            
+            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
+        }
+        else if(status.equals("OFFLINE")){
             readDeleteCluster.useCluster(connection -> {
+                connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString());
                 connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
-                connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX, uuid.toString());
             });
+            final Map<String , String> map = new HashMap<>();
+            map.put(uuid.toString(), "OFFLINE");
+            broadCastMessage(uuid, map); 
+            unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
+            // readDeleteCluster.useCluster(connection -> {
+            //    connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
+            // });
+            // readDeleteCluster.useCluster(connection -> {
+            //     connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX, uuid.toString());
+            // });
         }         
       }
 
@@ -876,12 +1026,16 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return map;
     }
 
-    public Map<String , String> takeProfessionalStatusMessage() {
+    public Map<String , String> takeProfessionalStatusMessage(UUID uuid) {
        final Map<String , String> map = new HashMap<>();
-       Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getProfessionalUserStatusQueueKey()));
-       for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
-                map.put(new String(entry.getKey()), new String(entry.getValue()));       
-        }
+       byte[] categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getProfessionalUserStatusQueueKey(), uuid.toString().getBytes()));
+       
+       if(categoryMap != null){
+        map.put(uuid.toString(), new String(categoryMap)); 
+       }
+    //    for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
+    //             map.put(new String(entry.getKey()), new String(entry.getValue()));       
+    //     }
        return map;
     }
 
