@@ -5,6 +5,8 @@
 
 package org.whispersystems.textsecuregcm.storage;
 
+import java.util.Map;
+import java.util.UUID;
 /**
  * A message availability listener is notified when new messages are available for a specific device for a specific
  * account. Availability listeners are also notified when messages are moved from the message cache to long-term storage
@@ -22,7 +24,13 @@ public interface MessageAvailabilityListener {
     
     void handlePostWallMessageAvailable();
 
-    void professionalStatusAvailable();
+    void professionalStatusAvailable(UUID uuid, Map<String , String> map);
 
     void recordingConsentMessageAvailable();
+
+    void userDisableMessageAvailable();
+
+    void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId);
+
+    void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId);
 }

@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope;
-import org.whispersystems.textsecuregcm.entities.CachyComment;
 import org.whispersystems.textsecuregcm.entities.CachyTaggedUserProfile;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
@@ -73,8 +72,11 @@ public class MessagesManager {
     return messagesCache.takeRecordingConsentMessage(destinationUuid, destinationDevice);
   }
   
-  public Map<String , String> takeProfessionalStatusMessage() {
-    return messagesCache.takeProfessionalStatusMessage();
+  public Map<String , String> takeProfessionalStatusMessage(UUID uuid) {
+    return messagesCache.takeProfessionalStatusMessage(uuid);
+  }
+  public void broadCastMessage(UUID uuid, Map<String , String> msg) {
+    messagesCache.broadCastMessage(uuid, msg);
   }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {
@@ -102,16 +104,19 @@ public class MessagesManager {
     messagesCache.setRecordingConsent(uuid, callId);
   }
 
-  public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl) {
-     messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl);
+  public void addScheduleTimeKey(final UUID uuid, final long device, final long startttl, final long endttl, int slotIndex) {
+     messagesCache.addScheduleTimeKey(uuid, device, startttl, endttl, slotIndex);
   }
-  public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String uuid) {
-     messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid);
+  public void unsubscribeFromKeyspaceNotificationsAndRemoveSchedule(final String queueName, final int slotIndex) {
+    messagesCache.unsubscribeFromKeyspaceNotificationsAndRemoveSchedule(queueName, slotIndex);
+  }
+  public void setOnlineStatusOnDisconnect(final UUID uuid) {
+     messagesCache.setOnlineStatusOnDisconnect(uuid);
+  }
+  public void subscribeForKeyspaceNotificationsForProfessionalUsers(final String uuid, int slotIndex) {
+     messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid, slotIndex);
   }
 
-  public List<CachyComment> getComments(final String uuid, final long[] range) {
-    return messagesCache.getComments(uuid,  range);
-  }
   public  Map<Integer , Double> getCommonInterestedCategory() {
     return messagesCache.getCommonInterestedCategory();
   }
@@ -196,6 +201,11 @@ public class MessagesManager {
       final long destinationDeviceId,
       final MessageAvailabilityListener listener) {
     messagesCache.addMessageAvailabilityListener(destinationUuid, destinationDeviceId, listener);
+  }
+
+  public void addTransactionMessageAvailabilityListener(
+      final MessageAvailabilityListener listener) {
+    messagesCache.addTransactionMessageAvailabilityListener(listener);
   }
 
   public void removeMessageAvailabilityListener(final MessageAvailabilityListener listener) {
