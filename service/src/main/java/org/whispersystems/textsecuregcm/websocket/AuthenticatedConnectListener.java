@@ -78,6 +78,7 @@ public class AuthenticatedConnectListener implements WebSocketConnectListener {
           logger.info("############## WEBSOCKET CLOSED : STATUS CODE "+ statusCode + " REASON "+ reason+" !!!!!!!!!!!!!!!!!!!!!");
           clientPresenceManager.clearPresence(account.getUuid(), device.getId());
           messagesManager.removeMessageAvailabilityListener(connection);
+          messagesManager.setOnlineStatusOnDisconnect(account.getUuid());
           connection.stop();
 
           openWebsocketCounter.dec();
