@@ -30,6 +30,9 @@ public class IncomingMessageList {
   @JsonProperty
   private boolean isMonetizeMessage;
 
+  @JsonProperty
+  private String  plaintext;
+
 
   public IncomingMessageList() {}
 
@@ -59,5 +62,13 @@ public class IncomingMessageList {
 
   public void setMonetizeMessage(boolean isMonetizeMessage) {
     this.isMonetizeMessage = isMonetizeMessage;
+  }
+
+  public String getPlaintext() {
+    return plaintext;
+  }
+
+  public void setPlaintext(String plaintext) {
+    this.plaintext = plaintext;
   }
 }
