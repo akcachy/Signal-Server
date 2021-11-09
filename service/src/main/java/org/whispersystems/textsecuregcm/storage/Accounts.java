@@ -141,8 +141,9 @@ public class Accounts {
   public void delete(final UUID uuid) {
     database.use(jdbi -> jdbi.useHandle(handle -> {
       try (Timer.Context ignored = deleteTimer.time()) {
-        handle.createUpdate("DELETE FROM accounts WHERE " + UID + " = :uuid")
+        handle.createUpdate("UPDATE accounts SET  status = :status::status WHERE " + UID + " = :uuid")
                 .bind("uuid", uuid)
+                .bind("status", "DELETED")
                 .execute();
       }
     }));

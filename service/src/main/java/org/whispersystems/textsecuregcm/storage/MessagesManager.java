@@ -56,6 +56,10 @@ public class MessagesManager {
     messagesCache.insertEphemeral(destinationUuid, destinationDevice, message);
   }
 
+  public void markReadMonetizeMsg(final UUID uuid, final UUID destinationUuid) {
+     messagesCache.markReadMonetizeMsg(uuid, destinationUuid);
+  }
+
   public Optional<Envelope> takeEphemeralMessage(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.takeEphemeralMessage(destinationUuid, destinationDevice);
   }

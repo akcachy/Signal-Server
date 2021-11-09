@@ -66,13 +66,13 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
         AuthenticationResult<T> authenticationResult = authenticator.get().authenticate(request);
 
         if (authenticationResult.getUser().isEmpty() && authenticationResult.isRequired()) {
-          addLoginHistory(request, "UNAUTHORIZE");
+          //addLoginHistory(request, "UNAUTHORIZE");
           response.sendForbidden("Unauthorized");
           return null;
         } else {
           authenticated = authenticationResult.getUser().orElse(null);
           if(authenticated != null){
-            addLoginHistory(request, "SUCCESS");
+            //addLoginHistory(request, "SUCCESS");
           }
           
         }
