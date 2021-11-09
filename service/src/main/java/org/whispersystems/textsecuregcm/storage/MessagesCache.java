@@ -890,6 +890,17 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+     public void markReadMonetizeMsg(final UUID accountUuid, final UUID destination) {
+   
+        readDeleteCluster.useCluster(connection -> {
+            List<String> list =  connection.sync().keys(getMonetizeMessageQueueKey(destination, accountUuid));
+            for (String key : list) {
+                connection.sync().del(key);
+            }
+        });
+
+     }
+
     public void removeComment(final String postId ) {
         insertEphemeralTimer.record(() -> {
                 final byte[] ephemeralQueueKey = getCommentCountQueueKey(postId);
@@ -1067,6 +1078,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     static byte[] getStoryWallQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_story_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static String getMonetizeMessageQueueKey(final UUID accountUuid, final UUID destination) {
+        return ("user_monetize_message::{" + accountUuid.toString() +"::"+destination.toString() +"}::*");
     }
 
     private static byte[] getUserInterestedCategoryQueueKey(final UUID accountUuid) {

@@ -41,7 +41,7 @@ public class ClientPresenceManagerTest extends AbstractRedisClusterTest {
         });
 
         presenceRenewalExecutorService = Executors.newSingleThreadScheduledExecutor();
-        clientPresenceManager          = new ClientPresenceManager(getRedisCluster(), presenceRenewalExecutorService, presenceRenewalExecutorService);
+        clientPresenceManager          = new ClientPresenceManager(getRedisCluster(), presenceRenewalExecutorService, presenceRenewalExecutorService, null);
     }
 
     @Override
