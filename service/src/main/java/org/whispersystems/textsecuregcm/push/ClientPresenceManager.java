@@ -76,6 +76,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     private final Meter pruneClientMeter;
     private final Meter remoteDisplacementMeter;
     private final Meter pubSubMessageMeter;
+    private final String  transactionServiceUrl;
 
     private static final int PRUNE_PEERS_INTERVAL_SECONDS = (int)Duration.ofSeconds(30).toSeconds();
 
@@ -83,7 +84,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
 
     private static final Logger log = LoggerFactory.getLogger(ClientPresenceManager.class);
 
-    public ClientPresenceManager(final FaultTolerantRedisCluster presenceCluster, final ScheduledExecutorService scheduledExecutorService, final ExecutorService keyspaceNotificationExecutorService) throws IOException {
+    public ClientPresenceManager(final FaultTolerantRedisCluster presenceCluster, final ScheduledExecutorService scheduledExecutorService, final ExecutorService keyspaceNotificationExecutorService, String transactionServiceUrl) throws IOException {
         this.presenceCluster                     = presenceCluster;
         this.pubSubConnection                    = this.presenceCluster.createPubSubConnection();
         this.clearPresenceScript                 = ClusterLuaScript.fromResource(presenceCluster, "lua/clear_presence.lua", ScriptOutputType.INTEGER);
@@ -101,6 +102,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
         this.remoteDisplacementMeter = metricRegistry.meter(name(getClass(), "remoteDisplacement"));
         this.pubSubMessageMeter      = metricRegistry.meter(name(getClass(), "pubSubMessage"));
         this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build(); 
+        this.transactionServiceUrl   = transactionServiceUrl;
     }
 
     @VisibleForTesting
@@ -294,7 +296,7 @@ public class ClientPresenceManager extends RedisClusterPubSubAdapter<String, Str
     }
 
     public void removeFromMatchingQueue(UUID uuid){
-        URI uri                        = URI.create("http://localhost:8084/cachy/v1/matching/delete/"+uuid.toString());
+        URI uri                        = URI.create(this.transactionServiceUrl+"/cachy/v1/matching/delete/"+uuid.toString());
         HttpRequest request = HttpRequest.newBuilder().uri(uri)
                 .PUT(HttpRequest.BodyPublishers.ofString(""))
                 .header("Content-Type", "application/json")
