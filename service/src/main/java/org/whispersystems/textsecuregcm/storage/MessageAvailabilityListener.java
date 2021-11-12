@@ -32,5 +32,9 @@ public interface MessageAvailabilityListener {
 
     void handleMessageRefund(UUID senderUuid, UUID receiverUuid, long messageId);
 
+    void handleMatchingUserWaitingExpire(UUID uuid);
+
+    void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid);
+
     void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId);
 }
