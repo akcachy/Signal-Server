@@ -28,4 +28,13 @@ public class TurnToken {
     this.password = password;
     this.urls     = urls;
   }
+
+  public boolean isTurnOnly() {
+    return turnOnly;
+  }
+
+  public void setTurnOnly(boolean turnOnly) {
+    this.turnOnly = turnOnly;
+  }
+  
 }
