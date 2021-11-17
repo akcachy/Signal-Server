@@ -20,6 +20,9 @@ public class TurnToken {
   @JsonProperty
   private List<String> urls;
 
+  @JsonProperty
+  private boolean turnOnly;
+
   public TurnToken(String username, String password, List<String> urls) {
     this.username = username;
     this.password = password;
