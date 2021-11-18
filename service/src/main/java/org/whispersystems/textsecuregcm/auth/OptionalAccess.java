@@ -50,6 +50,10 @@ public class OptionalAccess {
                             Optional<Anonymous> accessKey,
                             Optional<Account>   targetAccount)
   {
+    if (targetAccount.isPresent() && targetAccount.get().getStatus().equals("DELETED")) {
+      throw new WebApplicationException("Account deleted.",Response.Status.NOT_FOUND);
+    }
+
     if (requestAccount.isPresent() && targetAccount.isPresent() && targetAccount.get().isEnabled()) {
       return;
     }
