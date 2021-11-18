@@ -78,8 +78,8 @@ public class GCMSender {
       case NOTIFICATION: key = "notification"; break;
       case CHALLENGE:    key = "challenge";    break;
       case FOLLOW:       key = "follow";       break;
-      case LIKE:         key = "like";         break;
-      case COMMENT:      key = "comment";      break;
+      case POST_LIKED:   key = "post_liked";   break;
+      case COMMENTED:    key = "commented";    break;
       case CONTRIBUTOR_IN_POST:       key = "contributor_in_post";      break;
       case TAGGED_IN_POST:            key = "tagged_in_post";           break;
       case FOLLOW_REQUEST:            key = "follow_request";           break;
