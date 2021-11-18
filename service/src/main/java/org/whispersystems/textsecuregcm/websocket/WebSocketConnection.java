@@ -355,6 +355,17 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     
   }
 
+  @Override
+  public void handleMatchingUserWaitingExpire(UUID uuid) {
+    
+  }
+
+  @Override
+  public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
+
+    
+  }
+  
   private CompletableFuture<WebSocketResponseMessage> sendProfessionalStatusMessage(final Map<String , String> message) {
     final ProfessionalStatusMessage.Builder  professionalStatusMessage =   ProfessionalStatusMessage.newBuilder();
     

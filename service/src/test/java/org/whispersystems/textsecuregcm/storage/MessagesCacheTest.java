@@ -338,6 +338,12 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             @Override
             public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
             }
+            @Override
+            public void handleMatchingUserWaitingExpire(UUID uuid) {
+            }
+            @Override
+            public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
+            }
         };
 
         messagesCache.addMessageAvailabilityListener(DESTINATION_UUID, DESTINATION_DEVICE_ID, listener);
@@ -393,6 +399,12 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMatchingUserWaitingExpire(UUID uuid) {
+            }
+            @Override
+            public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
             }
         };
 
@@ -451,6 +463,12 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId) { 
+            }
+            @Override
+            public void handleMatchingUserWaitingExpire(UUID uuid) {
+            }
+            @Override
+            public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
             }
         };
 
