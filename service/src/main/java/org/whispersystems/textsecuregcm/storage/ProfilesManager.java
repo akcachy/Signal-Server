@@ -40,7 +40,7 @@ public class ProfilesManager {
 
   public void deleteAll(UUID uuid) {
     memcacheDelete(uuid);
-    profiles.deleteAll(uuid);
+    //profiles.deleteAll(uuid);
   }
 
   public Optional<VersionedProfile> get(UUID uuid, String version) {
