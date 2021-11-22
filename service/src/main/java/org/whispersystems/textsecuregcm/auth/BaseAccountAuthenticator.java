@@ -23,6 +23,9 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
 import static com.codahale.metrics.MetricRegistry.name;
 
 public class BaseAccountAuthenticator {
@@ -56,6 +59,10 @@ public class BaseAccountAuthenticator {
       AuthorizationHeader authorizationHeader = AuthorizationHeader.fromUserAndPassword(basicCredentials.getUsername(), basicCredentials.getPassword());
       Optional<Account>   account             = accountsManager.get(authorizationHeader.getIdentifier());
 
+      if (account.isPresent() && account.get().getStatus().equals("DELETED")) {
+        throw new WebApplicationException("Account deleted.",Response.Status.NOT_FOUND);
+      }
+      
       if (!account.isPresent()) {
         noSuchAccountMeter.mark();
         return Optional.empty();
