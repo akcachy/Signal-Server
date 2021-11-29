@@ -121,7 +121,7 @@ public class MessagesManager {
      messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid, slotIndex);
   }
 
-  public  Map<Integer , Double> getCommonInterestedCategory() {
+  public  Map<String , Double> getCommonInterestedCategory() {
     return messagesCache.getCommonInterestedCategory();
   }
   public List<CachyTaggedUserProfile> getContributorsStory(final List<CachyTaggedUserProfile> contributorsDetails) {
@@ -133,10 +133,10 @@ public class MessagesManager {
   public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> list) {
      messagesCache.insertMultipleStory(uuid,  list);
   }
-  public void addUserInterest(final UUID uuid, final Map<Integer , Double> data) {
+  public void addUserInterest(final UUID uuid, final Map<String , Double> data) {
      messagesCache.addUserInterest(uuid,  data);
   }
-  public Map<Integer, Double> getUserInterest(final UUID uuid) {
+  public Map<String, Double> getUserInterest(final UUID uuid) {
      return messagesCache.getUserInterest(uuid);
   }
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {

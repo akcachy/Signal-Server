@@ -942,7 +942,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
-    void addUserInterest(final UUID accountUuid, final Map<Integer , Double> data) {
+    void addUserInterest(final UUID accountUuid, final Map<String , Double> data) {
         
         insertCluster.useBinaryCluster(connection ->{
                 data.forEach((key, value) -> connection.sync().zadd(getUserInterestedCategoryQueueKey(accountUuid), ZAddArgs.Builder.nx(), value, key.toString().getBytes(StandardCharsets.UTF_8)   ));
@@ -1007,31 +1007,31 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }); 
       }
 
-    Map<Integer, Double> getUserInterest(final UUID accountUuid) {
+    Map<String, Double> getUserInterest(final UUID accountUuid) {
         
         final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(getUserInterestedCategoryQueueKey(accountUuid)),
                                                                                        List.of(String.valueOf(0).getBytes(StandardCharsets.UTF_8), String.valueOf(-1).getBytes(StandardCharsets.UTF_8)  ));
                                             
-        Map<Integer, Double> map= new HashMap<>();
+        Map<String, Double> map= new HashMap<>();
         if (queueItems.size() % 2 == 0) {
                 for (int i = 0; i < queueItems.size() - 1; i += 2) {
-                    map.put(Integer.parseInt(new String(queueItems.get(i))) , Double.parseDouble(  new String(queueItems.get(i+1)) ));
+                    map.put(new String(queueItems.get(i)) , Double.parseDouble(  new String(queueItems.get(i+1)) ));
                 }
         }
         return map;
 
     }
 
-    Map<Integer , Double> getCommonInterestedCategory() {
-        final Map<Integer , Double> map = new HashMap<>();
+    Map<String , Double> getCommonInterestedCategory() {
+        final Map<String , Double> map = new HashMap<>();
         Double total  = 0.0 ; 
         Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey()));
         for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
             Double count = Double.parseDouble(new String(entry.getValue()));
             total += count;
-            map.put(Integer.parseInt(new String(entry.getKey())), count  );       
+            map.put(new String(entry.getKey()), count  );       
         }
-        for (Map.Entry<Integer, Double> entry : map.entrySet()) {
+        for (Map.Entry<String, Double> entry : map.entrySet()) {
             map.put(entry.getKey(), (entry.getValue()*100)/total);
         }
         return map;
