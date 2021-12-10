@@ -51,6 +51,12 @@ public class CachyUserPostResponse {
     @JsonProperty
     public SignalServiceAttachmentPointer coverImg;
 
+    @JsonIgnore
+    public int ageGroup;
+
+    @JsonIgnore
+    public int category;
+
     public CachyUserPostResponse() {
     }
 
@@ -192,5 +198,28 @@ public class CachyUserPostResponse {
     public void setViews(long views) {
         this.views = views;
     }
+
+
+    public int getAgeGroup() {
+        return ageGroup;
+    }
+
+
+    public void setAgeGroup(int ageGroup) {
+        this.ageGroup = ageGroup;
+    }
+
+
+    public int getCategory() {
+        return category;
+    }
+
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+
+
    
 }

@@ -806,8 +806,26 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
                 for (int i = 0; i < queueItems.size() - 1; i += 2) {
                     try {
-                        //System.out.println(new String(queueItems.get(i)));
-                        CachyUserPostResponse post = mapper.readValue(new String(queueItems.get(i)), CachyUserPostResponse.class);
+                        final String postId = new String(queueItems.get(i));
+                        
+                        final String postIdKey;
+                            if(isPosts){
+                                final List<String> postIdList = readDeleteCluster.withCluster(connection -> connection.sync().keys(getUserPostQueueKey(postId)));
+                                if(postIdList.size() == 0){
+                                    continue;
+                                }
+                                postIdKey = postIdList.get(0);     
+                                   
+                            }else if(isStory){
+                                postIdKey = getUserStoryQueueKey(postId);  
+                            }else{
+                                postIdKey = ""; 
+                            }
+                        final String postData = readDeleteCluster.withCluster(connection -> connection.sync().get(postIdKey));
+                        if(postData == null){
+                            continue;
+                        }
+                        CachyUserPostResponse post = mapper.readValue(postData, CachyUserPostResponse.class);
                         List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
                         if(post.getContributorsDetails() != null && post.getContributorsDetails().size()!=0){    
                             for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
@@ -919,11 +937,13 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             insertCluster.useBinaryCluster(connection -> {
                     try{   
                         for(CachyUserPostResponse post : messages) {
-                            connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8)   );    
+                            connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  post.getPostId().getBytes(StandardCharsets.UTF_8)   );   
+                            connection.sync().set(getUserPostWtihCategoryQueueKey(post.getPostId(), post.getCategory()+"_"+post.getAgeGroup()).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) );  
                         }                   
                     }catch(Exception e){
                     }
                 });
+               
         });   
     }
     public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> messages) {
@@ -931,7 +951,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             insertCluster.useBinaryCluster(connection -> {
                     try{   
                         for(CachyUserPostResponse post : messages) {
-                            connection.sync().zadd(getStoryMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8)   );    
+                            connection.sync().zadd(getStoryMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  post.getPostId().getBytes(StandardCharsets.UTF_8)   );    
+                            connection.sync().set(getUserStoryQueueKey(post.getPostId()).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) );  
+                            connection.sync().expire(getUserStoryQueueKey(post.getPostId()).getBytes(StandardCharsets.UTF_8) , 86400); 
                         }                   
                         connection.sync().expire(getStoryMessageQueueKey(uuid, 1), 86400);
                         
@@ -1058,6 +1080,18 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     @VisibleForTesting
     static byte[] getPostWallQueueKey(final UUID accountUuid, final long deviceId) {
         return ("user_posts_wall_queue::{" + accountUuid.toString() + "::" + deviceId + "}").getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static String getUserPostQueueKey(final String postId) {
+        return ("user_posts::{" + postId + "}::*");
+    }
+
+    private static String getUserPostWtihCategoryQueueKey(final String postId, final String categoryAndAgeGroup) {
+        return ("user_posts::{" + postId + "}::"+categoryAndAgeGroup);
+    }
+
+    private static String getUserStoryQueueKey(final String postId) {
+        return ("user_story::{" + postId + "}");
     }
 
     private static byte[] getLikeQueueKey(final String postId) {

@@ -101,8 +101,8 @@ public class MessagesManager {
     return messagesCache.getPosts(uuid, device, range, false, true, true, null, false);
   }
 
-  public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryId) {
-    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryId, true);
+  public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
+    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryAndAgeGroup, true);
   }
   public void setRecordingConsent(final UUID uuid,  String callId) {
     messagesCache.setRecordingConsent(uuid, callId);
