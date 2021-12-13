@@ -461,8 +461,10 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
                                                   .setNumber(matchingUser.getNumber())
                                                   .setUuid(matchingUser.getUuid())
                                                   .setIsCaller(matchingUser.isCaller())
-                                                  .setFollowEnable(matchingUser.isFollowEnable());
-                                                             
+                                                  .setFollowEnable(matchingUser.isFollowEnable())
+                                                  .setProfileKey(matchingUser.getProfileKey())
+                                                  .setUnidentifiedAccess(new String(matchingUser.getUnidentifiedAccess()));
+          ;                                                   
     for (Integer iterable_element : matchingUser.getMatchingKeyword()) {
             builder1.addMatchingKeyword(iterable_element );
     }                                       

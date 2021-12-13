@@ -101,8 +101,8 @@ public class MessagesManager {
     return messagesCache.getPosts(uuid, device, range, false, true, true, null, false);
   }
 
-  public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryId) {
-    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryId, true);
+  public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
+    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryAndAgeGroup, true);
   }
   public void setRecordingConsent(final UUID uuid,  String callId) {
     messagesCache.setRecordingConsent(uuid, callId);
@@ -121,7 +121,7 @@ public class MessagesManager {
      messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid, slotIndex);
   }
 
-  public  Map<Integer , Double> getCommonInterestedCategory() {
+  public  Map<String , Double> getCommonInterestedCategory() {
     return messagesCache.getCommonInterestedCategory();
   }
   public List<CachyTaggedUserProfile> getContributorsStory(final List<CachyTaggedUserProfile> contributorsDetails) {
@@ -133,10 +133,10 @@ public class MessagesManager {
   public void insertMultipleStory(final UUID uuid, final List<CachyUserPostResponse> list) {
      messagesCache.insertMultipleStory(uuid,  list);
   }
-  public void addUserInterest(final UUID uuid, final Map<Integer , Double> data) {
+  public void addUserInterest(final UUID uuid, final Map<String , Double> data) {
      messagesCache.addUserInterest(uuid,  data);
   }
-  public Map<Integer, Double> getUserInterest(final UUID uuid) {
+  public Map<String, Double> getUserInterest(final UUID uuid) {
      return messagesCache.getUserInterest(uuid);
   }
   public OutgoingMessageEntityList getMessagesForDevice(UUID destinationUuid, long destinationDevice, final String userAgent, final boolean cachedMessagesOnly) {
