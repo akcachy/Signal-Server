@@ -59,8 +59,13 @@ public class BaseAccountAuthenticator {
       AuthorizationHeader authorizationHeader = AuthorizationHeader.fromUserAndPassword(basicCredentials.getUsername(), basicCredentials.getPassword());
       Optional<Account>   account             = accountsManager.get(authorizationHeader.getIdentifier());
 
-      if (account.isPresent() && account.get().getStatus().equals("DELETED")) {
-        throw new WebApplicationException("Account deleted.",Response.Status.NOT_FOUND);
+      if (account.isPresent()) {
+        switch(account.get().getStatus()){
+          case "DELETED" :                throw new WebApplicationException("Account deleted.",440); 
+          case "ACCOUNT_TEMP_SUSPENDED" : throw new WebApplicationException("Account Temp suspended.",441);
+          case "ACCOUNT_SUSPENDED" :      throw new WebApplicationException("Account suspended.",442); 
+        }
+        
       }
       
       if (!account.isPresent()) {

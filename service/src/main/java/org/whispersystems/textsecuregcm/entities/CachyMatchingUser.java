@@ -25,7 +25,11 @@ public class CachyMatchingUser {
     @JsonProperty
     private String callId;
 
-
+    @JsonProperty
+    private byte[] unidentifiedAccess;
+    
+    @JsonProperty
+    private String profileKey;
 
     public CachyMatchingUser() {
     }
@@ -76,6 +80,22 @@ public class CachyMatchingUser {
 
     public void setFollowEnable(boolean followEnable) {
         this.followEnable = followEnable;
+    }
+
+    public byte[] getUnidentifiedAccess() {
+        return unidentifiedAccess;
+    }
+
+    public void setUnidentifiedAccess(byte[] unidentifiedAccess) {
+        this.unidentifiedAccess = unidentifiedAccess;
+    }
+
+    public String getProfileKey() {
+        return profileKey;
+    }
+
+    public void setProfileKey(String profileKey) {
+        this.profileKey = profileKey;
     }
     
 }
