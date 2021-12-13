@@ -57,6 +57,12 @@ public class CachyUserPostResponse {
     @JsonIgnore
     public int category;
 
+    @JsonProperty
+    public String firstName;
+
+    @JsonProperty
+    public String lastName;
+
     public CachyUserPostResponse() {
     }
 
@@ -217,6 +223,26 @@ public class CachyUserPostResponse {
 
     public void setCategory(int category) {
         this.category = category;
+    }
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+
+    public String getLastName() {
+        return lastName;
+    }
+
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
 
