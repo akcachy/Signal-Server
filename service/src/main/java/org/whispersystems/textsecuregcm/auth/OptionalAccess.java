@@ -59,7 +59,7 @@ public class OptionalAccess {
     }
 
     //noinspection ConstantConditions
-    if (requestAccount.isPresent() && (targetAccount.isEmpty() || (targetAccount.isPresent() && !targetAccount.get().isEnabled()))) {
+    if (requestAccount.isPresent() && (targetAccount.isEmpty() || (targetAccount.isPresent() && !targetAccount.get().isEnabled()) || targetAccount.get().getUserName() == null  )) {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
