@@ -1056,9 +1056,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             total += count;
             map.put(new String(entry.getKey()), count  );       
         }
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            map.put(entry.getKey(), (entry.getValue()*100)/total);
-        }
+        // for (Map.Entry<String, Double> entry : map.entrySet()) {
+        //     map.put(entry.getKey(), (entry.getValue()*100)/total);
+        // }
         return map;
     }
 
