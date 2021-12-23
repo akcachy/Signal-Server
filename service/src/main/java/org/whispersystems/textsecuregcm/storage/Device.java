@@ -184,7 +184,7 @@ public class Device {
     boolean hasChannel = fetchesMessages || !Util.isEmpty(getApnId()) || !Util.isEmpty(getGcmId());
 
     return (id == MASTER_ID && hasChannel && signedPreKey != null) ||
-           (id != MASTER_ID && hasChannel && signedPreKey != null && lastSeen > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30)));
+           (id != MASTER_ID && hasChannel && signedPreKey != null && lastSeen > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(365)));
   }
   
   public boolean getFetchesMessages() {

@@ -1,6 +1,7 @@
 /***** Created By : Ankit Kumar ******/
 package org.whispersystems.textsecuregcm.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -18,7 +19,7 @@ public class CachyTaggedUserProfile {
     @JsonProperty
     private String un;
     
-    @JsonProperty
+    @JsonIgnore
     private String num;
     
     @JsonProperty
