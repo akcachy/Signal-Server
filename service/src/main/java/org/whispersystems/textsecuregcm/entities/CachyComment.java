@@ -5,11 +5,16 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.bson.types.ObjectId;
+
 public class CachyComment {
 
   @JsonProperty
-  private UUID id;
+  private ObjectId _id;
   
+  @JsonProperty
+  private String postId;
+
   @JsonProperty
   private UUID uuid;
   
@@ -47,12 +52,12 @@ public class CachyComment {
   public CachyComment() {
   }
 
-  public UUID getId() {
-    return id;
+  public ObjectId getId() {
+    return _id;
   }
 
-  public void setId(UUID id) {
-    this.id = id;
+  public void setId(ObjectId _id) {
+    this._id = _id;
   }
 
   public UUID getUuid() {
@@ -117,6 +122,38 @@ public class CachyComment {
 
   public void setPk(String pk) {
     this.pk = pk;
+  }
+
+  public int getPro() {
+    return pro;
+  }
+
+  public void setPro(int pro) {
+    this.pro = pro;
+  }
+
+  public int getPre() {
+    return pre;
+  }
+
+  public void setPre(int pre) {
+    this.pre = pre;
+  }
+
+  public boolean isUserStoryExists() {
+    return isUserStoryExists;
+  }
+
+  public void setUserStoryExists(boolean isUserStoryExists) {
+    this.isUserStoryExists = isUserStoryExists;
+  }
+
+  public String getPostId() {
+    return postId;
+  }
+
+  public void setPostId(String postId) {
+    this.postId = postId;
   }
 
   
