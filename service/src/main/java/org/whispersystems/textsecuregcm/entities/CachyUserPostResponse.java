@@ -63,6 +63,9 @@ public class CachyUserPostResponse {
     @JsonProperty
     public String lastName;
 
+    @JsonProperty
+    public int dirtyFlag;
+
     public CachyUserPostResponse() {
     }
 
@@ -243,6 +246,16 @@ public class CachyUserPostResponse {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+
+    public int getDirtyFlag() {
+        return dirtyFlag;
+    }
+
+
+    public void setDirtyFlag(int dirtyFlag) {
+        this.dirtyFlag = dirtyFlag;
     }
 
 
