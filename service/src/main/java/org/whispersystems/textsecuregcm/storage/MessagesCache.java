@@ -838,12 +838,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         post.setScore(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
                         final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
                         if(likeCount != null){
-                            post.setLikesCount(Long.parseLong(new String(likeCount)));
+                            post.setLikesCount(new String(likeCount));
                         }
 
                         final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
                         if(viewCount != null){
-                            post.setViews(Long.parseLong(new String(viewCount)));
+                            post.setViews(new String(viewCount));
                         }
 
                         final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
@@ -852,7 +852,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
                         final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
                         if(commentCount != null){
-                            post.setCommentsCount(Long.parseLong(new String(commentCount)));
+                            post.setCommentsCount(new String(commentCount));
                         }
                         messageEntities.add(post );
                     } catch (Exception e) {

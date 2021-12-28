@@ -25,13 +25,13 @@ public class CachyUserPostResponse {
     public long score;
     
     @JsonProperty
-    public long likesCount;
+    public String likesCount;
 
     @JsonProperty
-    public long views;
+    public String views;
     
     @JsonProperty
-    public long commentsCount;
+    public String commentsCount;
 
     @JsonProperty
     public long duration;
@@ -67,6 +67,9 @@ public class CachyUserPostResponse {
     public int dirtyFlag;
 
     public CachyUserPostResponse() {
+        this.likesCount = "0";
+        this.views = "0";
+        this.commentsCount = "0";
     }
 
 
@@ -109,12 +112,12 @@ public class CachyUserPostResponse {
         this.createdAt = createdAt;
     }
 
-    public long getLikesCount() {
+    public String getLikesCount() {
         return likesCount;
     }
 
 
-    public void setLikesCount(long likesCount) {
+    public void setLikesCount(String likesCount) {
         this.likesCount = likesCount;
     }
 
@@ -129,14 +132,7 @@ public class CachyUserPostResponse {
     }
 
 
-    public long getCommentsCount() {
-        return commentsCount;
-    }
-
-
-    public void setCommentsCount(long commentsCount) {
-        this.commentsCount = commentsCount;
-    }
+    
 
 
     public boolean isLiked() {
@@ -199,13 +195,23 @@ public class CachyUserPostResponse {
     }
 
 
-    public long getViews() {
+    public String getViews() {
         return views;
     }
 
 
-    public void setViews(long views) {
+    public void setViews(String views) {
         this.views = views;
+    }
+
+
+    public String getCommentsCount() {
+        return commentsCount;
+    }
+
+
+    public void setCommentsCount(String commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
 
