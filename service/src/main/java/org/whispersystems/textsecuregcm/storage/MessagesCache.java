@@ -940,8 +940,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                             final String categoryAndAgeGroup = post.getCategory()+"_"+post.getAgeGroup();
                             connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  post.getPostId().getBytes(StandardCharsets.UTF_8)   );   
                             connection.sync().set(getUserPostWtihCategoryQueueKey(post.getPostId(), categoryAndAgeGroup).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) ); 
-                           // connection.sync().hincrby(getPostCategoryQueueMetadataKey(), categoryAndAgeGroup.getBytes(), 1);
-                           // connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   ); 
+                            connection.sync().hincrby(getPostCategoryQueueMetadataKey(), categoryAndAgeGroup.getBytes(), 1);
+                            connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   ); 
                         }                   
                     }catch(Exception e){
                     }
