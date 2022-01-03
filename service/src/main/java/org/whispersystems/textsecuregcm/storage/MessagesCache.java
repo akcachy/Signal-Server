@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.dropwizard.lifecycle.Managed;
+import io.lettuce.core.RedisException;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.ZAddArgs;
@@ -108,7 +109,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String CACHE_PROFESSIONAL_PREFIX                       = "professionalUsers::";
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
     private static final String CACHE_ONLINE_PROFESSIONAL_PREFIX = "professionals_user_status::{aedc76c1-1e48-464b-b39e-c4949b4e4bb4::1}";
-
+    private static final String CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX = "professionalUsersCategoryMetadata::";
     private static final String REMOVE_TIMER_NAME = name(MessagesCache.class, "remove");
 
     private static final String REMOVE_METHOD_TAG    = "method";
@@ -1002,6 +1003,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "ONLINE");
+            changeProfessionalQueue(uuid, "OFFLINE", "ONLINE");
             broadCastMessage(uuid, map);
             
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
@@ -1013,6 +1015,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "OFFLINE");
+            changeProfessionalQueue(uuid, "ONLINE",  "OFFLINE");
             broadCastMessage(uuid, map); 
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
             // readDeleteCluster.useCluster(connection -> {
@@ -1023,6 +1026,32 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             // });
         }         
       }
+
+      public void changeProfessionalQueue(UUID uuid, String oldStatus, String newStatus){
+       String result =   readDeleteCluster.withCluster(connection -> connection.sync().hget(CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX, uuid.toString()));
+       if(result != null){
+           String[] categoryAndAgeGroupArr = result.split(" ");
+           for (String categoryAndAgeGroup : categoryAndAgeGroupArr) {
+                memcacheSetProfessionalByTagsAndAgegroup(uuid.toString(), categoryAndAgeGroup, oldStatus, newStatus );
+           }
+       }
+    }
+
+    private void memcacheSetProfessionalByTagsAndAgegroup(String uuid, String categoryAndAge,  String oldStatus, String newStatus ) {
+        try {
+
+            final Double score =  readDeleteCluster.withCluster(connection ->  connection.sync().zscore(CACHE_PROFESSIONAL_PREFIX+oldStatus+"::"+categoryAndAge, uuid ));
+            if(score == null){
+                insertCluster.useCluster(connection -> connection.sync().zadd(CACHE_PROFESSIONAL_PREFIX+newStatus+"::"+categoryAndAge, ZAddArgs.Builder.nx(), 0, uuid  ));
+            }else{
+                insertCluster.useCluster(connection -> connection.sync().zadd(CACHE_PROFESSIONAL_PREFIX+newStatus+"::"+categoryAndAge, ZAddArgs.Builder.nx(), score, uuid  ));
+            }
+            readDeleteCluster.withCluster(connection ->  connection.sync().zrem(CACHE_PROFESSIONAL_PREFIX+oldStatus+"::"+categoryAndAge, uuid ));
+    
+        } catch (RedisException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
       public  void setOnlineStatusOnDisconnect(UUID uuid) { 
         insertCluster.useCluster(connection -> {
