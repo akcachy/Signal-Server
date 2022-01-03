@@ -82,6 +82,9 @@ public class MessagesManager {
   public void broadCastMessage(UUID uuid, Map<String , String> msg) {
     messagesCache.broadCastMessage(uuid, msg);
   }
+  public void changeProfessionalQueue(UUID uuid, String oldStatus, String newStatus) {
+    messagesCache.changeProfessionalQueue(uuid, oldStatus, newStatus);
+  }
 
   public boolean hasCachedMessages(final UUID destinationUuid, final long destinationDevice) {
     return messagesCache.hasMessages(destinationUuid, destinationDevice);
