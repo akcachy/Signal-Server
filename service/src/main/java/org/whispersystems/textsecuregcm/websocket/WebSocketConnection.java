@@ -458,7 +458,7 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     
     final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder()
                                                   .setCallId(matchingUser.getCallId())
-                                                  .setNumber(matchingUser.getNumber())
+                                                  //.setNumber(matchingUser.getNumber())
                                                   .setUuid(matchingUser.getUuid())
                                                   .setIsCaller(matchingUser.isCaller())
                                                   .setFollowEnable(matchingUser.isFollowEnable())
