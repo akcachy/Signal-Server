@@ -135,12 +135,11 @@ message RecordingConsentMessage {
 message MatchingMessage {
   optional string uuid = 1;
   repeated uint32 matchingKeyword = 2;
-  optional string number = 3;
-  optional bool isCaller = 4;
-  optional string callId = 5;
-  optional bool followEnable = 6;
-  optional string unidentifiedAccess = 7;
-  optional string profileKey         = 8;
+  optional bool isCaller = 3;
+  optional string callId = 4;
+  optional bool followEnable = 5;
+  optional string unidentifiedAccess = 6;
+  optional string profileKey         = 7;
 }
 
 message ProvisioningUuid {
