@@ -61,9 +61,9 @@ public class BaseAccountAuthenticator {
 
       if (account.isPresent()) {
         switch(account.get().getStatus()){
-          case "DELETED" :                throw new WebApplicationException("Account deleted.",440); 
-          case "ACCOUNT_TEMP_SUSPENDED" : throw new WebApplicationException("Account Temp suspended.",441);
-          case "ACCOUNT_SUSPENDED" :      throw new WebApplicationException("Account suspended.",442); 
+          case "DELETED" :                return Optional.empty(); //throw new WebApplicationException("Account deleted.",440); 
+          case "ACCOUNT_TEMP_SUSPENDED" : return Optional.empty();  //throw new WebApplicationException("Account Temp suspended.",441);
+          case "ACCOUNT_SUSPENDED" :      return Optional.empty(); //throw new WebApplicationException("Account suspended.",442); 
         }
         
       }
