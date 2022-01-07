@@ -34,6 +34,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.ws.rs.WebApplicationException;
 
 import static java.util.Optional.ofNullable;
 
@@ -85,6 +86,11 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
                                               this.environment.getMessageFactory(),
                                               ofNullable(this.environment.getConnectListener()),
                                               this.environment.getIdleTimeoutMillis());
+    } catch (WebApplicationException ee) {
+      try {
+        response.sendError(getResponse().getStatus(), ee.getMessage());
+      } catch (IOException ex) {}
+      return null;
     } catch (AuthenticationException | IOException e) {
       logger.warn("Authentication failure", e);
       try {
