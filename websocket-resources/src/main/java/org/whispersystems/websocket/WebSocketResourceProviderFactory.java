@@ -88,7 +88,7 @@ public class WebSocketResourceProviderFactory<T extends Principal> extends WebSo
                                               this.environment.getIdleTimeoutMillis());
     } catch (WebApplicationException ee) {
       try {
-        response.sendError(getResponse().getStatus(), ee.getMessage());
+        response.sendError(ee.getResponse().getStatus(), ee.getMessage());
       } catch (IOException ex) {}
       return null;
     } catch (AuthenticationException | IOException e) {
