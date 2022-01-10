@@ -995,15 +995,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
       }
     public  void setOnlineStatus(UUID uuid, String status, String slotIndex) {
         if(status.equals("ONLINE")){
-            readDeleteCluster.useCluster(connection -> {
-                connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
-            });
+            // readDeleteCluster.useCluster(connection -> {
+            //     connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
+            // });
             insertCluster.useCluster(connection -> {
                 connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "ONLINE");
-            changeProfessionalQueue(uuid, "OFFLINE", "ONLINE");
+            changeProfessionalQueue(uuid, null, "OFFLINE", "ONLINE");
             broadCastMessage(uuid, map);
             
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
@@ -1011,11 +1011,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         else if(status.equals("OFFLINE")){
             readDeleteCluster.useCluster(connection -> {
                 connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString());
-                connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
+                //connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "OFFLINE");
-            changeProfessionalQueue(uuid, "ONLINE",  "OFFLINE");
+            changeProfessionalQueue(uuid, null, "ONLINE",  "OFFLINE");
             broadCastMessage(uuid, map); 
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
             // readDeleteCluster.useCluster(connection -> {
@@ -1027,14 +1027,21 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         }         
       }
 
-      public void changeProfessionalQueue(UUID uuid, String oldStatus, String newStatus){
-       String result =   readDeleteCluster.withCluster(connection -> connection.sync().hget(CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX, uuid.toString()));
-       if(result != null){
-           String[] categoryAndAgeGroupArr = result.split(" ");
-           for (String categoryAndAgeGroup : categoryAndAgeGroupArr) {
+      public void changeProfessionalQueue(UUID uuid, List<String> categoriesAndAgeGroup, String oldStatus, String newStatus){
+       if(categoriesAndAgeGroup == null){
+        String result =   readDeleteCluster.withCluster(connection -> connection.sync().hget(CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX, uuid.toString()));
+        if(result != null){
+            String[] categoryAndAgeGroupArr = result.split(" ");
+            for (String categoryAndAgeGroup : categoryAndAgeGroupArr) {
+                 memcacheSetProfessionalByTagsAndAgegroup(uuid.toString(), categoryAndAgeGroup, oldStatus, newStatus );
+            }
+        }
+       }else{
+            for (String categoryAndAgeGroup : categoriesAndAgeGroup) {
                 memcacheSetProfessionalByTagsAndAgegroup(uuid.toString(), categoryAndAgeGroup, oldStatus, newStatus );
-           }
+            }
        }
+       
     }
 
     private void memcacheSetProfessionalByTagsAndAgegroup(String uuid, String categoryAndAge,  String oldStatus, String newStatus ) {
