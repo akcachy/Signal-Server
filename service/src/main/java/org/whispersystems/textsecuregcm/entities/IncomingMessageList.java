@@ -29,6 +29,9 @@ public class IncomingMessageList {
 
   @JsonProperty
   private boolean isMonetizeMessage;
+  
+  @JsonProperty
+  private boolean isAnonymousCall;
 
   @JsonProperty
   private String  plaintext;
@@ -70,5 +73,13 @@ public class IncomingMessageList {
 
   public void setPlaintext(String plaintext) {
     this.plaintext = plaintext;
+  }
+
+  public boolean isAnonymousCall() {
+    return isAnonymousCall;
+  }
+
+  public void setAnonymousCall(boolean isAnonymousCall) {
+    this.isAnonymousCall = isAnonymousCall;
   }
 }
