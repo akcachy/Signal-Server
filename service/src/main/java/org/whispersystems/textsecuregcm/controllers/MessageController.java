@@ -207,7 +207,7 @@ public class MessageController {
 
         if (destinationDevice.isPresent()) {
           Metrics.counter(SENT_MESSAGE_COUNTER_NAME, tags).increment();
-          sendMessage(source, destination.get(), destinationDevice.get(), messages.getTimestamp(), messages.isOnline(), incomingMessage);
+          sendMessage(source, destination.get(), destinationDevice.get(), messages.getTimestamp(), messages.isOnline(), incomingMessage, false);
         }
       }
 
@@ -325,7 +325,8 @@ public class MessageController {
                            Device destinationDevice,
                            long timestamp,
                            boolean online,
-                           IncomingMessage incomingMessage)
+                           IncomingMessage incomingMessage,
+                           boolean isAnonymousCall)
       throws NoSuchUserException
   {
     logger.info("************ /v1/messages/{destination} SEND MSG");
@@ -352,7 +353,7 @@ public class MessageController {
         messageBuilder.setContent(ByteString.copyFrom(messageContent.get()));
       }
 
-      messageSender.sendMessage(destinationAccount, destinationDevice, messageBuilder.build(), online);
+      messageSender.sendMessage(destinationAccount, destinationDevice, messageBuilder.build(), online, false);
     } catch (NotPushRegisteredException e) {
       if (destinationDevice.isMaster()) throw new NoSuchUserException(e);
       else                              logger.debug("Not registered", e);
