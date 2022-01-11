@@ -100,7 +100,7 @@ public class MessageSender implements Managed {
         messagesManager.insertEphemeral(account.getUuid(), device.getId(), message);
       }
     } else {
-      //if(!isAnonymousCall)
+      if(!isAnonymousCall)
         messagesManager.insert(account.getUuid(), device.getId(), message);
 
       // We check for client presence after inserting the message to take a conservative view of notifications. If the
