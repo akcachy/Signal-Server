@@ -78,6 +78,7 @@ public class GCMSender {
       case NOTIFICATION: key = "notification"; break;
       case CHALLENGE:    key = "challenge";    break;
       case FOLLOW:       key = "follow";       break;
+      case FOLLOWING_ACCEPTED:       key = "following_accepted";       break;
       case POST_LIKED:   key = "post_liked";   break;
       case COMMENTED:    key = "commented";    break;
       case CONTRIBUTOR_IN_POST:       key = "contributor_in_post";      break;
@@ -86,6 +87,11 @@ public class GCMSender {
       case PROFESSIONAL_CALL_MISSED:            key = "professional_call_missed";           break;
       case KEYWORD_APPROVED:            key = "keyword_approved";           break;
       case KEYWORD_REJECTED:            key = "keyword_rejected";           break;
+      case KEYWORD_UPFOR_VOTE:            key = "keyword_upfor_vote";           break;
+      case PREMIUM_REJECTED:            key = "premium_rejected";           break;
+      case PREMIUM_APPROVED:            key = "premium_approved";           break;
+      case PROFESSIONAL_APPROVED:            key = "professional_approved";           break;
+      case PROFESSIONAL_REJECTED:            key = "professional_rejected";           break;
 
       default:           throw new AssertionError();
     }
