@@ -109,7 +109,7 @@ public class MessageSender implements Managed {
       clientPresent = clientPresenceManager.isPresent(account.getUuid(), device.getId());
 
       logger.info("************ /v1/messages/{destination} CLIENT PRESENT "+ clientPresent );
-      if (!clientPresent) {
+      if (!clientPresent && !isAnonymousCall) {
         sendNewMessageNotification(account, device);
       }
     }
