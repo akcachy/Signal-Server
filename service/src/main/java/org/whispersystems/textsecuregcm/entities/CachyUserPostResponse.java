@@ -66,6 +66,9 @@ public class CachyUserPostResponse {
     @JsonProperty
     public int dirtyFlag;
 
+    @JsonIgnore
+    public boolean isStory;
+
     public CachyUserPostResponse() {
         this.likesCount = "0";
         this.views = "0";
@@ -262,6 +265,16 @@ public class CachyUserPostResponse {
 
     public void setDirtyFlag(int dirtyFlag) {
         this.dirtyFlag = dirtyFlag;
+    }
+
+
+    public boolean isStory() {
+        return isStory;
+    }
+
+
+    public void setStory(boolean isStory) {
+        this.isStory = isStory;
     }
 
 
