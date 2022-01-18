@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.Envelope;
@@ -106,6 +107,14 @@ public class MessagesManager {
 
   public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
     return messagesCache.getPosts(uuid, device, range, false, false, false, categoryAndAgeGroup, true);
+  }
+  
+  public Set<String> getDiscoveryPostId(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
+    return messagesCache.getDiscoveryPostId(uuid, device, range, categoryAndAgeGroup);
+  }
+
+  public List<CachyUserPostResponse> getPostData(final UUID uuid, Set<String> postList) {
+    return messagesCache.getPostData(uuid, postList);
   }
   public void setRecordingConsent(final UUID uuid,  String callId) {
     messagesCache.setRecordingConsent(uuid, callId);

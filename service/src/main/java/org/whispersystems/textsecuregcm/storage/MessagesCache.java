@@ -869,6 +869,99 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+    public Set<String> getDiscoveryPostId(final UUID destinationUuid, final long destinationDevice, final long[] range, String categoryId) {
+        return getMessagesTimer.record(() -> {
+           final byte[]  queueName = getPostCategoryQueueKey(categoryId);
+          
+
+           final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
+                                                                                      List.of(String.valueOf(range[0]).getBytes(StandardCharsets.UTF_8), String.valueOf(range[1]).getBytes(StandardCharsets.UTF_8)  ));
+                    
+           final Set<String> messageEntities;
+           if (queueItems.size() % 2 == 0) {
+               messageEntities = new HashSet<>(queueItems.size() / 2);
+
+               for (int i = 0; i < queueItems.size() - 1; i += 2) {
+                   try {
+                       final String postId = new String(queueItems.get(i));
+                       
+                       final String postIdKey;
+                     
+                        final List<String> postIdList = readDeleteCluster.withCluster(connection -> connection.sync().keys(getUserPostQueueKey(postId)));
+                        if(postIdList.size() == 0){
+                            continue;
+                        }
+                        postIdKey = postIdList.get(0);                     
+                       final String postData = readDeleteCluster.withCluster(connection -> connection.sync().get(postIdKey));
+                       if(postData == null){
+                           continue;
+                       }else{
+                        messageEntities.add(postId);
+                       }
+                   } catch (Exception e) {
+                       logger.warn("Failed to parse envelope", e);
+                   }
+               }
+           } else {
+               logger.error("\"Get messages\" operation returned a list with a non-even number of elements.");
+               messageEntities = Collections.emptySet();
+           }
+           
+           return messageEntities;
+       });
+   }
+    public List<CachyUserPostResponse> getPostData(UUID uuid, Set<String> queueItems){
+            final List<CachyUserPostResponse> messageEntities = new ArrayList<>(queueItems.size());
+                for (String postId : queueItems) {
+                    try {
+                        final String postIdKey;
+                        
+                        final List<String> postIdList = readDeleteCluster.withCluster(connection -> connection.sync().keys(getUserPostQueueKey(postId)));
+                        if(postIdList.size() == 0){
+                            continue;
+                        }
+                        postIdKey = postIdList.get(0);     
+                                
+                        final String postData = readDeleteCluster.withCluster(connection -> connection.sync().get(postIdKey));
+                        if(postData == null){
+                            continue;
+                        }
+                        CachyUserPostResponse post = mapper.readValue(postData, CachyUserPostResponse.class);
+                        List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
+                        if(post.getContributorsDetails() != null && post.getContributorsDetails().size()!=0){    
+                            for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
+                                final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1), contributors.getUuid().getBytes()));
+                                contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
+                                contributorsList.add(contributors);
+                            }
+                        }
+                        post.setContributorsDetails(contributorsList);
+                        post.setScore(Long.parseLong("0"));
+                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
+                        if(likeCount != null){
+                            post.setLikesCount(new String(likeCount));
+                        }
+
+                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
+                        if(viewCount != null){
+                            post.setViews(new String(viewCount));
+                        }
+
+                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), uuid.toString().getBytes()));
+                        post.setLiked(isLiked);   
+
+
+                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
+                        if(commentCount != null){
+                            post.setCommentsCount(new String(commentCount));
+                        }
+                        messageEntities.add(post );
+                    } catch (Exception e) {
+                        logger.warn("Failed to parse envelope", e);
+                    }
+                }
+                return messageEntities;
+    }
     public List<CachyTaggedUserProfile> getContributorsStory(List<CachyTaggedUserProfile> contributorsDetails ){
         List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
         for (CachyTaggedUserProfile contributors : contributorsDetails){

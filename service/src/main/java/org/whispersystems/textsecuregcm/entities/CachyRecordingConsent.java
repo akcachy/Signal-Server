@@ -3,17 +3,22 @@ package org.whispersystems.textsecuregcm.entities;
 
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CachyRecordingConsent {
 
     @JsonProperty
+    @NotNull
     private UUID uuid;
     
     @JsonProperty
+    @NotNull
     private String callId;
     
     @JsonProperty
+    @NotNull
     private String type;
     
     
