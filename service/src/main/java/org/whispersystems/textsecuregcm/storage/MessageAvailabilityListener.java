@@ -37,4 +37,6 @@ public interface MessageAvailabilityListener {
     void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid);
 
     void handleMonetizeMessageRead(UUID senderUuid, UUID receiverUuid, long messageId);
+
+    void sendEmailVerifyMessageAvailable(String email);
 }

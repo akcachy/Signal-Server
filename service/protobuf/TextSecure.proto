@@ -31,6 +31,7 @@ message Envelope {
     MATCHING_MESSAGE    = 7;
     PROFESSIONAL_STATUS = 8;
     RECORDING_CONSENT   = 9;
+    EMAIL_VERIFY        = 10;
   }
 
   optional Type   type             = 1;
@@ -46,6 +47,7 @@ message Envelope {
   optional MatchingMessage  matchingMessage = 12;
   optional ProfessionalStatusMessage  professionalStatusMessage = 14;
   optional RecordingConsentMessage    recordingConsentMessage = 15;
+  optional EmailVerifyMessage         emailVerifyMessage = 16;
 }
 message Content {
   optional CallMessage    callMessage    = 3;
@@ -119,6 +121,11 @@ message CallMessage {
 }
 message ProfessionalStatusMessage {
   repeated ProfessionalMessage professionalMessage = 1;
+
+}
+
+message EmailVerifyMessage {
+   optional string email = 1;
 
 }
 message ProfessionalMessage {

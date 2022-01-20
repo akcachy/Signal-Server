@@ -83,6 +83,9 @@ public class MessagesManager {
   public void broadCastMessage(UUID uuid, Map<String , String> msg) {
     messagesCache.broadCastMessage(uuid, msg);
   }
+  public void sendEmailMessage(UUID uuid, String email) {
+    messagesCache.sendEmailMessage(uuid, email);
+  }
   public void changeProfessionalQueue(UUID uuid, List<String> categoriesAndAgeGroup, String oldStatus, String newStatus) {
     messagesCache.changeProfessionalQueue(uuid, categoriesAndAgeGroup, oldStatus, newStatus);
   }
