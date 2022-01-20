@@ -154,6 +154,9 @@ public class MessagePersisterIntegrationTest extends AbstractRedisClusterTest {
             public void handleMatchingUserWaitingExpire(UUID uuid) {
             }
             @Override
+            public void sendEmailVerifyMessageAvailable(String email) {
+            }
+            @Override
             public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
             }
         });

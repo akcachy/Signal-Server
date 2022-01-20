@@ -676,6 +676,18 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         // }
     }
 
+    public void sendEmailMessage(UUID uuid, String email){
+            final String queueName = "{"+getQueueName(uuid, 1)+"}";
+        
+            notificationExecutorService.execute(() -> findListener(queueName).ifPresent(new Consumer<MessageAvailabilityListener>() {
+                @Override
+                public void accept(MessageAvailabilityListener listener){
+                listener.sendEmailVerifyMessageAvailable(email);
+                }
+            }));
+        
+    }
+
     public void broadCastMessage(UUID uuid, Map<String , String> msg){
         for (Map.Entry<String, MessageAvailabilityListener> entry : messageListenersByQueueName.entrySet()){
             final String channelName = "{"+entry.getKey()+"}";

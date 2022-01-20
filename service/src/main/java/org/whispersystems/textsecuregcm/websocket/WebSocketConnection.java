@@ -40,6 +40,7 @@ import org.whispersystems.textsecuregcm.entities.CachyMatchingUser;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage;
@@ -331,6 +332,11 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
                    .ifPresent(message -> sendPostWallMessage(message));
   }
   @Override
+  public void sendEmailVerifyMessageAvailable(String email) {
+      sendEmailVerifyMessage(email);
+  }
+
+  @Override
   public void professionalStatusAvailable(UUID uuid, Map<String , String> message) {
   
     //Map<String , String> message = messagesManager.takeProfessionalStatusMessage(uuid);
@@ -383,6 +389,27 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
     // X-Signal-Key: false must be sent until Android stops assuming it missing means true
     return client.sendRequest("PUT", "/api/v1/professional/status", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### PUT /api/v1/professional/status RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
+  }
+
+  private CompletableFuture<WebSocketResponseMessage> sendEmailVerifyMessage(final String email) {
+    final EmailVerifyMessage.Builder  mmailVerifyMessage =   EmailVerifyMessage.newBuilder();
+    mmailVerifyMessage.setEmail(email);
+                                      
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.EMAIL_VERIFY)
+                                                    .setEmailVerifyMessage(mmailVerifyMessage);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/email/verify", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
         if (isSuccessResponse(response)) {
           logger.info("############### PUT /api/v1/professional/status RESPONSE "+ response.getMessage());
