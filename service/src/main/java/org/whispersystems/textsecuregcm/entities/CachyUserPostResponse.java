@@ -75,8 +75,31 @@ public class CachyUserPostResponse {
         this.commentsCount = "0";
     }
 
+  public CachyUserPostResponse(CachyUserPostResponse post) {
 
-    public String getPostId() {
+
+    this.postId = post.getPostId();
+    this.uuid = post.getUuid();
+    this.metadata = post.getMetadata();
+    this.createdAt = post.getCreatedAt();
+    this.score = post.getScore();
+    this.likesCount = post.getLikesCount();
+    this.views = post.getViews();
+    this.commentsCount = post.getCommentsCount();
+    this.duration = post.getDuration();
+    this.description = post.getDescription();
+    this.isLiked = post.isLiked();
+    this.contributorsDetails = post.getContributorsDetails();
+    this.video = post.getVideo();
+    this.coverImg = post.getCoverImg();
+    this.ageGroup = post.getAgeGroup();
+    this.category = post.getCategory();
+    this.firstName = post.getFirstName();
+    this.lastName = post.getLastName();
+    this.dirtyFlag = post.getDirtyFlag();
+  }
+
+  public String getPostId() {
         return postId;
     }
 
