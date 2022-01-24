@@ -675,6 +675,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
            
         // }
     }
+    public boolean isUserOnline(UUID uuid){
+        final String queueName = "{"+getQueueName(uuid, 1)+"}";
+        if(findListener(queueName).isPresent() ){
+            return true;
+        } else{
+            return false;
+        }
+    
+    }
 
     public void sendEmailMessage(UUID uuid, String email){
             final String queueName = "{"+getQueueName(uuid, 1)+"}";

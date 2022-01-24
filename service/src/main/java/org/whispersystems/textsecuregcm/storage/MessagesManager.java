@@ -86,6 +86,9 @@ public class MessagesManager {
   public void sendEmailMessage(UUID uuid, String email) {
     messagesCache.sendEmailMessage(uuid, email);
   }
+  public boolean isUserOnline(UUID uuid) {
+    return messagesCache.isUserOnline(uuid);
+  }
   public void changeProfessionalQueue(UUID uuid, List<String> categoriesAndAgeGroup, String oldStatus, String newStatus) {
     messagesCache.changeProfessionalQueue(uuid, categoriesAndAgeGroup, oldStatus, newStatus);
   }

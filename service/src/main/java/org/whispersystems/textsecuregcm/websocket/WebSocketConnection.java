@@ -322,7 +322,17 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     ephemeralMatchingMessageAvailableMeter.mark();
 
     messagesManager.takeMatchingMessage(account.getUuid(), device.getId())
-                   .ifPresent(message -> sendMatchingMessage(message));
+                   .ifPresent(message -> {
+                      CachyMatchingUser matchingUser = null;
+                      try{
+                          matchingUser = mapper.readValue(message, CachyMatchingUser.class);
+                      }catch(Exception e){}
+                  
+                      if(messagesManager.isUserOnline(UUID.fromString(matchingUser.getUuid()))){
+                        sendMatchingMessage(matchingUser);
+                      }
+                    
+                    });
   }
   @Override
   public void handlePostWallMessageAvailable() {
@@ -474,12 +484,8 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     });
   }
 
-  private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final String message) {
-    CachyMatchingUser matchingUser = null;
-    try{
-        matchingUser = mapper.readValue(message, CachyMatchingUser.class);
-    }catch(Exception e){}
-
+  private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final CachyMatchingUser matchingUser) {
+    
     sendMessageMeter.mark();
     sentMessageCounter.increment();
     
