@@ -97,6 +97,7 @@ public class CachyUserPostResponse {
     this.firstName = post.getFirstName();
     this.lastName = post.getLastName();
     this.dirtyFlag = post.getDirtyFlag();
+    this.isStory = post.isStory();
   }
 
   public String getPostId() {
