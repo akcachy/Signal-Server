@@ -66,7 +66,7 @@ public class CachyUserPostResponse {
     @JsonProperty
     public int dirtyFlag;
 
-    @JsonIgnore
+    @JsonProperty
     public boolean isStory;
 
     public CachyUserPostResponse() {
