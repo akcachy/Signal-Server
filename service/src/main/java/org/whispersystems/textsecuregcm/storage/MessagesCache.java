@@ -1055,8 +1055,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                             final String categoryAndAgeGroup = post.getCategory()+"_"+post.getAgeGroup();
                             connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  post.getPostId().getBytes(StandardCharsets.UTF_8)   );   
                             //connection.sync().set(getUserPostWtihCategoryQueueKey(post.getPostId(), categoryAndAgeGroup).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) );
-                           // connection.sync().hincrby(getPostCategoryQueueMetadataKey(), categoryAndAgeGroup.getBytes(), 1);
-                           // connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   ); 
+                            // connection.sync().hincrby(getPostCategoryQueueMetadataKey("",""), categoryAndAgeGroup.getBytes(), 1);
+                            // connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   );
                         }                   
                     }catch(Exception e){
                     }
@@ -1197,14 +1197,14 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     }
 
-    Map<String , Double> getCommonInterestedCategory() {
+    Map<String , Double> getCommonInterestedCategory(String language, String countryCode) {
         final Map<String , Double> map = new HashMap<>();
         Double total  = 0.0 ; 
-        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey()));
+        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey(language+"_"+countryCode)));
         for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
             Double count = Double.parseDouble(new String(entry.getValue()));
             total += count;
-            map.put(new String(entry.getKey()), count  );       
+            map.put((new String(entry.getKey())+"::"+ language+"_"+countryCode), count  );
         }
         // for (Map.Entry<String, Double> entry : map.entrySet()) {
         //     map.put(entry.getKey(), (entry.getValue()*100)/total);
@@ -1285,8 +1285,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return ("user_posts_by_category::"+ category).getBytes(StandardCharsets.UTF_8);
     }
 
-    private static byte[] getPostCategoryQueueMetadataKey() {
-        return ("user_posts_by_category_metadata::").getBytes(StandardCharsets.UTF_8);
+    private static byte[] getPostCategoryQueueMetadataKey(String langCountry) {
+        return ("user_posts_by_category_metadata::"+langCountry).getBytes(StandardCharsets.UTF_8);
     }
     private static byte[] getProfessionalUserStatusQueueKey() {
         return (CACHE_ONLINE_PROFESSIONAL_PREFIX).getBytes(StandardCharsets.UTF_8);
