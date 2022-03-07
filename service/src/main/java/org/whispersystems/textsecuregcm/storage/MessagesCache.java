@@ -1197,10 +1197,10 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     }
 
-    Map<String , Double> getCommonInterestedCategory(String language, String countryCode) {
+    Map<String , Double> getCommonInterestedCategory(String language, String countryCode, int ageGroup) {
         final Map<String , Double> map = new HashMap<>();
         Double total  = 0.0 ; 
-        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey(language+"_"+countryCode)));
+        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey(language+"_"+countryCode+"::"+ageGroup)));
         for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
             Double count = Double.parseDouble(new String(entry.getValue()));
             total += count;

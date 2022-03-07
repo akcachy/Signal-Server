@@ -139,8 +139,8 @@ public class MessagesManager {
      messagesCache.subscribeForKeyspaceNotificationsForProfessionalUsers(uuid, slotIndex);
   }
 
-  public  Map<String , Double> getCommonInterestedCategory(String language, String countryCode) {
-    return messagesCache.getCommonInterestedCategory(language, countryCode);
+  public  Map<String , Double> getCommonInterestedCategory(String language, String countryCode, int ageGroup) {
+    return messagesCache.getCommonInterestedCategory(language, countryCode, ageGroup);
   }
   public List<CachyTaggedUserProfile> getContributorsStory(final List<CachyTaggedUserProfile> contributorsDetails) {
     return messagesCache.getContributorsStory(contributorsDetails);
