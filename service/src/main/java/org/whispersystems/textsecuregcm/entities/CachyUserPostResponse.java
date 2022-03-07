@@ -1,6 +1,7 @@
 /***** Created By : Ankit Kumar ******/
 package org.whispersystems.textsecuregcm.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -69,6 +70,8 @@ public class CachyUserPostResponse {
     @JsonProperty
     public boolean isStory;
 
+    @JsonProperty
+    List<CachyCommentRes> comments = new ArrayList<>();
     public CachyUserPostResponse() {
         this.likesCount = "0";
         this.views = "0";
@@ -301,7 +304,12 @@ public class CachyUserPostResponse {
         this.isStory = isStory;
     }
 
+  public List<CachyCommentRes> getComments() {
+    return comments;
+  }
 
+  public void setComments(List<CachyCommentRes> comments) {
+    this.comments = comments;
+  }
 
-   
 }
