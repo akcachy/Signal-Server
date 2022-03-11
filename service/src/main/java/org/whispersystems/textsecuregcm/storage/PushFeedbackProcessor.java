@@ -58,7 +58,7 @@ public class PushFeedbackProcessor extends AccountDatabaseCrawlerListener {
             } else if (!Util.isEmpty(device.getGcmId())) {
               device.setUserAgent("OWA");
             }
-            device.setGcmId(null);
+            //device.setGcmId(null);
             device.setApnId(null);
             device.setVoipApnId(null);
             device.setFetchesMessages(false);
