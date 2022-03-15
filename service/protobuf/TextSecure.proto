@@ -31,6 +31,7 @@ message Envelope {
     MATCHING_MESSAGE    = 7;
     PROFESSIONAL_STATUS = 8;
     RECORDING_CONSENT   = 9;
+    EMAIL_VERIFY        = 10;
   }
 
   optional Type   type             = 1;
@@ -46,6 +47,7 @@ message Envelope {
   optional MatchingMessage  matchingMessage = 12;
   optional ProfessionalStatusMessage  professionalStatusMessage = 14;
   optional RecordingConsentMessage    recordingConsentMessage = 15;
+  optional EmailVerifyMessage         emailVerifyMessage = 16;
 }
 message Content {
   optional CallMessage    callMessage    = 3;
@@ -121,6 +123,11 @@ message ProfessionalStatusMessage {
   repeated ProfessionalMessage professionalMessage = 1;
 
 }
+
+message EmailVerifyMessage {
+   optional string email = 1;
+
+}
 message ProfessionalMessage {
   optional string uuid = 1;
   optional string status = 2;
@@ -135,12 +142,11 @@ message RecordingConsentMessage {
 message MatchingMessage {
   optional string uuid = 1;
   repeated uint32 matchingKeyword = 2;
-  optional string number = 3;
-  optional bool isCaller = 4;
-  optional string callId = 5;
-  optional bool followEnable = 6;
-  optional string unidentifiedAccess = 7;
-  optional string profileKey         = 8;
+  optional bool isCaller = 3;
+  optional string callId = 4;
+  optional bool followEnable = 5;
+  optional string unidentifiedAccess = 6;
+  optional string profileKey         = 7;
 }
 
 message ProvisioningUuid {

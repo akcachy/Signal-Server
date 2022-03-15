@@ -67,7 +67,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(true);
         when(device.getGcmId()).thenReturn("gcm-id");
 
-        messageSender.sendMessage(account, device, message, true);
+        messageSender.sendMessage(account, device, message, true, false);
 
         verify(messagesManager).insertEphemeral(ACCOUNT_UUID, DEVICE_ID, message);
         verify(messagesManager, never()).insert(any(), anyLong(), any());
@@ -80,7 +80,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(false);
         when(device.getGcmId()).thenReturn("gcm-id");
 
-        messageSender.sendMessage(account, device, message, true);
+        messageSender.sendMessage(account, device, message, true, false);
 
         verify(messagesManager, never()).insertEphemeral(any(), anyLong(), any());
         verify(messagesManager, never()).insert(any(), anyLong(), any());
@@ -93,7 +93,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(true);
         when(device.getGcmId()).thenReturn("gcm-id");
 
-        messageSender.sendMessage(account, device, message, false);
+        messageSender.sendMessage(account, device, message, false, false);
 
         verify(messagesManager, never()).insertEphemeral(any(), anyLong(), any());
         verify(messagesManager).insert(ACCOUNT_UUID, DEVICE_ID, message);
@@ -106,7 +106,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(false);
         when(device.getGcmId()).thenReturn("gcm-id");
 
-        messageSender.sendMessage(account, device, message, false);
+        messageSender.sendMessage(account, device, message, false, false);
 
         verify(messagesManager, never()).insertEphemeral(any(), anyLong(), any());
         verify(messagesManager).insert(ACCOUNT_UUID, DEVICE_ID, message);
@@ -119,7 +119,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(false);
         when(device.getApnId()).thenReturn("apn-id");
 
-        messageSender.sendMessage(account, device, message, false);
+        messageSender.sendMessage(account, device, message, false, false);
 
         verify(messagesManager, never()).insertEphemeral(any(), anyLong(), any());
         verify(messagesManager).insert(ACCOUNT_UUID, DEVICE_ID, message);
@@ -132,7 +132,7 @@ public class MessageSenderTest {
         when(clientPresenceManager.isPresent(ACCOUNT_UUID, DEVICE_ID)).thenReturn(false);
         when(device.getFetchesMessages()).thenReturn(true);
 
-        messageSender.sendMessage(account, device, message, false);
+        messageSender.sendMessage(account, device, message, false, false);
 
         verify(messagesManager, never()).insertEphemeral(any(), anyLong(), any());
         verify(messagesManager).insert(ACCOUNT_UUID, DEVICE_ID, message);

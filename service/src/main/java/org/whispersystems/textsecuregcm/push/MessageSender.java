@@ -69,7 +69,7 @@ public class MessageSender implements Managed {
     this.pushLatencyManager    = pushLatencyManager;
   }
 
-  public void sendMessage(final Account account, final Device device, final Envelope message, boolean online)
+  public void sendMessage(final Account account, final Device device, final Envelope message, boolean online, boolean isAnonymousCall)
       throws NotPushRegisteredException
   {
     if (device.getGcmId() == null && device.getApnId() == null && !device.getFetchesMessages()) {
@@ -100,7 +100,8 @@ public class MessageSender implements Managed {
         messagesManager.insertEphemeral(account.getUuid(), device.getId(), message);
       }
     } else {
-      messagesManager.insert(account.getUuid(), device.getId(), message);
+      //if(!isAnonymousCall)
+        messagesManager.insert(account.getUuid(), device.getId(), message);
 
       // We check for client presence after inserting the message to take a conservative view of notifications. If the
       // client wasn't present at the time of insertion but is now, they'll retrieve the message. If they were present

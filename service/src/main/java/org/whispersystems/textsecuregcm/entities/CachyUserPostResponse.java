@@ -1,6 +1,7 @@
 /***** Created By : Ankit Kumar ******/
 package org.whispersystems.textsecuregcm.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,13 +26,13 @@ public class CachyUserPostResponse {
     public long score;
     
     @JsonProperty
-    public long likesCount;
+    public String likesCount;
 
     @JsonProperty
-    public long views;
+    public String views;
     
     @JsonProperty
-    public long commentsCount;
+    public String commentsCount;
 
     @JsonProperty
     public long duration;
@@ -63,11 +64,46 @@ public class CachyUserPostResponse {
     @JsonProperty
     public String lastName;
 
+    @JsonProperty
+    public int dirtyFlag;
+
+    @JsonProperty
+    public boolean isStory;
+
+    @JsonProperty
+    List<CachyCommentRes> comments = new ArrayList<>();
     public CachyUserPostResponse() {
+        this.likesCount = "0";
+        this.views = "0";
+        this.commentsCount = "0";
     }
 
+  public CachyUserPostResponse(CachyUserPostResponse post) {
 
-    public String getPostId() {
+
+    this.postId = post.getPostId();
+    this.uuid = post.getUuid();
+    this.metadata = post.getMetadata();
+    this.createdAt = post.getCreatedAt();
+    this.score = post.getScore();
+    this.likesCount = post.getLikesCount();
+    this.views = post.getViews();
+    this.commentsCount = post.getCommentsCount();
+    this.duration = post.getDuration();
+    this.description = post.getDescription();
+    this.isLiked = post.isLiked();
+    this.contributorsDetails = post.getContributorsDetails();
+    this.video = post.getVideo();
+    this.coverImg = post.getCoverImg();
+    this.ageGroup = post.getAgeGroup();
+    this.category = post.getCategory();
+    this.firstName = post.getFirstName();
+    this.lastName = post.getLastName();
+    this.dirtyFlag = post.getDirtyFlag();
+    this.isStory = post.isStory();
+  }
+
+  public String getPostId() {
         return postId;
     }
 
@@ -106,12 +142,12 @@ public class CachyUserPostResponse {
         this.createdAt = createdAt;
     }
 
-    public long getLikesCount() {
+    public String getLikesCount() {
         return likesCount;
     }
 
 
-    public void setLikesCount(long likesCount) {
+    public void setLikesCount(String likesCount) {
         this.likesCount = likesCount;
     }
 
@@ -126,14 +162,7 @@ public class CachyUserPostResponse {
     }
 
 
-    public long getCommentsCount() {
-        return commentsCount;
-    }
-
-
-    public void setCommentsCount(long commentsCount) {
-        this.commentsCount = commentsCount;
-    }
+    
 
 
     public boolean isLiked() {
@@ -196,13 +225,23 @@ public class CachyUserPostResponse {
     }
 
 
-    public long getViews() {
+    public String getViews() {
         return views;
     }
 
 
-    public void setViews(long views) {
+    public void setViews(String views) {
         this.views = views;
+    }
+
+
+    public String getCommentsCount() {
+        return commentsCount;
+    }
+
+
+    public void setCommentsCount(String commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
 
@@ -246,6 +285,31 @@ public class CachyUserPostResponse {
     }
 
 
+    public int getDirtyFlag() {
+        return dirtyFlag;
+    }
 
-   
+
+    public void setDirtyFlag(int dirtyFlag) {
+        this.dirtyFlag = dirtyFlag;
+    }
+
+
+    public boolean isStory() {
+        return isStory;
+    }
+
+
+    public void setStory(boolean isStory) {
+        this.isStory = isStory;
+    }
+
+  public List<CachyCommentRes> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<CachyCommentRes> comments) {
+    this.comments = comments;
+  }
+
 }

@@ -212,6 +212,21 @@ public final class MessageProtos {
      * <code>optional .textsecure.RecordingConsentMessage recordingConsentMessage = 15;</code>
      */
     org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessageOrBuilder getRecordingConsentMessageOrBuilder();
+
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     * @return Whether the emailVerifyMessage field is set.
+     */
+    boolean hasEmailVerifyMessage();
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     * @return The emailVerifyMessage.
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getEmailVerifyMessage();
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     */
+    org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder getEmailVerifyMessageOrBuilder();
   }
   /**
    * Protobuf type {@code textsecure.Envelope}
@@ -366,6 +381,19 @@ public final class MessageProtos {
               bitField0_ |= 0x00001000;
               break;
             }
+            case 130: {
+              org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder subBuilder = null;
+              if (((bitField0_ & 0x00002000) != 0)) {
+                subBuilder = emailVerifyMessage_.toBuilder();
+              }
+              emailVerifyMessage_ = input.readMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(emailVerifyMessage_);
+                emailVerifyMessage_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00002000;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -439,6 +467,10 @@ public final class MessageProtos {
        * <code>RECORDING_CONSENT = 9;</code>
        */
       RECORDING_CONSENT(9),
+      /**
+       * <code>EMAIL_VERIFY = 10;</code>
+       */
+      EMAIL_VERIFY(10),
       ;
 
       /**
@@ -477,6 +509,10 @@ public final class MessageProtos {
        * <code>RECORDING_CONSENT = 9;</code>
        */
       public static final int RECORDING_CONSENT_VALUE = 9;
+      /**
+       * <code>EMAIL_VERIFY = 10;</code>
+       */
+      public static final int EMAIL_VERIFY_VALUE = 10;
 
 
       public final int getNumber() {
@@ -508,6 +544,7 @@ public final class MessageProtos {
           case 7: return MATCHING_MESSAGE;
           case 8: return PROFESSIONAL_STATUS;
           case 9: return RECORDING_CONSENT;
+          case 10: return EMAIL_VERIFY;
           default: return null;
         }
       }
@@ -958,6 +995,32 @@ public final class MessageProtos {
       return recordingConsentMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.RecordingConsentMessage.getDefaultInstance() : recordingConsentMessage_;
     }
 
+    public static final int EMAILVERIFYMESSAGE_FIELD_NUMBER = 16;
+    private org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage emailVerifyMessage_;
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     * @return Whether the emailVerifyMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasEmailVerifyMessage() {
+      return ((bitField0_ & 0x00002000) != 0);
+    }
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     * @return The emailVerifyMessage.
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getEmailVerifyMessage() {
+      return emailVerifyMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance() : emailVerifyMessage_;
+    }
+    /**
+     * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+     */
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder getEmailVerifyMessageOrBuilder() {
+      return emailVerifyMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance() : emailVerifyMessage_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1010,6 +1073,9 @@ public final class MessageProtos {
       }
       if (((bitField0_ & 0x00001000) != 0)) {
         output.writeMessage(15, getRecordingConsentMessage());
+      }
+      if (((bitField0_ & 0x00002000) != 0)) {
+        output.writeMessage(16, getEmailVerifyMessage());
       }
       unknownFields.writeTo(output);
     }
@@ -1067,6 +1133,10 @@ public final class MessageProtos {
       if (((bitField0_ & 0x00001000) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(15, getRecordingConsentMessage());
+      }
+      if (((bitField0_ & 0x00002000) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(16, getEmailVerifyMessage());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1147,6 +1217,11 @@ public final class MessageProtos {
         if (!getRecordingConsentMessage()
             .equals(other.getRecordingConsentMessage())) return false;
       }
+      if (hasEmailVerifyMessage() != other.hasEmailVerifyMessage()) return false;
+      if (hasEmailVerifyMessage()) {
+        if (!getEmailVerifyMessage()
+            .equals(other.getEmailVerifyMessage())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1211,6 +1286,10 @@ public final class MessageProtos {
       if (hasRecordingConsentMessage()) {
         hash = (37 * hash) + RECORDINGCONSENTMESSAGE_FIELD_NUMBER;
         hash = (53 * hash) + getRecordingConsentMessage().hashCode();
+      }
+      if (hasEmailVerifyMessage()) {
+        hash = (37 * hash) + EMAILVERIFYMESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getEmailVerifyMessage().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1343,6 +1422,7 @@ public final class MessageProtos {
           getMatchingMessageFieldBuilder();
           getProfessionalStatusMessageFieldBuilder();
           getRecordingConsentMessageFieldBuilder();
+          getEmailVerifyMessageFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1386,6 +1466,12 @@ public final class MessageProtos {
           recordingConsentMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00001000);
+        if (emailVerifyMessageBuilder_ == null) {
+          emailVerifyMessage_ = null;
+        } else {
+          emailVerifyMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00002000);
         return this;
       }
 
@@ -1477,6 +1563,14 @@ public final class MessageProtos {
             result.recordingConsentMessage_ = recordingConsentMessageBuilder_.build();
           }
           to_bitField0_ |= 0x00001000;
+        }
+        if (((from_bitField0_ & 0x00002000) != 0)) {
+          if (emailVerifyMessageBuilder_ == null) {
+            result.emailVerifyMessage_ = emailVerifyMessage_;
+          } else {
+            result.emailVerifyMessage_ = emailVerifyMessageBuilder_.build();
+          }
+          to_bitField0_ |= 0x00002000;
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1573,6 +1667,9 @@ public final class MessageProtos {
         }
         if (other.hasRecordingConsentMessage()) {
           mergeRecordingConsentMessage(other.getRecordingConsentMessage());
+        }
+        if (other.hasEmailVerifyMessage()) {
+          mergeEmailVerifyMessage(other.getEmailVerifyMessage());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2574,6 +2671,126 @@ public final class MessageProtos {
           recordingConsentMessage_ = null;
         }
         return recordingConsentMessageBuilder_;
+      }
+
+      private org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage emailVerifyMessage_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder> emailVerifyMessageBuilder_;
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       * @return Whether the emailVerifyMessage field is set.
+       */
+      public boolean hasEmailVerifyMessage() {
+        return ((bitField0_ & 0x00002000) != 0);
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       * @return The emailVerifyMessage.
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getEmailVerifyMessage() {
+        if (emailVerifyMessageBuilder_ == null) {
+          return emailVerifyMessage_ == null ? org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance() : emailVerifyMessage_;
+        } else {
+          return emailVerifyMessageBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public Builder setEmailVerifyMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage value) {
+        if (emailVerifyMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          emailVerifyMessage_ = value;
+          onChanged();
+        } else {
+          emailVerifyMessageBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public Builder setEmailVerifyMessage(
+          org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder builderForValue) {
+        if (emailVerifyMessageBuilder_ == null) {
+          emailVerifyMessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          emailVerifyMessageBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public Builder mergeEmailVerifyMessage(org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage value) {
+        if (emailVerifyMessageBuilder_ == null) {
+          if (((bitField0_ & 0x00002000) != 0) &&
+              emailVerifyMessage_ != null &&
+              emailVerifyMessage_ != org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance()) {
+            emailVerifyMessage_ =
+              org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.newBuilder(emailVerifyMessage_).mergeFrom(value).buildPartial();
+          } else {
+            emailVerifyMessage_ = value;
+          }
+          onChanged();
+        } else {
+          emailVerifyMessageBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public Builder clearEmailVerifyMessage() {
+        if (emailVerifyMessageBuilder_ == null) {
+          emailVerifyMessage_ = null;
+          onChanged();
+        } else {
+          emailVerifyMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00002000);
+        return this;
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder getEmailVerifyMessageBuilder() {
+        bitField0_ |= 0x00002000;
+        onChanged();
+        return getEmailVerifyMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder getEmailVerifyMessageOrBuilder() {
+        if (emailVerifyMessageBuilder_ != null) {
+          return emailVerifyMessageBuilder_.getMessageOrBuilder();
+        } else {
+          return emailVerifyMessage_ == null ?
+              org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance() : emailVerifyMessage_;
+        }
+      }
+      /**
+       * <code>optional .textsecure.EmailVerifyMessage emailVerifyMessage = 16;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder> 
+          getEmailVerifyMessageFieldBuilder() {
+        if (emailVerifyMessageBuilder_ == null) {
+          emailVerifyMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder>(
+                  getEmailVerifyMessage(),
+                  getParentForChildren(),
+                  isClean());
+          emailVerifyMessage_ = null;
+        }
+        return emailVerifyMessageBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -11341,6 +11558,612 @@ public final class MessageProtos {
 
   }
 
+  public interface EmailVerifyMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:textsecure.EmailVerifyMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string email = 1;</code>
+     * @return Whether the email field is set.
+     */
+    boolean hasEmail();
+    /**
+     * <code>optional string email = 1;</code>
+     * @return The email.
+     */
+    java.lang.String getEmail();
+    /**
+     * <code>optional string email = 1;</code>
+     * @return The bytes for email.
+     */
+    com.google.protobuf.ByteString
+        getEmailBytes();
+  }
+  /**
+   * Protobuf type {@code textsecure.EmailVerifyMessage}
+   */
+  public static final class EmailVerifyMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:textsecure.EmailVerifyMessage)
+      EmailVerifyMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use EmailVerifyMessage.newBuilder() to construct.
+    private EmailVerifyMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private EmailVerifyMessage() {
+      email_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new EmailVerifyMessage();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private EmailVerifyMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              email_ = bs;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_EmailVerifyMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_EmailVerifyMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int EMAIL_FIELD_NUMBER = 1;
+    private volatile java.lang.Object email_;
+    /**
+     * <code>optional string email = 1;</code>
+     * @return Whether the email field is set.
+     */
+    @java.lang.Override
+    public boolean hasEmail() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional string email = 1;</code>
+     * @return The email.
+     */
+    @java.lang.Override
+    public java.lang.String getEmail() {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          email_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string email = 1;</code>
+     * @return The bytes for email.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getEmailBytes() {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        email_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, email_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, email_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage)) {
+        return super.equals(obj);
+      }
+      org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage other = (org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage) obj;
+
+      if (hasEmail() != other.hasEmail()) return false;
+      if (hasEmail()) {
+        if (!getEmail()
+            .equals(other.getEmail())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasEmail()) {
+        hash = (37 * hash) + EMAIL_FIELD_NUMBER;
+        hash = (53 * hash) + getEmail().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code textsecure.EmailVerifyMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:textsecure.EmailVerifyMessage)
+        org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_EmailVerifyMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_EmailVerifyMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.class, org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.Builder.class);
+      }
+
+      // Construct using org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        email_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.internal_static_textsecure_EmailVerifyMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getDefaultInstanceForType() {
+        return org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage build() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage buildPartial() {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage result = new org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.email_ = email_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage) {
+          return mergeFrom((org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage other) {
+        if (other == org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage.getDefaultInstance()) return this;
+        if (other.hasEmail()) {
+          bitField0_ |= 0x00000001;
+          email_ = other.email_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object email_ = "";
+      /**
+       * <code>optional string email = 1;</code>
+       * @return Whether the email field is set.
+       */
+      public boolean hasEmail() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional string email = 1;</code>
+       * @return The email.
+       */
+      public java.lang.String getEmail() {
+        java.lang.Object ref = email_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            email_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string email = 1;</code>
+       * @return The bytes for email.
+       */
+      public com.google.protobuf.ByteString
+          getEmailBytes() {
+        java.lang.Object ref = email_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          email_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string email = 1;</code>
+       * @param value The email to set.
+       * @return This builder for chaining.
+       */
+      public Builder setEmail(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        email_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string email = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearEmail() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        email_ = getDefaultInstance().getEmail();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string email = 1;</code>
+       * @param value The bytes for email to set.
+       * @return This builder for chaining.
+       */
+      public Builder setEmailBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        email_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:textsecure.EmailVerifyMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:textsecure.EmailVerifyMessage)
+    private static final org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage();
+    }
+
+    public static org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<EmailVerifyMessage>
+        PARSER = new com.google.protobuf.AbstractParser<EmailVerifyMessage>() {
+      @java.lang.Override
+      public EmailVerifyMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new EmailVerifyMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<EmailVerifyMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<EmailVerifyMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ProfessionalMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:textsecure.ProfessionalMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -13138,90 +13961,73 @@ public final class MessageProtos {
     int getMatchingKeyword(int index);
 
     /**
-     * <code>optional string number = 3;</code>
-     * @return Whether the number field is set.
-     */
-    boolean hasNumber();
-    /**
-     * <code>optional string number = 3;</code>
-     * @return The number.
-     */
-    java.lang.String getNumber();
-    /**
-     * <code>optional string number = 3;</code>
-     * @return The bytes for number.
-     */
-    com.google.protobuf.ByteString
-        getNumberBytes();
-
-    /**
-     * <code>optional bool isCaller = 4;</code>
+     * <code>optional bool isCaller = 3;</code>
      * @return Whether the isCaller field is set.
      */
     boolean hasIsCaller();
     /**
-     * <code>optional bool isCaller = 4;</code>
+     * <code>optional bool isCaller = 3;</code>
      * @return The isCaller.
      */
     boolean getIsCaller();
 
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return Whether the callId field is set.
      */
     boolean hasCallId();
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return The callId.
      */
     java.lang.String getCallId();
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return The bytes for callId.
      */
     com.google.protobuf.ByteString
         getCallIdBytes();
 
     /**
-     * <code>optional bool followEnable = 6;</code>
+     * <code>optional bool followEnable = 5;</code>
      * @return Whether the followEnable field is set.
      */
     boolean hasFollowEnable();
     /**
-     * <code>optional bool followEnable = 6;</code>
+     * <code>optional bool followEnable = 5;</code>
      * @return The followEnable.
      */
     boolean getFollowEnable();
 
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return Whether the unidentifiedAccess field is set.
      */
     boolean hasUnidentifiedAccess();
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return The unidentifiedAccess.
      */
     java.lang.String getUnidentifiedAccess();
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return The bytes for unidentifiedAccess.
      */
     com.google.protobuf.ByteString
         getUnidentifiedAccessBytes();
 
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return Whether the profileKey field is set.
      */
     boolean hasProfileKey();
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return The profileKey.
      */
     java.lang.String getProfileKey();
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return The bytes for profileKey.
      */
     com.google.protobuf.ByteString
@@ -13242,7 +14048,6 @@ public final class MessageProtos {
     private MatchingMessage() {
       uuid_ = "";
       matchingKeyword_ = emptyIntList();
-      number_ = "";
       callId_ = "";
       unidentifiedAccess_ = "";
       profileKey_ = "";
@@ -13306,37 +14111,31 @@ public final class MessageProtos {
               input.popLimit(limit);
               break;
             }
-            case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+            case 24: {
               bitField0_ |= 0x00000002;
-              number_ = bs;
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000004;
               isCaller_ = input.readBool();
               break;
             }
-            case 42: {
+            case 34: {
               com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               callId_ = bs;
               break;
             }
-            case 48: {
-              bitField0_ |= 0x00000010;
+            case 40: {
+              bitField0_ |= 0x00000008;
               followEnable_ = input.readBool();
+              break;
+            }
+            case 50: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              unidentifiedAccess_ = bs;
               break;
             }
             case 58: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000020;
-              unidentifiedAccess_ = bs;
-              break;
-            }
-            case 66: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000040;
               profileKey_ = bs;
               break;
             }
@@ -13451,66 +14250,18 @@ public final class MessageProtos {
       return matchingKeyword_.getInt(index);
     }
 
-    public static final int NUMBER_FIELD_NUMBER = 3;
-    private volatile java.lang.Object number_;
-    /**
-     * <code>optional string number = 3;</code>
-     * @return Whether the number field is set.
-     */
-    @java.lang.Override
-    public boolean hasNumber() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <code>optional string number = 3;</code>
-     * @return The number.
-     */
-    @java.lang.Override
-    public java.lang.String getNumber() {
-      java.lang.Object ref = number_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          number_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string number = 3;</code>
-     * @return The bytes for number.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getNumberBytes() {
-      java.lang.Object ref = number_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        number_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ISCALLER_FIELD_NUMBER = 4;
+    public static final int ISCALLER_FIELD_NUMBER = 3;
     private boolean isCaller_;
     /**
-     * <code>optional bool isCaller = 4;</code>
+     * <code>optional bool isCaller = 3;</code>
      * @return Whether the isCaller field is set.
      */
     @java.lang.Override
     public boolean hasIsCaller() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>optional bool isCaller = 4;</code>
+     * <code>optional bool isCaller = 3;</code>
      * @return The isCaller.
      */
     @java.lang.Override
@@ -13518,18 +14269,18 @@ public final class MessageProtos {
       return isCaller_;
     }
 
-    public static final int CALLID_FIELD_NUMBER = 5;
+    public static final int CALLID_FIELD_NUMBER = 4;
     private volatile java.lang.Object callId_;
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return Whether the callId field is set.
      */
     @java.lang.Override
     public boolean hasCallId() {
-      return ((bitField0_ & 0x00000008) != 0);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return The callId.
      */
     @java.lang.Override
@@ -13548,7 +14299,7 @@ public final class MessageProtos {
       }
     }
     /**
-     * <code>optional string callId = 5;</code>
+     * <code>optional string callId = 4;</code>
      * @return The bytes for callId.
      */
     @java.lang.Override
@@ -13566,18 +14317,18 @@ public final class MessageProtos {
       }
     }
 
-    public static final int FOLLOWENABLE_FIELD_NUMBER = 6;
+    public static final int FOLLOWENABLE_FIELD_NUMBER = 5;
     private boolean followEnable_;
     /**
-     * <code>optional bool followEnable = 6;</code>
+     * <code>optional bool followEnable = 5;</code>
      * @return Whether the followEnable field is set.
      */
     @java.lang.Override
     public boolean hasFollowEnable() {
-      return ((bitField0_ & 0x00000010) != 0);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>optional bool followEnable = 6;</code>
+     * <code>optional bool followEnable = 5;</code>
      * @return The followEnable.
      */
     @java.lang.Override
@@ -13585,18 +14336,18 @@ public final class MessageProtos {
       return followEnable_;
     }
 
-    public static final int UNIDENTIFIEDACCESS_FIELD_NUMBER = 7;
+    public static final int UNIDENTIFIEDACCESS_FIELD_NUMBER = 6;
     private volatile java.lang.Object unidentifiedAccess_;
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return Whether the unidentifiedAccess field is set.
      */
     @java.lang.Override
     public boolean hasUnidentifiedAccess() {
-      return ((bitField0_ & 0x00000020) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return The unidentifiedAccess.
      */
     @java.lang.Override
@@ -13615,7 +14366,7 @@ public final class MessageProtos {
       }
     }
     /**
-     * <code>optional string unidentifiedAccess = 7;</code>
+     * <code>optional string unidentifiedAccess = 6;</code>
      * @return The bytes for unidentifiedAccess.
      */
     @java.lang.Override
@@ -13633,18 +14384,18 @@ public final class MessageProtos {
       }
     }
 
-    public static final int PROFILEKEY_FIELD_NUMBER = 8;
+    public static final int PROFILEKEY_FIELD_NUMBER = 7;
     private volatile java.lang.Object profileKey_;
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return Whether the profileKey field is set.
      */
     @java.lang.Override
     public boolean hasProfileKey() {
-      return ((bitField0_ & 0x00000040) != 0);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return The profileKey.
      */
     @java.lang.Override
@@ -13663,7 +14414,7 @@ public final class MessageProtos {
       }
     }
     /**
-     * <code>optional string profileKey = 8;</code>
+     * <code>optional string profileKey = 7;</code>
      * @return The bytes for profileKey.
      */
     @java.lang.Override
@@ -13702,22 +14453,19 @@ public final class MessageProtos {
         output.writeUInt32(2, matchingKeyword_.getInt(i));
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, number_);
+        output.writeBool(3, isCaller_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeBool(4, isCaller_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, callId_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, callId_);
+        output.writeBool(5, followEnable_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        output.writeBool(6, followEnable_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, unidentifiedAccess_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, unidentifiedAccess_);
-      }
-      if (((bitField0_ & 0x00000040) != 0)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, profileKey_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, profileKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -13741,24 +14489,21 @@ public final class MessageProtos {
         size += 1 * getMatchingKeywordList().size();
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, number_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, isCaller_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, isCaller_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, callId_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, callId_);
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, followEnable_);
       }
       if (((bitField0_ & 0x00000010) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(6, followEnable_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, unidentifiedAccess_);
       }
       if (((bitField0_ & 0x00000020) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, unidentifiedAccess_);
-      }
-      if (((bitField0_ & 0x00000040) != 0)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, profileKey_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, profileKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -13782,11 +14527,6 @@ public final class MessageProtos {
       }
       if (!getMatchingKeywordList()
           .equals(other.getMatchingKeywordList())) return false;
-      if (hasNumber() != other.hasNumber()) return false;
-      if (hasNumber()) {
-        if (!getNumber()
-            .equals(other.getNumber())) return false;
-      }
       if (hasIsCaller() != other.hasIsCaller()) return false;
       if (hasIsCaller()) {
         if (getIsCaller()
@@ -13830,10 +14570,6 @@ public final class MessageProtos {
       if (getMatchingKeywordCount() > 0) {
         hash = (37 * hash) + MATCHINGKEYWORD_FIELD_NUMBER;
         hash = (53 * hash) + getMatchingKeywordList().hashCode();
-      }
-      if (hasNumber()) {
-        hash = (37 * hash) + NUMBER_FIELD_NUMBER;
-        hash = (53 * hash) + getNumber().hashCode();
       }
       if (hasIsCaller()) {
         hash = (37 * hash) + ISCALLER_FIELD_NUMBER;
@@ -13994,18 +14730,16 @@ public final class MessageProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         matchingKeyword_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000002);
-        number_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
         isCaller_ = false;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         callId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         followEnable_ = false;
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         unidentifiedAccess_ = "";
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000020);
         profileKey_ = "";
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -14044,27 +14778,23 @@ public final class MessageProtos {
         }
         result.matchingKeyword_ = matchingKeyword_;
         if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.isCaller_ = isCaller_;
           to_bitField0_ |= 0x00000002;
         }
-        result.number_ = number_;
         if (((from_bitField0_ & 0x00000008) != 0)) {
-          result.isCaller_ = isCaller_;
           to_bitField0_ |= 0x00000004;
         }
+        result.callId_ = callId_;
         if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.followEnable_ = followEnable_;
           to_bitField0_ |= 0x00000008;
         }
-        result.callId_ = callId_;
         if (((from_bitField0_ & 0x00000020) != 0)) {
-          result.followEnable_ = followEnable_;
           to_bitField0_ |= 0x00000010;
         }
+        result.unidentifiedAccess_ = unidentifiedAccess_;
         if (((from_bitField0_ & 0x00000040) != 0)) {
           to_bitField0_ |= 0x00000020;
-        }
-        result.unidentifiedAccess_ = unidentifiedAccess_;
-        if (((from_bitField0_ & 0x00000080) != 0)) {
-          to_bitField0_ |= 0x00000040;
         }
         result.profileKey_ = profileKey_;
         result.bitField0_ = to_bitField0_;
@@ -14131,16 +14861,11 @@ public final class MessageProtos {
           }
           onChanged();
         }
-        if (other.hasNumber()) {
-          bitField0_ |= 0x00000004;
-          number_ = other.number_;
-          onChanged();
-        }
         if (other.hasIsCaller()) {
           setIsCaller(other.getIsCaller());
         }
         if (other.hasCallId()) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           callId_ = other.callId_;
           onChanged();
         }
@@ -14148,12 +14873,12 @@ public final class MessageProtos {
           setFollowEnable(other.getFollowEnable());
         }
         if (other.hasUnidentifiedAccess()) {
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           unidentifiedAccess_ = other.unidentifiedAccess_;
           onChanged();
         }
         if (other.hasProfileKey()) {
-          bitField0_ |= 0x00000080;
+          bitField0_ |= 0x00000040;
           profileKey_ = other.profileKey_;
           onChanged();
         }
@@ -14350,101 +15075,17 @@ public final class MessageProtos {
         return this;
       }
 
-      private java.lang.Object number_ = "";
-      /**
-       * <code>optional string number = 3;</code>
-       * @return Whether the number field is set.
-       */
-      public boolean hasNumber() {
-        return ((bitField0_ & 0x00000004) != 0);
-      }
-      /**
-       * <code>optional string number = 3;</code>
-       * @return The number.
-       */
-      public java.lang.String getNumber() {
-        java.lang.Object ref = number_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            number_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string number = 3;</code>
-       * @return The bytes for number.
-       */
-      public com.google.protobuf.ByteString
-          getNumberBytes() {
-        java.lang.Object ref = number_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          number_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string number = 3;</code>
-       * @param value The number to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNumber(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        number_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string number = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearNumber() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        number_ = getDefaultInstance().getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string number = 3;</code>
-       * @param value The bytes for number to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNumberBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        number_ = value;
-        onChanged();
-        return this;
-      }
-
       private boolean isCaller_ ;
       /**
-       * <code>optional bool isCaller = 4;</code>
+       * <code>optional bool isCaller = 3;</code>
        * @return Whether the isCaller field is set.
        */
       @java.lang.Override
       public boolean hasIsCaller() {
-        return ((bitField0_ & 0x00000008) != 0);
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>optional bool isCaller = 4;</code>
+       * <code>optional bool isCaller = 3;</code>
        * @return The isCaller.
        */
       @java.lang.Override
@@ -14452,22 +15093,22 @@ public final class MessageProtos {
         return isCaller_;
       }
       /**
-       * <code>optional bool isCaller = 4;</code>
+       * <code>optional bool isCaller = 3;</code>
        * @param value The isCaller to set.
        * @return This builder for chaining.
        */
       public Builder setIsCaller(boolean value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         isCaller_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool isCaller = 4;</code>
+       * <code>optional bool isCaller = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearIsCaller() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         isCaller_ = false;
         onChanged();
         return this;
@@ -14475,14 +15116,14 @@ public final class MessageProtos {
 
       private java.lang.Object callId_ = "";
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @return Whether the callId field is set.
        */
       public boolean hasCallId() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @return The callId.
        */
       public java.lang.String getCallId() {
@@ -14500,7 +15141,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @return The bytes for callId.
        */
       public com.google.protobuf.ByteString
@@ -14517,7 +15158,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @param value The callId to set.
        * @return This builder for chaining.
        */
@@ -14526,23 +15167,23 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         callId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearCallId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         callId_ = getDefaultInstance().getCallId();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string callId = 5;</code>
+       * <code>optional string callId = 4;</code>
        * @param value The bytes for callId to set.
        * @return This builder for chaining.
        */
@@ -14551,7 +15192,7 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         callId_ = value;
         onChanged();
         return this;
@@ -14559,15 +15200,15 @@ public final class MessageProtos {
 
       private boolean followEnable_ ;
       /**
-       * <code>optional bool followEnable = 6;</code>
+       * <code>optional bool followEnable = 5;</code>
        * @return Whether the followEnable field is set.
        */
       @java.lang.Override
       public boolean hasFollowEnable() {
-        return ((bitField0_ & 0x00000020) != 0);
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
-       * <code>optional bool followEnable = 6;</code>
+       * <code>optional bool followEnable = 5;</code>
        * @return The followEnable.
        */
       @java.lang.Override
@@ -14575,22 +15216,22 @@ public final class MessageProtos {
         return followEnable_;
       }
       /**
-       * <code>optional bool followEnable = 6;</code>
+       * <code>optional bool followEnable = 5;</code>
        * @param value The followEnable to set.
        * @return This builder for chaining.
        */
       public Builder setFollowEnable(boolean value) {
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000010;
         followEnable_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool followEnable = 6;</code>
+       * <code>optional bool followEnable = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearFollowEnable() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         followEnable_ = false;
         onChanged();
         return this;
@@ -14598,14 +15239,14 @@ public final class MessageProtos {
 
       private java.lang.Object unidentifiedAccess_ = "";
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @return Whether the unidentifiedAccess field is set.
        */
       public boolean hasUnidentifiedAccess() {
-        return ((bitField0_ & 0x00000040) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @return The unidentifiedAccess.
        */
       public java.lang.String getUnidentifiedAccess() {
@@ -14623,7 +15264,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @return The bytes for unidentifiedAccess.
        */
       public com.google.protobuf.ByteString
@@ -14640,7 +15281,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @param value The unidentifiedAccess to set.
        * @return This builder for chaining.
        */
@@ -14649,23 +15290,23 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000020;
         unidentifiedAccess_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearUnidentifiedAccess() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000020);
         unidentifiedAccess_ = getDefaultInstance().getUnidentifiedAccess();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string unidentifiedAccess = 7;</code>
+       * <code>optional string unidentifiedAccess = 6;</code>
        * @param value The bytes for unidentifiedAccess to set.
        * @return This builder for chaining.
        */
@@ -14674,7 +15315,7 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000020;
         unidentifiedAccess_ = value;
         onChanged();
         return this;
@@ -14682,14 +15323,14 @@ public final class MessageProtos {
 
       private java.lang.Object profileKey_ = "";
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @return Whether the profileKey field is set.
        */
       public boolean hasProfileKey() {
-        return ((bitField0_ & 0x00000080) != 0);
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @return The profileKey.
        */
       public java.lang.String getProfileKey() {
@@ -14707,7 +15348,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @return The bytes for profileKey.
        */
       public com.google.protobuf.ByteString
@@ -14724,7 +15365,7 @@ public final class MessageProtos {
         }
       }
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @param value The profileKey to set.
        * @return This builder for chaining.
        */
@@ -14733,23 +15374,23 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000080;
+  bitField0_ |= 0x00000040;
         profileKey_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @return This builder for chaining.
        */
       public Builder clearProfileKey() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
         profileKey_ = getDefaultInstance().getProfileKey();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string profileKey = 8;</code>
+       * <code>optional string profileKey = 7;</code>
        * @param value The bytes for profileKey to set.
        * @return This builder for chaining.
        */
@@ -14758,7 +15399,7 @@ public final class MessageProtos {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000080;
+  bitField0_ |= 0x00000040;
         profileKey_ = value;
         onChanged();
         return this;
@@ -18657,6 +19298,11 @@ public final class MessageProtos {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_textsecure_ProfessionalStatusMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_textsecure_EmailVerifyMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_textsecure_EmailVerifyMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_textsecure_ProfessionalMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -18705,7 +19351,7 @@ public final class MessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020TextSecure.proto\022\ntextsecure\"\342\004\n\010Envel" +
+      "\n\020TextSecure.proto\022\ntextsecure\"\260\005\n\010Envel" +
       "ope\022\'\n\004type\030\001 \001(\0162\031.textsecure.Envelope." +
       "Type\022\016\n\006source\030\002 \001(\t\022\022\n\nsourceUuid\030\013 \001(\t" +
       "\022\024\n\014sourceDevice\030\007 \001(\r\022\r\n\005relay\030\003 \001(\t\022\021\n" +
@@ -18716,57 +19362,60 @@ public final class MessageProtos {
       "professionalStatusMessage\030\016 \001(\0132%.textse" +
       "cure.ProfessionalStatusMessage\022D\n\027record" +
       "ingConsentMessage\030\017 \001(\0132#.textsecure.Rec" +
-      "ordingConsentMessage\"\264\001\n\004Type\022\013\n\007UNKNOWN" +
-      "\020\000\022\016\n\nCIPHERTEXT\020\001\022\020\n\014KEY_EXCHANGE\020\002\022\021\n\r" +
-      "PREKEY_BUNDLE\020\003\022\013\n\007RECEIPT\020\005\022\027\n\023UNIDENTI" +
-      "FIED_SENDER\020\006\022\024\n\020MATCHING_MESSAGE\020\007\022\027\n\023P" +
-      "ROFESSIONAL_STATUS\020\010\022\025\n\021RECORDING_CONSEN" +
-      "T\020\t\"7\n\007Content\022,\n\013callMessage\030\003 \001(\0132\027.te" +
-      "xtsecure.CallMessage\"\266\007\n\013CallMessage\022,\n\005" +
-      "offer\030\001 \001(\0132\035.textsecure.CallMessage.Off" +
-      "er\022.\n\006answer\030\002 \001(\0132\036.textsecure.CallMess" +
-      "age.Answer\0224\n\ticeUpdate\030\003 \003(\0132!.textsecu" +
-      "re.CallMessage.IceUpdate\0224\n\014legacyHangup" +
-      "\030\004 \001(\0132\036.textsecure.CallMessage.Hangup\022*" +
-      "\n\004busy\030\005 \001(\0132\034.textsecure.CallMessage.Bu" +
-      "sy\022.\n\006hangup\030\007 \001(\0132\036.textsecure.CallMess" +
-      "age.Hangup\022\021\n\tmultiRing\030\010 \001(\010\022\033\n\023destina" +
-      "tionDeviceId\030\t \001(\r\022.\n\006opaque\030\n \001(\0132\036.tex" +
-      "tsecure.CallMessage.Opaque\032\234\001\n\005Offer\022\n\n\002" +
-      "id\030\001 \001(\004\022\013\n\003sdp\030\002 \001(\t\0220\n\004type\030\003 \001(\0162\".te" +
-      "xtsecure.CallMessage.Offer.Type\022\016\n\006opaqu" +
-      "e\030\004 \001(\014\"8\n\004Type\022\024\n\020OFFER_AUDIO_CALL\020\000\022\024\n" +
-      "\020OFFER_VIDEO_CALL\020\001\"\004\010\002\020\002\0321\n\006Answer\022\n\n\002i" +
-      "d\030\001 \001(\004\022\013\n\003sdp\030\002 \001(\t\022\016\n\006opaque\030\003 \001(\014\032O\n\t" +
-      "IceUpdate\022\n\n\002id\030\001 \001(\004\022\013\n\003mid\030\002 \001(\t\022\014\n\004li" +
-      "ne\030\003 \001(\r\022\013\n\003sdp\030\004 \001(\t\022\016\n\006opaque\030\005 \001(\014\032\022\n" +
-      "\004Busy\022\n\n\002id\030\001 \001(\004\032\313\001\n\006Hangup\022\n\n\002id\030\001 \001(\004" +
-      "\0221\n\004type\030\002 \001(\0162#.textsecure.CallMessage." +
-      "Hangup.Type\022\020\n\010deviceId\030\003 \001(\r\"p\n\004Type\022\021\n" +
-      "\rHANGUP_NORMAL\020\000\022\023\n\017HANGUP_ACCEPTED\020\001\022\023\n" +
-      "\017HANGUP_DECLINED\020\002\022\017\n\013HANGUP_BUSY\020\003\022\032\n\026H" +
-      "ANGUP_NEED_PERMISSION\020\004\032\026\n\006Opaque\022\014\n\004dat" +
-      "a\030\001 \001(\014J\004\010\006\020\007\"Y\n\031ProfessionalStatusMessa" +
-      "ge\022<\n\023professionalMessage\030\001 \003(\0132\037.textse" +
-      "cure.ProfessionalMessage\"3\n\023Professional" +
-      "Message\022\014\n\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"E\n" +
-      "\027RecordingConsentMessage\022\014\n\004uuid\030\001 \001(\t\022\016" +
-      "\n\006callId\030\002 \001(\t\022\014\n\004type\030\003 \001(\t\"\260\001\n\017Matchin" +
-      "gMessage\022\014\n\004uuid\030\001 \001(\t\022\027\n\017matchingKeywor" +
-      "d\030\002 \003(\r\022\016\n\006number\030\003 \001(\t\022\020\n\010isCaller\030\004 \001(" +
-      "\010\022\016\n\006callId\030\005 \001(\t\022\024\n\014followEnable\030\006 \001(\010\022" +
-      "\032\n\022unidentifiedAccess\030\007 \001(\t\022\022\n\nprofileKe" +
-      "y\030\010 \001(\t\" \n\020ProvisioningUuid\022\014\n\004uuid\030\001 \001(" +
-      "\t\"c\n\021ServerCertificate\022\023\n\013certificate\030\001 " +
-      "\001(\014\022\021\n\tsignature\030\002 \001(\014\032&\n\013Certificate\022\n\n" +
-      "\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(\014\"\332\001\n\021SenderCertifi" +
-      "cate\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002" +
-      " \001(\014\032\234\001\n\013Certificate\022\016\n\006sender\030\001 \001(\t\022\022\n\n" +
-      "senderUuid\030\006 \001(\t\022\024\n\014senderDevice\030\002 \001(\r\022\017" +
-      "\n\007expires\030\003 \001(\006\022\023\n\013identityKey\030\004 \001(\014\022-\n\006" +
-      "signer\030\005 \001(\0132\035.textsecure.ServerCertific" +
-      "ateB:\n)org.whispersystems.textsecuregcm." +
-      "entitiesB\rMessageProtos"
+      "ordingConsentMessage\022:\n\022emailVerifyMessa" +
+      "ge\030\020 \001(\0132\036.textsecure.EmailVerifyMessage" +
+      "\"\306\001\n\004Type\022\013\n\007UNKNOWN\020\000\022\016\n\nCIPHERTEXT\020\001\022\020" +
+      "\n\014KEY_EXCHANGE\020\002\022\021\n\rPREKEY_BUNDLE\020\003\022\013\n\007R" +
+      "ECEIPT\020\005\022\027\n\023UNIDENTIFIED_SENDER\020\006\022\024\n\020MAT" +
+      "CHING_MESSAGE\020\007\022\027\n\023PROFESSIONAL_STATUS\020\010" +
+      "\022\025\n\021RECORDING_CONSENT\020\t\022\020\n\014EMAIL_VERIFY\020" +
+      "\n\"7\n\007Content\022,\n\013callMessage\030\003 \001(\0132\027.text" +
+      "secure.CallMessage\"\266\007\n\013CallMessage\022,\n\005of" +
+      "fer\030\001 \001(\0132\035.textsecure.CallMessage.Offer" +
+      "\022.\n\006answer\030\002 \001(\0132\036.textsecure.CallMessag" +
+      "e.Answer\0224\n\ticeUpdate\030\003 \003(\0132!.textsecure" +
+      ".CallMessage.IceUpdate\0224\n\014legacyHangup\030\004" +
+      " \001(\0132\036.textsecure.CallMessage.Hangup\022*\n\004" +
+      "busy\030\005 \001(\0132\034.textsecure.CallMessage.Busy" +
+      "\022.\n\006hangup\030\007 \001(\0132\036.textsecure.CallMessag" +
+      "e.Hangup\022\021\n\tmultiRing\030\010 \001(\010\022\033\n\023destinati" +
+      "onDeviceId\030\t \001(\r\022.\n\006opaque\030\n \001(\0132\036.texts" +
+      "ecure.CallMessage.Opaque\032\234\001\n\005Offer\022\n\n\002id" +
+      "\030\001 \001(\004\022\013\n\003sdp\030\002 \001(\t\0220\n\004type\030\003 \001(\0162\".text" +
+      "secure.CallMessage.Offer.Type\022\016\n\006opaque\030" +
+      "\004 \001(\014\"8\n\004Type\022\024\n\020OFFER_AUDIO_CALL\020\000\022\024\n\020O" +
+      "FFER_VIDEO_CALL\020\001\"\004\010\002\020\002\0321\n\006Answer\022\n\n\002id\030" +
+      "\001 \001(\004\022\013\n\003sdp\030\002 \001(\t\022\016\n\006opaque\030\003 \001(\014\032O\n\tIc" +
+      "eUpdate\022\n\n\002id\030\001 \001(\004\022\013\n\003mid\030\002 \001(\t\022\014\n\004line" +
+      "\030\003 \001(\r\022\013\n\003sdp\030\004 \001(\t\022\016\n\006opaque\030\005 \001(\014\032\022\n\004B" +
+      "usy\022\n\n\002id\030\001 \001(\004\032\313\001\n\006Hangup\022\n\n\002id\030\001 \001(\004\0221" +
+      "\n\004type\030\002 \001(\0162#.textsecure.CallMessage.Ha" +
+      "ngup.Type\022\020\n\010deviceId\030\003 \001(\r\"p\n\004Type\022\021\n\rH" +
+      "ANGUP_NORMAL\020\000\022\023\n\017HANGUP_ACCEPTED\020\001\022\023\n\017H" +
+      "ANGUP_DECLINED\020\002\022\017\n\013HANGUP_BUSY\020\003\022\032\n\026HAN" +
+      "GUP_NEED_PERMISSION\020\004\032\026\n\006Opaque\022\014\n\004data\030" +
+      "\001 \001(\014J\004\010\006\020\007\"Y\n\031ProfessionalStatusMessage" +
+      "\022<\n\023professionalMessage\030\001 \003(\0132\037.textsecu" +
+      "re.ProfessionalMessage\"#\n\022EmailVerifyMes" +
+      "sage\022\r\n\005email\030\001 \001(\t\"3\n\023ProfessionalMessa" +
+      "ge\022\014\n\004uuid\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"E\n\027Reco" +
+      "rdingConsentMessage\022\014\n\004uuid\030\001 \001(\t\022\016\n\006cal" +
+      "lId\030\002 \001(\t\022\014\n\004type\030\003 \001(\t\"\240\001\n\017MatchingMess" +
+      "age\022\014\n\004uuid\030\001 \001(\t\022\027\n\017matchingKeyword\030\002 \003" +
+      "(\r\022\020\n\010isCaller\030\003 \001(\010\022\016\n\006callId\030\004 \001(\t\022\024\n\014" +
+      "followEnable\030\005 \001(\010\022\032\n\022unidentifiedAccess" +
+      "\030\006 \001(\t\022\022\n\nprofileKey\030\007 \001(\t\" \n\020Provisioni" +
+      "ngUuid\022\014\n\004uuid\030\001 \001(\t\"c\n\021ServerCertificat" +
+      "e\022\023\n\013certificate\030\001 \001(\014\022\021\n\tsignature\030\002 \001(" +
+      "\014\032&\n\013Certificate\022\n\n\002id\030\001 \001(\r\022\013\n\003key\030\002 \001(" +
+      "\014\"\332\001\n\021SenderCertificate\022\023\n\013certificate\030\001" +
+      " \001(\014\022\021\n\tsignature\030\002 \001(\014\032\234\001\n\013Certificate\022" +
+      "\016\n\006sender\030\001 \001(\t\022\022\n\nsenderUuid\030\006 \001(\t\022\024\n\014s" +
+      "enderDevice\030\002 \001(\r\022\017\n\007expires\030\003 \001(\006\022\023\n\013id" +
+      "entityKey\030\004 \001(\014\022-\n\006signer\030\005 \001(\0132\035.textse" +
+      "cure.ServerCertificateB:\n)org.whispersys" +
+      "tems.textsecuregcm.entitiesB\rMessageProt" +
+      "os"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -18777,7 +19426,7 @@ public final class MessageProtos {
     internal_static_textsecure_Envelope_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_Envelope_descriptor,
-        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", "ProfessionalStatusMessage", "RecordingConsentMessage", });
+        new java.lang.String[] { "Type", "Source", "SourceUuid", "SourceDevice", "Relay", "Timestamp", "LegacyMessage", "Content", "ServerGuid", "ServerTimestamp", "MatchingMessage", "ProfessionalStatusMessage", "RecordingConsentMessage", "EmailVerifyMessage", });
     internal_static_textsecure_Content_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_textsecure_Content_fieldAccessorTable = new
@@ -18832,32 +19481,38 @@ public final class MessageProtos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProfessionalStatusMessage_descriptor,
         new java.lang.String[] { "ProfessionalMessage", });
-    internal_static_textsecure_ProfessionalMessage_descriptor =
+    internal_static_textsecure_EmailVerifyMessage_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_textsecure_EmailVerifyMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_textsecure_EmailVerifyMessage_descriptor,
+        new java.lang.String[] { "Email", });
+    internal_static_textsecure_ProfessionalMessage_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_textsecure_ProfessionalMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProfessionalMessage_descriptor,
         new java.lang.String[] { "Uuid", "Status", });
     internal_static_textsecure_RecordingConsentMessage_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_textsecure_RecordingConsentMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_RecordingConsentMessage_descriptor,
         new java.lang.String[] { "Uuid", "CallId", "Type", });
     internal_static_textsecure_MatchingMessage_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_textsecure_MatchingMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_MatchingMessage_descriptor,
-        new java.lang.String[] { "Uuid", "MatchingKeyword", "Number", "IsCaller", "CallId", "FollowEnable", "UnidentifiedAccess", "ProfileKey", });
+        new java.lang.String[] { "Uuid", "MatchingKeyword", "IsCaller", "CallId", "FollowEnable", "UnidentifiedAccess", "ProfileKey", });
     internal_static_textsecure_ProvisioningUuid_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_textsecure_ProvisioningUuid_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ProvisioningUuid_descriptor,
         new java.lang.String[] { "Uuid", });
     internal_static_textsecure_ServerCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_textsecure_ServerCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_ServerCertificate_descriptor,
@@ -18869,7 +19524,7 @@ public final class MessageProtos {
         internal_static_textsecure_ServerCertificate_Certificate_descriptor,
         new java.lang.String[] { "Id", "Key", });
     internal_static_textsecure_SenderCertificate_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_textsecure_SenderCertificate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_textsecure_SenderCertificate_descriptor,

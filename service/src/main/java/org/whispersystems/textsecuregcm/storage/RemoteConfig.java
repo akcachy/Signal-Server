@@ -18,7 +18,7 @@ import java.util.UUID;
 public class RemoteConfig {
 
   @JsonProperty
-  @Pattern(regexp = "[A-Za-z0-9\\.]+")
+  @Pattern(regexp = "[A-Za-z0-9_\\.]+")
   private String name;
 
   @JsonProperty

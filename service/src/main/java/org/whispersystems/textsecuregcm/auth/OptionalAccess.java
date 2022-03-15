@@ -50,8 +50,12 @@ public class OptionalAccess {
                             Optional<Anonymous> accessKey,
                             Optional<Account>   targetAccount)
   {
-    if (targetAccount.isPresent() && targetAccount.get().getStatus().equals("DELETED")) {
-      throw new WebApplicationException("Account deleted.",Response.Status.NOT_FOUND);
+    if (targetAccount.isPresent()) {
+      switch(targetAccount.get().getStatus()){
+        case "DELETED" :                throw new WebApplicationException("Account deleted.",440);
+        case "ACCOUNT_TEMP_SUSPENDED" : throw new WebApplicationException("Account Temp suspended.",441);
+        case "ACCOUNT_SUSPENDED" :      throw new WebApplicationException("Account suspended.",442);
+      }
     }
 
     if (requestAccount.isPresent() && targetAccount.isPresent() && targetAccount.get().isEnabled()) {

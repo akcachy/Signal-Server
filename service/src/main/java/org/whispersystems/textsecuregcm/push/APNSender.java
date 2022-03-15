@@ -96,6 +96,9 @@ public class APNSender implements Managed {
       public void onSuccess(@Nullable ApnResult result) {
         if (message.getChallengeData().isPresent()) return;
 
+        try{
+          logger.info("%%%%%%%%%%%%%%%%%%  APN RESPONSE "+ mapper.writeValueAsString(result));
+        }catch(Exception e){}
         if (result == null) {
           logger.warn("*** RECEIVED NULL APN RESULT ***");
         } else if (result.getStatus() == ApnResult.Status.NO_SUCH_USER) {

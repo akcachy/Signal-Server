@@ -344,6 +344,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             @Override
             public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
             }
+            @Override
+            public void sendEmailVerifyMessageAvailable(String email) {
+            }
         };
 
         messagesCache.addMessageAvailabilityListener(DESTINATION_UUID, DESTINATION_DEVICE_ID, listener);
@@ -405,6 +408,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
+            }
+            @Override
+            public void sendEmailVerifyMessageAvailable(String email) {
             }
         };
 
@@ -469,6 +475,9 @@ public class MessagesCacheTest extends AbstractRedisClusterTest {
             }
             @Override
             public void handleRecentlyMatchedUserExpire(UUID firstUuid, UUID secondUuid) {
+            }
+            @Override
+            public void sendEmailVerifyMessageAvailable(String email) {
             }
         };
 

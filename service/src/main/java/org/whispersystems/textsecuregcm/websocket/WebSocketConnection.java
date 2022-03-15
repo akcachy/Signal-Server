@@ -40,6 +40,7 @@ import org.whispersystems.textsecuregcm.entities.CachyMatchingUser;
 import org.whispersystems.textsecuregcm.entities.CachyUserPostResponse;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntity;
 import org.whispersystems.textsecuregcm.entities.OutgoingMessageEntityList;
+import org.whispersystems.textsecuregcm.entities.MessageProtos.EmailVerifyMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.MatchingMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalMessage;
 import org.whispersystems.textsecuregcm.entities.MessageProtos.ProfessionalStatusMessage;
@@ -321,7 +322,17 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     ephemeralMatchingMessageAvailableMeter.mark();
 
     messagesManager.takeMatchingMessage(account.getUuid(), device.getId())
-                   .ifPresent(message -> sendMatchingMessage(message));
+                   .ifPresent(message -> {
+                      CachyMatchingUser matchingUser = null;
+                      try{
+                          matchingUser = mapper.readValue(message, CachyMatchingUser.class);
+                      }catch(Exception e){}
+                  
+                      if(messagesManager.isUserOnline(UUID.fromString(matchingUser.getUuid()))){
+                        sendMatchingMessage(matchingUser);
+                      }
+                    
+                    });
   }
   @Override
   public void handlePostWallMessageAvailable() {
@@ -330,6 +341,11 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     messagesManager.takePostWallMessage(account.getUuid(), device.getId())
                    .ifPresent(message -> sendPostWallMessage(message));
   }
+  @Override
+  public void sendEmailVerifyMessageAvailable(String email) {
+      sendEmailVerifyMessage(email);
+  }
+
   @Override
   public void professionalStatusAvailable(UUID uuid, Map<String , String> message) {
   
@@ -383,6 +399,27 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
     // X-Signal-Key: false must be sent until Android stops assuming it missing means true
     return client.sendRequest("PUT", "/api/v1/professional/status", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
+      if (throwable == null) {
+        if (isSuccessResponse(response)) {
+          logger.info("############### PUT /api/v1/professional/status RESPONSE "+ response.getMessage());
+        }
+      } else {
+        sendFailuresMeter.mark();
+      }
+    });
+  }
+
+  private CompletableFuture<WebSocketResponseMessage> sendEmailVerifyMessage(final String email) {
+    final EmailVerifyMessage.Builder  mmailVerifyMessage =   EmailVerifyMessage.newBuilder();
+    mmailVerifyMessage.setEmail(email);
+                                      
+    final Envelope.Builder      builder = Envelope.newBuilder()
+                                                    .setType(Envelope.Type.EMAIL_VERIFY)
+                                                    .setEmailVerifyMessage(mmailVerifyMessage);
+    final Optional<byte[]> body = Optional.ofNullable(builder.build().toByteArray());
+    bytesSentMeter.mark(body.map(bytes -> bytes.length).orElse(0));
+    // X-Signal-Key: false must be sent until Android stops assuming it missing means true
+    return client.sendRequest("PUT", "/api/v1/email/verify", List.of("X-Signal-Key: false", TimestampHeaderUtil.getTimestampHeader()), body).whenComplete((response, throwable) -> {
       if (throwable == null) {
         if (isSuccessResponse(response)) {
           logger.info("############### PUT /api/v1/professional/status RESPONSE "+ response.getMessage());
@@ -447,18 +484,14 @@ public class WebSocketConnection implements MessageAvailabilityListener, Displac
     });
   }
 
-  private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final String message) {
-    CachyMatchingUser matchingUser = null;
-    try{
-        matchingUser = mapper.readValue(message, CachyMatchingUser.class);
-    }catch(Exception e){}
-
+  private CompletableFuture<WebSocketResponseMessage> sendMatchingMessage(final CachyMatchingUser matchingUser) {
+    
     sendMessageMeter.mark();
     sentMessageCounter.increment();
     
     final MatchingMessage.Builder  builder1 =   MatchingMessage.newBuilder()
                                                   .setCallId(matchingUser.getCallId())
-                                                  .setNumber(matchingUser.getNumber())
+                                                  //.setNumber(matchingUser.getNumber())
                                                   .setUuid(matchingUser.getUuid())
                                                   .setIsCaller(matchingUser.isCaller())
                                                   .setFollowEnable(matchingUser.isFollowEnable())

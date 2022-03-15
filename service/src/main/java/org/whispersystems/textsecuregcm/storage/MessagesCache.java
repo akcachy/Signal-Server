@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.dropwizard.lifecycle.Managed;
+import io.lettuce.core.RedisException;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.ZAddArgs;
@@ -108,7 +109,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
     private static final String CACHE_PROFESSIONAL_PREFIX                       = "professionalUsers::";
     private static final Duration MAX_EPHEMERAL_MESSAGE_DELAY = Duration.ofSeconds(10);
     private static final String CACHE_ONLINE_PROFESSIONAL_PREFIX = "professionals_user_status::{aedc76c1-1e48-464b-b39e-c4949b4e4bb4::1}";
-
+    private static final String CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX = "professionalUsersCategoryMetadata::";
     private static final String REMOVE_TIMER_NAME = name(MessagesCache.class, "remove");
 
     private static final String REMOVE_METHOD_TAG    = "method";
@@ -674,6 +675,27 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
            
         // }
     }
+    public boolean isUserOnline(UUID uuid){
+        final String queueName = "{"+getQueueName(uuid, 1)+"}";
+        if(findListener(queueName).isPresent() ){
+            return true;
+        } else{
+            return false;
+        }
+    
+    }
+
+    public void sendEmailMessage(UUID uuid, String email){
+            final String queueName = "{"+getQueueName(uuid, 1)+"}";
+        
+            notificationExecutorService.execute(() -> findListener(queueName).ifPresent(new Consumer<MessageAvailabilityListener>() {
+                @Override
+                public void accept(MessageAvailabilityListener listener){
+                listener.sendEmailVerifyMessageAvailable(email);
+                }
+            }));
+        
+    }
 
     public void broadCastMessage(UUID uuid, Map<String , String> msg){
         for (Map.Entry<String, MessageAvailabilityListener> entry : messageListenersByQueueName.entrySet()){
@@ -838,12 +860,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         post.setScore(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
                         final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
                         if(likeCount != null){
-                            post.setLikesCount(Long.parseLong(new String(likeCount)));
+                            post.setLikesCount(new String(likeCount));
                         }
 
                         final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
                         if(viewCount != null){
-                            post.setViews(Long.parseLong(new String(viewCount)));
+                            post.setViews(new String(viewCount));
                         }
 
                         final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
@@ -852,7 +874,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
                         final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
                         if(commentCount != null){
-                            post.setCommentsCount(Long.parseLong(new String(commentCount)));
+                            post.setCommentsCount(new String(commentCount));
                         }
                         messageEntities.add(post );
                     } catch (Exception e) {
@@ -868,6 +890,99 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         });
     }
 
+    public Set<String> getDiscoveryPostId(final UUID destinationUuid, final long destinationDevice, final long[] range, String categoryId) {
+        return getMessagesTimer.record(() -> {
+           final byte[]  queueName = getPostCategoryQueueKey(categoryId);
+          
+
+           final List<byte[]> queueItems = (List<byte[]>)getPostsScript.executeBinary(List.of(queueName),
+                                                                                      List.of(String.valueOf(range[0]).getBytes(StandardCharsets.UTF_8), String.valueOf(range[1]).getBytes(StandardCharsets.UTF_8)  ));
+                    
+           final Set<String> messageEntities;
+           if (queueItems.size() % 2 == 0) {
+               messageEntities = new HashSet<>(queueItems.size() / 2);
+
+               for (int i = 0; i < queueItems.size() - 1; i += 2) {
+                   try {
+                       final String postId = new String(queueItems.get(i));
+                       
+                       final String postIdKey;
+                     
+                        final List<String> postIdList = readDeleteCluster.withCluster(connection -> connection.sync().keys(getUserPostQueueKey(postId)));
+                        if(postIdList.size() == 0){
+                            continue;
+                        }
+                        postIdKey = postIdList.get(0);                     
+                       final String postData = readDeleteCluster.withCluster(connection -> connection.sync().get(postIdKey));
+                       if(postData == null){
+                           continue;
+                       }else{
+                        messageEntities.add(postId);
+                       }
+                   } catch (Exception e) {
+                       logger.warn("Failed to parse envelope", e);
+                   }
+               }
+           } else {
+               logger.error("\"Get messages\" operation returned a list with a non-even number of elements.");
+               messageEntities = Collections.emptySet();
+           }
+           
+           return messageEntities;
+       });
+   }
+    public List<CachyUserPostResponse> getPostData(UUID uuid, Set<String> queueItems){
+            final List<CachyUserPostResponse> messageEntities = new ArrayList<>(queueItems.size());
+                for (String postId : queueItems) {
+                    try {
+                        final String postIdKey;
+                        
+                        final List<String> postIdList = readDeleteCluster.withCluster(connection -> connection.sync().keys(getUserPostQueueKey(postId)));
+                        if(postIdList.size() == 0){
+                            continue;
+                        }
+                        postIdKey = postIdList.get(0);     
+                                
+                        final String postData = readDeleteCluster.withCluster(connection -> connection.sync().get(postIdKey));
+                        if(postData == null){
+                            continue;
+                        }
+                        CachyUserPostResponse post = mapper.readValue(postData, CachyUserPostResponse.class);
+                        List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
+                        if(post.getContributorsDetails() != null && post.getContributorsDetails().size()!=0){    
+                            for (CachyTaggedUserProfile contributors : post.getContributorsDetails()){
+                                final long isUserStoryExists = (long)readDeleteCluster.withBinaryCluster(connection -> connection.sync().exists(getUserStoryExistsQueueKey(contributors.getUuid(), 1), contributors.getUuid().getBytes()));
+                                contributors.setUserStoryExists(isUserStoryExists == 1? true:false);
+                                contributorsList.add(contributors);
+                            }
+                        }
+                        post.setContributorsDetails(contributorsList);
+                        post.setScore(Long.parseLong("0"));
+                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
+                        if(likeCount != null){
+                            post.setLikesCount(new String(likeCount));
+                        }
+
+                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
+                        if(viewCount != null){
+                            post.setViews(new String(viewCount));
+                        }
+
+                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), uuid.toString().getBytes()));
+                        post.setLiked(isLiked);   
+
+
+                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
+                        if(commentCount != null){
+                            post.setCommentsCount(new String(commentCount));
+                        }
+                        messageEntities.add(post );
+                    } catch (Exception e) {
+                        logger.warn("Failed to parse envelope", e);
+                    }
+                }
+                return messageEntities;
+    }
     public List<CachyTaggedUserProfile> getContributorsStory(List<CachyTaggedUserProfile> contributorsDetails ){
         List<CachyTaggedUserProfile> contributorsList = new ArrayList<>();
         for (CachyTaggedUserProfile contributors : contributorsDetails){
@@ -939,9 +1054,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         for(CachyUserPostResponse post : messages) {
                             final String categoryAndAgeGroup = post.getCategory()+"_"+post.getAgeGroup();
                             connection.sync().zadd(getPostMessageQueueKey(uuid, 1), ZAddArgs.Builder.nx(), post.getCreatedAt(),  post.getPostId().getBytes(StandardCharsets.UTF_8)   );   
-                            connection.sync().set(getUserPostWtihCategoryQueueKey(post.getPostId(), categoryAndAgeGroup).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) ); 
-                           // connection.sync().hincrby(getPostCategoryQueueMetadataKey(), categoryAndAgeGroup.getBytes(), 1);
-                           // connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   ); 
+                            //connection.sync().set(getUserPostWtihCategoryQueueKey(post.getPostId(), categoryAndAgeGroup).getBytes(StandardCharsets.UTF_8) , mapper.writeValueAsString(post).getBytes(StandardCharsets.UTF_8) );
+                            // connection.sync().hincrby(getPostCategoryQueueMetadataKey("",""), categoryAndAgeGroup.getBytes(), 1);
+                            // connection.sync().zadd(getPostCategoryQueueKey(categoryAndAgeGroup), ZAddArgs.Builder.nx(), System.currentTimeMillis(), post.getPostId().getBytes(StandardCharsets.UTF_8)   );
                         }                   
                     }catch(Exception e){
                     }
@@ -994,14 +1109,15 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
       }
     public  void setOnlineStatus(UUID uuid, String status, String slotIndex) {
         if(status.equals("ONLINE")){
-            readDeleteCluster.useCluster(connection -> {
-                connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
-            });
+            // readDeleteCluster.useCluster(connection -> {
+            //     connection.sync().del(CACHE_PROFESSIONAL_PREFIX);
+            // });
             insertCluster.useCluster(connection -> {
                 connection.sync().hset(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString(), status);
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "ONLINE");
+            changeProfessionalQueue(uuid, null, "OFFLINE", "ONLINE");
             broadCastMessage(uuid, map);
             
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "start", slotIndex);
@@ -1009,10 +1125,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         else if(status.equals("OFFLINE")){
             readDeleteCluster.useCluster(connection -> {
                 connection.sync().hdel(CACHE_ONLINE_PROFESSIONAL_PREFIX , uuid.toString());
-                connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
+                //connection.sync().hdel(CACHE_PROFESSIONAL_PREFIX, uuid.toString());
             });
             final Map<String , String> map = new HashMap<>();
             map.put(uuid.toString(), "OFFLINE");
+            changeProfessionalQueue(uuid, null, "ONLINE",  "OFFLINE");
             broadCastMessage(uuid, map); 
             unsubscribeFromKeyspaceNotificationsForProfessionalUsers(uuid.toString(), "end", slotIndex);
             // readDeleteCluster.useCluster(connection -> {
@@ -1023,6 +1140,39 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
             // });
         }         
       }
+
+      public void changeProfessionalQueue(UUID uuid, List<String> categoriesAndAgeGroup, String oldStatus, String newStatus){
+       if(categoriesAndAgeGroup == null){
+        String result =   readDeleteCluster.withCluster(connection -> connection.sync().hget(CACHE_PROFESSIONAL_WITH_CATEGORY_METADATA_PREFIX, uuid.toString()));
+        if(result != null){
+            String[] categoryAndAgeGroupArr = result.split(" ");
+            for (String categoryAndAgeGroup : categoryAndAgeGroupArr) {
+                 memcacheSetProfessionalByTagsAndAgegroup(uuid.toString(), categoryAndAgeGroup, oldStatus, newStatus );
+            }
+        }
+       }else{
+            for (String categoryAndAgeGroup : categoriesAndAgeGroup) {
+                memcacheSetProfessionalByTagsAndAgegroup(uuid.toString(), categoryAndAgeGroup, oldStatus, newStatus );
+            }
+       }
+       
+    }
+
+    private void memcacheSetProfessionalByTagsAndAgegroup(String uuid, String categoryAndAge,  String oldStatus, String newStatus ) {
+        try {
+
+            final Double score =  readDeleteCluster.withCluster(connection ->  connection.sync().zscore(CACHE_PROFESSIONAL_PREFIX+oldStatus+"::"+categoryAndAge, uuid ));
+            if(score == null){
+                insertCluster.useCluster(connection -> connection.sync().zadd(CACHE_PROFESSIONAL_PREFIX+newStatus+"::"+categoryAndAge, ZAddArgs.Builder.nx(), 0, uuid  ));
+            }else{
+                insertCluster.useCluster(connection -> connection.sync().zadd(CACHE_PROFESSIONAL_PREFIX+newStatus+"::"+categoryAndAge, ZAddArgs.Builder.nx(), score, uuid  ));
+            }
+            readDeleteCluster.withCluster(connection ->  connection.sync().zrem(CACHE_PROFESSIONAL_PREFIX+oldStatus+"::"+categoryAndAge, uuid ));
+    
+        } catch (RedisException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 
       public  void setOnlineStatusOnDisconnect(UUID uuid) { 
         insertCluster.useCluster(connection -> {
@@ -1047,14 +1197,14 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     }
 
-    Map<String , Double> getCommonInterestedCategory() {
+    Map<String , Double> getCommonInterestedCategory(String language, String countryCode, int ageGroup) {
         final Map<String , Double> map = new HashMap<>();
         Double total  = 0.0 ; 
-        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey()));
+        Map<byte[], byte[]> categoryMap = readDeleteCluster.withBinaryCluster(connection -> connection.sync().hgetall(getPostCategoryQueueMetadataKey(language+"_"+countryCode+"::"+ageGroup)));
         for (Map.Entry<byte[], byte[]> entry : categoryMap.entrySet()) {
             Double count = Double.parseDouble(new String(entry.getValue()));
             total += count;
-            map.put(new String(entry.getKey()), count  );       
+            map.put((new String(entry.getKey())+"::"+ language+"_"+countryCode), count  );
         }
         // for (Map.Entry<String, Double> entry : map.entrySet()) {
         //     map.put(entry.getKey(), (entry.getValue()*100)/total);
@@ -1135,8 +1285,8 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         return ("user_posts_by_category::"+ category).getBytes(StandardCharsets.UTF_8);
     }
 
-    private static byte[] getPostCategoryQueueMetadataKey() {
-        return ("user_posts_by_category_metadata::").getBytes(StandardCharsets.UTF_8);
+    private static byte[] getPostCategoryQueueMetadataKey(String langCountry) {
+        return ("user_posts_by_category_metadata::"+langCountry).getBytes(StandardCharsets.UTF_8);
     }
     private static byte[] getProfessionalUserStatusQueueKey() {
         return (CACHE_ONLINE_PROFESSIONAL_PREFIX).getBytes(StandardCharsets.UTF_8);
