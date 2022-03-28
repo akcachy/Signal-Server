@@ -28,7 +28,7 @@ public class VerificationCode {
 
   public VerificationCode(String verificationCode) {
     this.verificationCode        = verificationCode;
-    this.verificationCodeDisplay = this.verificationCode.substring(0, 3) + "-" + this.verificationCode.substring(3, 6);
+    this.verificationCodeDisplay = this.verificationCode.substring(0, 3) + this.verificationCode.substring(3, 6);
     this.verificationCodeSpeech  = delimit(verificationCode + "");
   }
 
