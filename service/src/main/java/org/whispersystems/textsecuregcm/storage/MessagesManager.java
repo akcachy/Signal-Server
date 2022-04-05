@@ -98,21 +98,21 @@ public class MessagesManager {
   }
 
   public List<CachyUserPostResponse> getPosts(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, true, false, false, null, false);
+    return messagesCache.getPosts(uuid, device, range, true, false, false, null, false, 0);
   }
   public List<CachyUserPostResponse> getPostWall(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, true, false, true, null, false);
+    return messagesCache.getPosts(uuid, device, range, true, false, true, null, false, 0);
   }
   
-  public List<CachyUserPostResponse> getStory(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, false, true, false, null, false);
+  public List<CachyUserPostResponse> getStory(final UUID uuid, final long device, final long[] range, final int STORY_EXPIRE_TIME_IN_HOURS) {
+    return messagesCache.getPosts(uuid, device, range, false, true, false, null, false, STORY_EXPIRE_TIME_IN_HOURS);
   }
-  public List<CachyUserPostResponse> getStoryWall(final UUID uuid, final long device, final long[] range) {
-    return messagesCache.getPosts(uuid, device, range, false, true, true, null, false);
+  public List<CachyUserPostResponse> getStoryWall(final UUID uuid, final long device, final long[] range, final int STORY_EXPIRE_TIME_IN_HOURS) {
+    return messagesCache.getPosts(uuid, device, range, false, true, true, null, false, STORY_EXPIRE_TIME_IN_HOURS);
   }
 
   public List<CachyUserPostResponse> getPostByCategory(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
-    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryAndAgeGroup, true);
+    return messagesCache.getPosts(uuid, device, range, false, false, false, categoryAndAgeGroup, true, 0);
   }
   
   public Set<String> getDiscoveryPostId(final UUID uuid, final long device, final long[] range, String categoryAndAgeGroup) {
