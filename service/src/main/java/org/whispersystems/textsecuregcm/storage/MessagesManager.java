@@ -119,7 +119,7 @@ public class MessagesManager {
     return messagesCache.getDiscoveryPostId(uuid, device, range, categoryAndAgeGroup);
   }
 
-  public List<CachyUserPostResponse> getPostData(final UUID uuid, Set<String> postList) {
+  public List<CachyUserPostResponse> getPostData(final UUID uuid, List<String> postList) {
     return messagesCache.getPostData(uuid, postList);
   }
   public void setRecordingConsent(final UUID uuid,  String callId) {
