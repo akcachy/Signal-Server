@@ -361,7 +361,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
         long[] range = new long[2];
         range[0] = 0;
         range[1] = 19;
-        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, range, true, false, true, null, false);
+        List<CachyUserPostResponse> list = getPosts(uuid, destinationDevice, range, true, false, true, null, false, 0);
         if(list.size()!=1){
             return Optional.of(list.get(0));
         }
@@ -801,8 +801,9 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
 
     //#region
     @SuppressWarnings("unchecked")
-    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final long[] range, boolean isPosts, boolean isStory, boolean isWall, String categoryId, boolean isCategory) {
-         return getMessagesTimer.record(() -> {
+    public List<CachyUserPostResponse> getPosts(final UUID destinationUuid, final long destinationDevice, final long[] range, boolean isPosts, boolean isStory, boolean isWall, String categoryId, boolean isCategory, final int STORY_EXPIRE_TIME_IN_HOURS) {
+      final long currentTime = System.currentTimeMillis();
+      return getMessagesTimer.record(() -> {
             final byte[] queueName;
             if(isPosts && !isWall){
                 queueName = getPostMessageQueueKey(destinationUuid, destinationDevice);
@@ -839,7 +840,12 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                                 postIdKey = postIdList.get(0);     
                                    
                             }else if(isStory){
-                                postIdKey = getUserStoryQueueKey(postId);  
+                              long storyCreatedTime = Long.parseLong(new String(queueItems.get(i+1)));
+                              if(storyCreatedTime <= (currentTime - STORY_EXPIRE_TIME_IN_HOURS*60*60*1000)  ){
+                                continue;
+                              }
+                              postIdKey = getUserStoryQueueKey(postId);
+
                             }else{
                                 postIdKey = ""; 
                             }
@@ -858,24 +864,24 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         }
                         post.setContributorsDetails(contributorsList);
                         post.setScore(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
-                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
-                        if(likeCount != null){
-                            post.setLikesCount(new String(likeCount));
-                        }
+//                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(likeCount != null){
+//                            post.setLikesCount(new String(likeCount));
+//                        }
 
-                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
-                        if(viewCount != null){
-                            post.setViews(new String(viewCount));
-                        }
+//                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(viewCount != null){
+//                            post.setViews(new String(viewCount));
+//                        }
 
-                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
-                        post.setLiked(isLiked);   
+//                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), destinationUuid.toString().getBytes()));
+//                        post.setLiked(isLiked);
 
 
-                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
-                        if(commentCount != null){
-                            post.setCommentsCount(new String(commentCount));
-                        }
+//                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(commentCount != null){
+//                            post.setCommentsCount(new String(commentCount));
+//                        }
                         messageEntities.add(post );
                     } catch (Exception e) {
                         logger.warn("Failed to parse envelope", e);
@@ -931,7 +937,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
            return messageEntities;
        });
    }
-    public List<CachyUserPostResponse> getPostData(UUID uuid, Set<String> queueItems){
+    public List<CachyUserPostResponse> getPostData(UUID uuid, List<String> queueItems){
             final List<CachyUserPostResponse> messageEntities = new ArrayList<>(queueItems.size());
                 for (String postId : queueItems) {
                     try {
@@ -957,25 +963,25 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                             }
                         }
                         post.setContributorsDetails(contributorsList);
-                        post.setScore(Long.parseLong("0"));
-                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
-                        if(likeCount != null){
-                            post.setLikesCount(new String(likeCount));
-                        }
+                        //post.setScore(Long.parseLong("0"));
+//                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(likeCount != null){
+//                            post.setLikesCount(new String(likeCount));
+//                        }
 
-                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
-                        if(viewCount != null){
-                            post.setViews(new String(viewCount));
-                        }
+//                        final byte[] viewCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getViewQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(viewCount != null){
+//                            post.setViews(new String(viewCount));
+//                        }
 
-                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), uuid.toString().getBytes()));
-                        post.setLiked(isLiked);   
+//                        final Boolean isLiked = (Boolean)readDeleteCluster.withBinaryCluster(connection -> connection.sync().hexists(getLikeQueueKey(post.getPostId()), uuid.toString().getBytes()));
+//                        post.setLiked(isLiked);
 
 
-                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
-                        if(commentCount != null){
-                            post.setCommentsCount(new String(commentCount));
-                        }
+//                        final byte[] commentCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getCommentCountQueueKey(post.getPostId()), "count".getBytes()));
+//                        if(commentCount != null){
+//                            post.setCommentsCount(new String(commentCount));
+//                        }
                         messageEntities.add(post );
                     } catch (Exception e) {
                         logger.warn("Failed to parse envelope", e);
