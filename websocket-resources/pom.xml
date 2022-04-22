@@ -6,7 +6,7 @@
     <groupId>com.cachysecureserver</groupId>
     <artifactId>CachySecureServer</artifactId>
     <version>1.0</version>
-    <relativePath>../../CachyServerNew/pom.xml</relativePath>
+    <relativePath>../../CachyServer/pom.xml</relativePath>
 
   </parent>
   <modelVersion>4.0.0</modelVersion>
