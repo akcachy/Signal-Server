@@ -864,6 +864,11 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                         }
                         post.setContributorsDetails(contributorsList);
                         post.setScore(Long.parseLong(new String(queueItems.get(i + 1), StandardCharsets.UTF_8)));
+                      if(isPosts || isCategory){
+                        post.setStory(false);
+                      }else{
+                        post.setStory(true);
+                      }
 //                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
 //                        if(likeCount != null){
 //                            post.setLikesCount(new String(likeCount));
@@ -963,6 +968,7 @@ public class MessagesCache extends RedisClusterPubSubAdapter<String, String> imp
                             }
                         }
                         post.setContributorsDetails(contributorsList);
+                        post.setStory(false);
                         //post.setScore(Long.parseLong("0"));
 //                        final byte[] likeCount = (byte[])readDeleteCluster.withBinaryCluster(connection -> connection.sync().hget(getLikeQueueKey(post.getPostId()), "count".getBytes()));
 //                        if(likeCount != null){
