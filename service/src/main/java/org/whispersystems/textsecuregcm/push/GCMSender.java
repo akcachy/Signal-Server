@@ -89,6 +89,7 @@ public class GCMSender {
       case KEYWORD_REJECTED:            key = "keyword_rejected";           break;
       case KEYWORD_UPFOR_VOTE:            key = "keyword_upfor_vote";           break;
       case PREMIUM_REJECTED:            key = "premium_rejected";           break;
+      case COMMENTED_REPLY:            key = "commented_reply";           break;
       case PREMIUM_APPROVED:            key = "premium_approved";           break;
       case PROFESSIONAL_APPROVED:            key = "professional_approved";           break;
       case PROFESSIONAL_REJECTED:            key = "professional_rejected";           break;
